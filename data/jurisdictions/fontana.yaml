@@ -1,11 +1,29 @@
-# City of Fontana — thin jurisdiction profile. Inherits the statewide submittal
-# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
-# and any local amendments per project.
+# City of Fontana — deepened jurisdiction profile. Inherits the statewide
+# submittal checklists from ca-statewide.yaml; adds Fontana-specific submittal
+# logistics below. Every local item is sourced and marked to confirm.
 meta:
   jurisdiction_id: "fontana"
   jurisdiction_name: "City of Fontana"
   status: PLACEHOLDER
-  source: "City of Fontana building department + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Fontana Building & Safety + Fontana Fire — VERIFY current submittal requirements"
   reviewing_agencies:
-    - "City of Fontana — Building & Safety (structural / rack anchorage) — VERIFY"
-    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
+    - "City of Fontana — Building & Safety / Development Services (structural / rack anchorage) — VERIFY"
+    - "Fontana Fire — Fire Prevention (high-piled combustible storage) — VERIFY"
+
+# City-specific submittal logistics (administrative facts, not code values).
+local_submittal:
+  - id: eplan
+    label: "Plan submittal / e-permitting"
+    detail: "Create an account on the Build Fontana public portal to submit applications and manage permits/plan check."
+    source: "City of Fontana — Build Fontana portal (confirm current)"
+    url: "https://build.fontanaca.gov/"
+  - id: fire_review
+    label: "High-piled storage fire review"
+    detail: "If a fire permit is required, Building & Safety refers the project to the Fire Department; plans are submitted to Fire for review and the permit is issued by Fire. Confirm whether the Fontana Fire Protection District / San Bernardino County Fire administers the high-piled permit."
+    source: "City of Fontana — Fire Prevention, Permits, Inspections & Fees (confirm current)"
+    url: "https://www.fontanaca.gov/864/Fire-Prevention"
+  - id: contact
+    label: "Building & Safety / Development Services"
+    detail: "Development Services Office, 8353 Sierra Avenue, Fontana, CA 92335. Building & Safety (909) 350-7640; plan-submittal questions (909) 428-8891."
+    source: "City of Fontana — Building & Safety (confirm current)"
+    url: "https://www.fontanaca.gov/136/Building-Safety"

@@ -28,6 +28,7 @@ export interface SubmittalCover {
   documents: SubmittalCoverDoc[];
   planContent: { name: string; source: string }[];
   structuralSubmittal: { name: string; source: string }[];
+  localSubmittal: { label: string; detail: string; source: string; url?: string }[];
   disclaimer: string;
   demo: boolean;
 }
@@ -49,6 +50,7 @@ export function buildSubmittalCover(pkg: ReviewPackage): SubmittalCover {
     documents,
     planContent: pkg.jurisdiction.planContent.map((i) => ({ name: i.name, source: i.source })),
     structuralSubmittal: pkg.jurisdiction.structuralSubmittal.map((i) => ({ name: i.name, source: i.source })),
+    localSubmittal: pkg.jurisdiction.localSubmittal.map((n) => ({ label: n.label, detail: n.detail, source: n.source, url: n.url })),
     disclaimer: pkg.meta.disclaimer,
     demo: !!pkg.demo,
   };
@@ -87,6 +89,14 @@ export function renderSubmittalCoverMarkdown(c: SubmittalCover): string {
     L.push(`## Structural / fire documents`);
     L.push("");
     for (const it of c.structuralSubmittal) L.push(`- [ ] ${it.name} _(${it.source})_`);
+    L.push("");
+  }
+  if (c.localSubmittal.length) {
+    L.push(`## Local jurisdiction specifics _(confirm current)_`);
+    L.push("");
+    for (const n of c.localSubmittal) {
+      L.push(`- **${n.label}:** ${n.detail}${n.url ? ` — ${n.url}` : ""} _(${n.source})_`);
+    }
     L.push("");
   }
   L.push(`## Engineer of record`);

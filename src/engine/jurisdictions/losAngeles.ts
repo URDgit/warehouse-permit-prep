@@ -43,6 +43,20 @@ export interface ChecklistItem {
   source: string;
 }
 
+/**
+ * A jurisdiction-specific administrative fact (how plans are submitted here,
+ * which fire AHJ reviews high-piled storage, local amendments, etc.). These
+ * are local logistics, not code values; each carries a source to confirm and
+ * an optional link. Only "deepened" city files define these.
+ */
+export interface LocalNote {
+  id: string;
+  label: string;
+  detail: string;
+  source: string;
+  url?: string;
+}
+
 export interface JurisdictionResult {
   jurisdictionId: string;
   jurisdictionName: string;
@@ -56,6 +70,8 @@ export interface JurisdictionResult {
   specialInspections: ChecklistItem[];
   /** Items deferred to a post-permit submittal. */
   deferredSubmittals: ChecklistItem[];
+  /** City-specific submittal logistics (portal, fire AHJ, local amendments). */
+  localSubmittal: LocalNote[];
   /** Problems found in the submittal trigger data. */
   dataIssues: string[];
   audit: AuditEntry;
@@ -162,6 +178,16 @@ export function getJurisdictionRequirements(
   const specialInspections = toChecklist(inherit("special_inspections"));
   const deferredSubmittals = toChecklist(inherit("deferred_submittals"));
 
+  // Local specifics are city-only (never inherited from the statewide default).
+  const localRaw = j.local_submittal;
+  const localSubmittal: LocalNote[] = (Array.isArray(localRaw) ? (localRaw as Record<string, any>[]) : []).map((x) => ({
+    id: String(x.id ?? "local"),
+    label: String(x.label ?? "Local requirement"),
+    detail: String(x.detail ?? ""),
+    source: String(x.source ?? "— confirm current"),
+    url: x.url ? String(x.url) : undefined,
+  }));
+
   const audit: AuditEntry = {
     step: "Los Angeles submittal requirements",
     description: triggersVerified
@@ -196,6 +222,7 @@ export function getJurisdictionRequirements(
     structuralSubmittal,
     specialInspections,
     deferredSubmittals,
+    localSubmittal,
     dataIssues: issues,
     audit,
   };

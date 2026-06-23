@@ -218,6 +218,14 @@ export async function buildReviewPackagePdf(pkg: ReviewPackage): Promise<Doc> {
     ["Document", "Applicability", "Why", "Source"],
     pkg.jurisdiction.requiredDocuments.map((d) => [d.name, applicabilityLabel(d.applicability), d.reason, d.status.source]),
   );
+  if (pkg.jurisdiction.localSubmittal.length) {
+    paragraph(ctx, "Local jurisdiction specifics (confirm current)", { bold: true, size: 9.5 });
+    for (const n of pkg.jurisdiction.localSubmittal) {
+      paragraph(ctx, `• ${n.label}: ${n.detail}`, { size: 9 });
+      if (n.url) paragraph(ctx, `  ${n.url}`, { size: 8, color: MUTED });
+      paragraph(ctx, `  Source: ${n.source}`, { size: 8, color: MUTED });
+    }
+  }
 
   heading(ctx, "5. All code values used (with citations)");
   table(
@@ -345,6 +353,14 @@ export async function buildSubmittalCoverPdf(pkg: ReviewPackage): Promise<Doc> {
   if (c.structuralSubmittal.length) {
     heading(ctx, "Structural / fire documents");
     for (const it of c.structuralSubmittal) paragraph(ctx, `[  ]  ${it.name}  (${it.source})`, { size: 9 });
+  }
+  if (c.localSubmittal.length) {
+    heading(ctx, "Local jurisdiction specifics (confirm current)");
+    for (const n of c.localSubmittal) {
+      paragraph(ctx, `${n.label}: ${n.detail}`, { size: 9 });
+      if (n.url) paragraph(ctx, n.url, { size: 8, color: MUTED });
+      paragraph(ctx, `Source: ${n.source}`, { size: 8, color: MUTED });
+    }
   }
 
   heading(ctx, "Engineer of record");

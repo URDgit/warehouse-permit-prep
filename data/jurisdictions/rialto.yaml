@@ -1,11 +1,29 @@
-# City of Rialto — thin jurisdiction profile. Inherits the statewide submittal
-# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
-# and any local amendments per project.
+# City of Rialto — deepened jurisdiction profile. Inherits the statewide
+# submittal checklists from ca-statewide.yaml; adds Rialto-specific submittal
+# logistics below. Every local item is sourced and marked to confirm.
 meta:
   jurisdiction_id: "rialto"
   jurisdiction_name: "City of Rialto"
   status: PLACEHOLDER
-  source: "City of Rialto building department + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Rialto Building & Safety + Rialto Fire Prevention — VERIFY current submittal requirements"
   reviewing_agencies:
-    - "City of Rialto — Building & Safety (structural / rack anchorage) — VERIFY"
-    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
+    - "City of Rialto — Building & Safety Division (structural / rack anchorage) — VERIFY"
+    - "Rialto Fire Department — Fire Prevention Division (high-piled combustible storage) — VERIFY"
+
+# City-specific submittal logistics (administrative facts, not code values).
+local_submittal:
+  - id: eplan
+    label: "Plan submittal / e-permitting"
+    detail: "Submit applications and plans through the Rialto Online Permitting Center (OPC). After submittal, check the OPC 'My work' tab (typically within ~48 business hours) for linked permits."
+    source: "City of Rialto — Online Permitting Center (confirm current)"
+    url: "https://www.rialtoca.gov/913/Online-Permitting-Center"
+  - id: fire_review
+    label: "High-piled storage fire review"
+    detail: "The Rialto Fire Prevention Division handles permits, plan checks, and inspections on fire systems. High-piled combustible storage is governed by CFC Chapter 32 (permit per §105.5/§105.6). Confirm the current submittal checklist."
+    source: "City of Rialto — Fire Prevention Division (confirm current)"
+    url: "https://www.rialtoca.gov/918/Fire-Prevention-Division"
+  - id: contact
+    label: "Building & Safety / Permits & Plan Review"
+    detail: "Building & Safety Division, 150 S Palm Avenue, Rialto, CA 92376; (909) 820-2505."
+    source: "City of Rialto — Permits & Plan Review (confirm current)"
+    url: "https://www.rialtoca.gov/197/Permits-Plan-Review"

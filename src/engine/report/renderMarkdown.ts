@@ -125,6 +125,18 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   }
   L.push("");
 
+  if (pkg.jurisdiction.localSubmittal.length) {
+    L.push(`### Local jurisdiction specifics (confirm current)`);
+    L.push("");
+    L.push(`| Item | Detail | Source |`);
+    L.push(`| --- | --- | --- |`);
+    for (const n of pkg.jurisdiction.localSubmittal) {
+      const detail = n.url ? `${n.detail} (${n.url})` : n.detail;
+      L.push(`| ${mdCell(n.label)} | ${mdCell(detail)} | ${mdCell(n.source)} |`);
+    }
+    L.push("");
+  }
+
   // --- Code values used ----------------------------------------------
   L.push(`## 5. All code values used (with citations)`);
   L.push("");

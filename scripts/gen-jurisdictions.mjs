@@ -16,7 +16,11 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 // These have hand-written files (don't overwrite); still listed for the registry.
-const RICH = new Set(["ca-statewide", "los-angeles", "la-county", "long-beach"]);
+// Includes the "deepened" Inland Empire cities that carry local_submittal blocks.
+const RICH = new Set([
+  "ca-statewide", "los-angeles", "la-county", "long-beach",
+  "ontario", "fontana", "moreno-valley", "rialto", "perris",
+]);
 
 const GROUPS = [
   {

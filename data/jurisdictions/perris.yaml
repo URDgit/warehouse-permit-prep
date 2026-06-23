@@ -1,11 +1,29 @@
-# City of Perris — thin jurisdiction profile. Inherits the statewide submittal
-# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
-# and any local amendments per project.
+# City of Perris — deepened jurisdiction profile. Inherits the statewide
+# submittal checklists from ca-statewide.yaml; adds Perris-specific submittal
+# logistics below. Every local item is sourced and marked to confirm.
 meta:
   jurisdiction_id: "perris"
   jurisdiction_name: "City of Perris"
   status: PLACEHOLDER
-  source: "City of Perris building department + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Perris Building & Safety + Riverside County Fire / CAL FIRE — VERIFY current submittal requirements"
   reviewing_agencies:
-    - "City of Perris — Building & Safety (structural / rack anchorage) — VERIFY"
-    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
+    - "City of Perris — Development Services, Building & Safety Division (structural / rack anchorage) — VERIFY"
+    - "Riverside County Fire Department / CAL FIRE — Perris Fire Marshal (high-piled combustible storage) — VERIFY"
+
+# City-specific submittal logistics (administrative facts, not code values).
+local_submittal:
+  - id: eplan
+    label: "Plan submittal / e-permitting"
+    detail: "Submit building/planning applications through the City of Perris Accela e-permit portal; a property-lookup feature is included."
+    source: "City of Perris — E-Permit Portal (confirm current)"
+    url: "https://aca-prod.accela.com/perris/default.aspx"
+  - id: fire_review
+    label: "High-piled storage fire review"
+    detail: "Fire services are provided by CAL FIRE / Riverside County Fire Department; high-piled combustible storage submittals go through the Perris Fire Marshal. Confirm the current high-piled storage permit application and checklist."
+    source: "City of Perris — Fire Marshal (confirm current)"
+    url: "https://www.cityofperris.org/departments/development-services/fire-marshal"
+  - id: building_dept
+    label: "Building Department"
+    detail: "City of Perris Development Services — Building Department (permits, inspection scheduling)."
+    source: "City of Perris — Building Department (confirm current)"
+    url: "https://www.cityofperris.org/departments/development-services/building-department"

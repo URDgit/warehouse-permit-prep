@@ -322,6 +322,32 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         </table>
       </div>
 
+      {pkg.jurisdiction.localSubmittal.length > 0 && (
+        <div className="card">
+          <h2 style={{ marginTop: 0 }}>Local jurisdiction specifics</h2>
+          <p className="note">
+            How this jurisdiction handles submittals — plan portal, the fire AHJ that reviews
+            high-piled storage, and any local guidance. These are administrative facts gathered
+            from the AHJ; confirm each is current before relying on it.
+          </p>
+          <table className="report">
+            <thead><tr><th>Item</th><th>Detail</th><th>Source</th></tr></thead>
+            <tbody>
+              {pkg.jurisdiction.localSubmittal.map((n) => (
+                <tr key={n.id}>
+                  <td>{n.label}</td>
+                  <td>
+                    {n.detail}
+                    {n.url && (<><br /><a href={n.url} target="_blank" rel="noreferrer">{n.url}</a></>)}
+                  </td>
+                  <td className="source">{n.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {(pkg.jurisdiction.planContent.length > 0 || pkg.jurisdiction.structuralSubmittal.length > 0) && (
         <div className="card">
           <h2 style={{ marginTop: 0 }}>Submittal requirements checklist</h2>

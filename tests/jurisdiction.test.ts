@@ -90,12 +90,27 @@ describe("multi-jurisdiction", () => {
   });
 
   it("a thin city profile inherits the statewide checklists + its own agencies", () => {
+    const tracy = getJurisdictionRequirements(input, data, "tracy");
+    expect(tracy.jurisdictionName).toMatch(/Tracy/);
+    // tracy.yaml defines no lists — these come from ca-statewide:
+    expect(tracy.planContent.length).toBeGreaterThan(0);
+    expect(tracy.structuralSubmittal.length).toBeGreaterThan(0);
+    expect(tracy.requiredDocuments.length).toBeGreaterThan(0);
+    expect(tracy.reviewingAgencies.some((a) => /Tracy/.test(a))).toBe(true);
+    // a thin profile carries no city-specific submittal logistics:
+    expect(tracy.localSubmittal).toHaveLength(0);
+  });
+
+  it("a deepened city exposes local submittal specifics (portal, fire AHJ) with sources", () => {
     const ontario = getJurisdictionRequirements(input, data, "ontario");
-    expect(ontario.jurisdictionName).toMatch(/Ontario/);
-    // ontario.yaml defines no lists — these come from ca-statewide:
+    // still inherits the statewide checklists...
     expect(ontario.planContent.length).toBeGreaterThan(0);
-    expect(ontario.structuralSubmittal.length).toBeGreaterThan(0);
-    expect(ontario.requiredDocuments.length).toBeGreaterThan(0);
-    expect(ontario.reviewingAgencies.some((a) => /Ontario/.test(a))).toBe(true);
+    // ...and adds its own local specifics, each with a source to confirm:
+    expect(ontario.localSubmittal.length).toBeGreaterThan(0);
+    expect(ontario.localSubmittal.every((n) => n.source.length > 0)).toBe(true);
+    // at least one local note links out to the AHJ:
+    expect(ontario.localSubmittal.some((n) => !!n.url)).toBe(true);
+    // the deepened agencies name the fire AHJ that reviews high-piled storage:
+    expect(ontario.reviewingAgencies.some((a) => /Fire/.test(a))).toBe(true);
   });
 });

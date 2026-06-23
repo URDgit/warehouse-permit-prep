@@ -1,11 +1,35 @@
-# City of Ontario — thin jurisdiction profile. Inherits the statewide submittal
-# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
-# and any local amendments per project.
+# City of Ontario — deepened jurisdiction profile. Inherits the statewide
+# submittal checklists from ca-statewide.yaml; adds Ontario-specific submittal
+# logistics below. Every local item is sourced and marked to confirm — AHJ
+# portals/forms change without notice, so verify per project.
 meta:
   jurisdiction_id: "ontario"
   jurisdiction_name: "City of Ontario"
   status: PLACEHOLDER
-  source: "City of Ontario building department + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Ontario Building Division + Ontario Fire Department — VERIFY current submittal requirements"
   reviewing_agencies:
-    - "City of Ontario — Building & Safety (structural / rack anchorage) — VERIFY"
-    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
+    - "City of Ontario — Building Division / Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Ontario Fire Department — Fire Prevention Bureau (high-piled combustible storage) — VERIFY"
+
+# City-specific submittal logistics (administrative facts, not code values).
+local_submittal:
+  - id: eplan
+    label: "Plan submittal / e-permitting"
+    detail: "Submit plans, track plan check, and schedule inspections through Ontario's Citizen Portal Access (Accela). Follow the city's Electronic Plan Submittal Guide for first submittal and resubmittals."
+    source: "City of Ontario — Building Permits & Plans (confirm current)"
+    url: "https://www.ontarioca.gov/government/community-development/building/building-permits-and-plans"
+  - id: portal
+    label: "Online permit portal"
+    detail: "Ontario Accela Citizen Access portal for applications, plan-check status, and inspection scheduling."
+    source: "City of Ontario online permits (confirm current)"
+    url: "https://aca-prod.accela.com/ONT/Default.aspx"
+  - id: fire_review
+    label: "High-piled storage fire review"
+    detail: "High-piled combustible storage is reviewed in-house by the Ontario Fire Department Fire Prevention Bureau (fire marshal / plan review). Confirm the current high-piled storage permit application and submittal checklist."
+    source: "Ontario Fire Department — Fire Prevention Bureau (confirm current)"
+    url: "https://www.ontarioca.gov/government/fire/bureaus/fire-prevention-bureau"
+  - id: forms
+    label: "Building applications & resources"
+    detail: "City building application forms, handouts, and submittal requirement sheets."
+    source: "City of Ontario — Building Applications & Resources (confirm current)"
+    url: "https://www.ontarioca.gov/government/community-development/building/building-applications-resources"

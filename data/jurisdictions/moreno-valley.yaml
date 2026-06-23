@@ -1,11 +1,24 @@
-# City of Moreno Valley — thin jurisdiction profile. Inherits the statewide submittal
-# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
-# and any local amendments per project.
+# City of Moreno Valley — deepened jurisdiction profile. Inherits the statewide
+# submittal checklists from ca-statewide.yaml; adds Moreno Valley-specific
+# submittal logistics below. Every local item is sourced and marked to confirm.
 meta:
   jurisdiction_id: "moreno-valley"
   jurisdiction_name: "City of Moreno Valley"
   status: PLACEHOLDER
-  source: "City of Moreno Valley building department + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Moreno Valley Building & Safety + Moreno Valley Fire Prevention Bureau — VERIFY current submittal requirements"
   reviewing_agencies:
-    - "City of Moreno Valley — Building & Safety (structural / rack anchorage) — VERIFY"
-    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
+    - "City of Moreno Valley — Community Development, Building & Safety Division (structural / rack anchorage) — VERIFY"
+    - "Moreno Valley Fire Department — Fire Prevention Bureau (high-piled combustible storage; fire services via Riverside County Fire / CAL FIRE) — VERIFY"
+
+# City-specific submittal logistics (administrative facts, not code values).
+local_submittal:
+  - id: eplan
+    label: "Plan submittal / e-permitting"
+    detail: "Submit digital plans and manage plan review, permits, and inspections through the city's SimpliCITY online portal (available 24/7)."
+    source: "City of Moreno Valley — Building & Safety Division (confirm current)"
+    url: "https://www.moreno-valley.ca.us/cdd/department/divisions-building-safety.html"
+  - id: fire_guide
+    label: "High-piled storage fire review + developer guide"
+    detail: "Plans and specifications for high-piled storage are submitted to the Moreno Valley Fire Prevention Bureau. The city publishes a High-Piled Combustible Storage developer guide requiring a proposed high-piled analysis per CFC Chapter 32 with commodity classification. Confirm the current edition."
+    source: "Moreno Valley Fire — High-Piled Combustible Storage developer guide (confirm current)"
+    url: "https://moval.gov/departments/fire/pdf/dev-guides/HighPiledCombustibleStorage.pdf"
