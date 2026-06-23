@@ -109,6 +109,13 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       </div>
 
       <div className="card">
+        {(m.firm.firmName || m.firm.firmAddress || m.firm.firmContact) && (
+          <div className="letterhead">
+            {m.firm.firmName && <div className="letterhead__name">{m.firm.firmName}</div>}
+            {m.firm.firmAddress && <div className="letterhead__line">{m.firm.firmAddress}</div>}
+            {m.firm.firmContact && <div className="letterhead__line">{m.firm.firmContact}</div>}
+          </div>
+        )}
         <h1>{m.title}</h1>
         <div className="kv">
           <div><strong>Project:</strong> {m.projectName}</div>
@@ -265,6 +272,18 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
             <p className="kv"><strong>Result:</strong> {JSON.stringify(a.result)}</p>
           </div>
         ))}
+      </div>
+
+      <div className="stampblock">
+        <h3>Engineer of record — review &amp; seal</h3>
+        <p className="note">This package is a draft until signed and sealed by the engineer of record below.</p>
+        <div className="kv">
+          <div><strong>Engineer of record:</strong> {m.firm.engineerName || "________________________"}</div>
+          <div><strong>License:</strong> {[m.firm.licenseType, m.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}</div>
+          <div style={{ marginTop: 10 }}>Signature: ______________________________&nbsp;&nbsp;&nbsp;Date: ______________</div>
+        </div>
+        <div className="stampblock__seal">Seal / stamp</div>
+        {m.firm.standardNotes && <p className="note"><strong>Firm notes:</strong> {m.firm.standardNotes}</p>}
       </div>
 
       <div className="banner banner--danger" role="alert" style={{ marginTop: 20 }}>

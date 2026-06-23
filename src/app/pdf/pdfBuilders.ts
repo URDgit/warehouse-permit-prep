@@ -152,7 +152,14 @@ function cvText(cv: { isPlaceholder: boolean; value: unknown; unit: string | nul
 export async function buildReviewPackagePdf(pkg: ReviewPackage): Promise<Doc> {
   const { ctx, autoTable } = await createCtx();
   const m = pkg.meta;
+  const f = m.firm;
 
+  if (f.firmName || f.firmAddress || f.firmContact) {
+    if (f.firmName) paragraph(ctx, f.firmName, { bold: true, size: 12 });
+    if (f.firmAddress) paragraph(ctx, f.firmAddress, { size: 9, color: MUTED });
+    if (f.firmContact) paragraph(ctx, f.firmContact, { size: 9, color: MUTED });
+    ctx.y += 4;
+  }
   title(ctx, m.title);
   paragraph(ctx, `Project: ${m.projectName}`, { bold: true });
   paragraph(
@@ -230,6 +237,21 @@ export async function buildReviewPackagePdf(pkg: ReviewPackage): Promise<Doc> {
       color: MUTED,
     });
   }
+
+  heading(ctx, "Engineer of record — review & seal");
+  paragraph(ctx, "This package is a draft until signed and sealed by the engineer of record below.", { size: 9, color: MUTED });
+  paragraph(ctx, `Engineer of record: ${f.engineerName || "________________________"}`);
+  paragraph(ctx, `License: ${[f.licenseType, f.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);
+  ctx.y += 6;
+  paragraph(ctx, "Signature: ______________________________      Date: ______________");
+  ctx.y += 8;
+  ensure(ctx, 84);
+  ctx.doc.setDrawColor(...INK).setLineWidth(0.8);
+  ctx.doc.rect(M, ctx.y, 160, 72);
+  ctx.doc.setFont("helvetica", "normal").setFontSize(8).setTextColor(...MUTED);
+  ctx.doc.text("Seal / stamp", M + 8, ctx.y + 14);
+  ctx.y += 84;
+  if (f.standardNotes) paragraph(ctx, `Firm notes: ${f.standardNotes}`, { size: 9, color: MUTED });
 
   if (pkg.demo) demoWatermark(ctx);
   footer(ctx);

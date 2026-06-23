@@ -361,6 +361,7 @@ export default function Home() {
           Import
           <input type="file" accept="application/json" style={{ display: "none" }} onChange={importProject} />
         </label>
+        <Link className="btn btn-secondary" href="/settings">Firm profile</Link>
       </div>
       <h1>Storage-Rack Permit — Intake</h1>
       <p className="note">

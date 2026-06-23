@@ -28,6 +28,9 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   const m = pkg.meta;
 
   L.push(`# ${m.title}`);
+  if (m.firm.firmName) L.push(`**${m.firm.firmName}**`);
+  if (m.firm.firmAddress) L.push(m.firm.firmAddress);
+  if (m.firm.firmContact) L.push(m.firm.firmContact);
   L.push("");
   L.push(`> **${m.disclaimer}**`);
   L.push("");
@@ -149,6 +152,15 @@ export function renderMarkdown(pkg: ReviewPackage): string {
     L.push(`- **Code values / rules:** ${a.codeValues.map((c) => `${c.label} (${c.source})`).join("; ") || "none"}`);
     L.push(`- **Result:** ${JSON.stringify(a.result)}`);
   }
+  L.push("");
+  L.push(`## Engineer of record — review & seal`);
+  L.push("");
+  L.push("This package is a draft until signed and sealed by the engineer of record below.");
+  L.push(`- Engineer of record: ${m.firm.engineerName || "________________________"}`);
+  L.push(`- License: ${[m.firm.licenseType, m.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);
+  L.push(`- Signature: ______________________________    Date: ______________`);
+  L.push(`- Seal / stamp:`);
+  if (m.firm.standardNotes) L.push(`- Firm notes: ${m.firm.standardNotes}`);
   L.push("");
   L.push(`---`);
   L.push(`_${m.disclaimer}_`);

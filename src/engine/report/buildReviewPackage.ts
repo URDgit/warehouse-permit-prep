@@ -22,6 +22,7 @@ import { getLosAngelesRequirements, type JurisdictionResult } from "@/engine/jur
 import { type AuditEntry, type CodeValue } from "@/engine/provenance";
 import { buildReadiness, type Readiness } from "@/engine/report/readiness";
 import { validateCodeData, type ValidationIssue } from "@/engine/data/validate";
+import { loadFirmProfile, type FirmProfile } from "@/engine/firm";
 import { APP_TITLE, CODE_BASIS, DISCLAIMER } from "@/engine/constants";
 
 export interface ReviewPackage {
@@ -34,6 +35,7 @@ export interface ReviewPackage {
     generatedAt: string;
     disclaimer: string;
     codeBasis: string[];
+    firm: FirmProfile;
   };
   inputs: IntakeInput;
   classification: ClassificationResult;
@@ -61,11 +63,13 @@ export interface ReviewPackage {
 export interface BuildOptions {
   data?: CodeData;
   now?: Date;
+  firm?: FirmProfile;
 }
 
 export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {}): ReviewPackage {
   const data = options.data ?? loadCodeData();
   const now = options.now ?? new Date();
+  const firm = options.firm ?? loadFirmProfile();
 
   const classification = classifyCommodity(input, data);
   const seismic = computeSeismicDemand(input, data);
@@ -114,6 +118,7 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
       generatedAt: now.toISOString(),
       disclaimer: DISCLAIMER,
       codeBasis: CODE_BASIS,
+      firm,
     },
     inputs: input,
     classification,

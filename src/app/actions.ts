@@ -18,6 +18,7 @@ import { loadCodeData } from "@/engine/data/loadData";
 import { buildVerificationBrief, type VerificationBrief } from "@/engine/report/verificationBrief";
 import { buildDemoPackage } from "@/engine/demo/buildDemoPackage";
 import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "@/engine/data/overrides";
+import { loadFirmProfile, EMPTY_FIRM, type FirmProfile } from "@/engine/firm";
 
 export interface FieldError {
   path: string;
@@ -59,6 +60,20 @@ export async function getVerificationBrief(): Promise<VerificationBrief> {
 /** A fabricated, watermarked demonstration report. Never reads the real data files. */
 export async function getDemoPackage(): Promise<ReviewPackage> {
   return buildDemoPackage();
+}
+
+export async function getFirmProfile(): Promise<FirmProfile> {
+  return loadFirmProfile();
+}
+
+export async function saveFirmProfile(profile: FirmProfile): Promise<{ ok: true } | { ok: false; message: string }> {
+  try {
+    const file = path.join(process.cwd(), "data", "firm-profile.json");
+    fs.writeFileSync(file, JSON.stringify({ ...EMPTY_FIRM, ...profile }, null, 2), "utf8");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
 }
 
 /** Current state of every editable code value (with verified overrides applied). */

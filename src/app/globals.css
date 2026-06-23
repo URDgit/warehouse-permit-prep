@@ -53,7 +53,15 @@ legend { font-weight: 600; padding: 0 6px; }
 
 label.field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
 label.field span.req { color: var(--danger-line); }
-input, select { font: inherit; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); }
+input, select, textarea { font: inherit; padding: 7px 9px; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink); }
+textarea { resize: vertical; }
+
+/* Firm letterhead + seal block */
+.letterhead { border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 10px; }
+.letterhead__name { font-size: 16px; font-weight: 700; }
+.letterhead__line { color: var(--muted); font-size: 13px; }
+.stampblock { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin-top: 18px; }
+.stampblock__seal { margin-top: 12px; width: 160px; height: 72px; border: 1px dashed var(--muted); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px; }
 input.input-error, select.input-error { border-color: var(--danger-line); background: #fffafa; }
 .field .unit { color: var(--muted); font-weight: 400; }
 .field .hint { color: var(--muted); font-size: 11.5px; }

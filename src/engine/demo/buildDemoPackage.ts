@@ -16,8 +16,19 @@ import { buildReadiness } from "@/engine/report/readiness";
 import type { CalcResult } from "@/engine/calculation/types";
 import type { AuditEntry, CodeValue } from "@/engine/provenance";
 import { demoData, demoInput } from "@/engine/demo/demoData";
+import type { FirmProfile } from "@/engine/firm";
 
 const DEMO_SRC = "DEMO — fabricated for demonstration, NOT a real result";
+
+const demoFirm: FirmProfile = {
+  firmName: "Demo Structural Engineering, Inc. (fabricated)",
+  firmAddress: "100 Example Blvd, Los Angeles, CA 90000",
+  firmContact: "(555) 555-0100 · demo@example.com",
+  engineerName: "Jane Demo (fabricated)",
+  licenseType: "PE",
+  licenseNumber: "C 99999 (demo)",
+  standardNotes: "Demonstration firm profile — not a real firm or engineer.",
+};
 
 function demoCalc(
   resultId: string,
@@ -43,7 +54,7 @@ function demoCalc(
 }
 
 export function buildDemoPackage(now: Date = new Date()): ReviewPackage {
-  const pkg = buildReviewPackage(demoInput, { data: demoData, now });
+  const pkg = buildReviewPackage(demoInput, { data: demoData, now, firm: demoFirm });
 
   // Fabricated "computed" results (the real engine cannot/ will not compute).
   const seismic = demoCalc(
