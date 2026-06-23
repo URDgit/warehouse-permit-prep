@@ -419,6 +419,44 @@ export async function downloadCorrectionLetterPdf(d: CorrectionLetterData): Prom
   doc.save(`${safeFileName(d.projectName)}_Correction_Responses_R${d.revision}.pdf`);
 }
 
+// ---------------------------------------------------------------------
+//  Combined submittal package — merge the cover with the engineer's PDFs
+// ---------------------------------------------------------------------
+export async function mergePdfs(parts: { bytes: ArrayBuffer; label: string }[]): Promise<Uint8Array> {
+  const { PDFDocument } = await import("pdf-lib");
+  const merged = await PDFDocument.create();
+  for (const part of parts) {
+    let src;
+    try {
+      src = await PDFDocument.load(part.bytes, { ignoreEncryption: true });
+    } catch {
+      throw new Error(`Could not read "${part.label}". Make sure it is a standard (non-encrypted) PDF.`);
+    }
+    const pages = await merged.copyPages(src, src.getPageIndices());
+    pages.forEach((p) => merged.addPage(p));
+  }
+  return merged.save();
+}
+
+/** Combine the submittal cover + the engineer's own PDFs (in order) into one file. */
+export async function assembleSubmittalPackagePdf(pkg: ReviewPackage, files: File[]): Promise<void> {
+  const coverDoc = await buildSubmittalCoverPdf(pkg);
+  const parts: { bytes: ArrayBuffer; label: string }[] = [
+    { bytes: coverDoc.output("arraybuffer"), label: "submittal cover" },
+  ];
+  for (const f of files) parts.push({ bytes: await f.arrayBuffer(), label: f.name });
+  const out = await mergePdfs(parts);
+  const bytes = new Uint8Array(out.byteLength);
+  bytes.set(out);
+  const blob = new Blob([bytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${safeFileName(pkg.meta.projectName)}_Submittal_Package.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function safeFileName(s: string): string {
   return s.replace(/[^\w.-]+/g, "_") || "review-package";
 }

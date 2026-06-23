@@ -5,7 +5,7 @@ import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
 import { inputRows } from "@/engine/report/inputRows";
-import { downloadReviewPackagePdf, downloadVerificationBriefPdf, downloadSubmittalCoverPdf } from "@/app/pdf/pdfBuilders";
+import { downloadReviewPackagePdf, downloadVerificationBriefPdf, downloadSubmittalCoverPdf, assembleSubmittalPackagePdf } from "@/app/pdf/pdfBuilders";
 import { getVerificationBrief } from "@/app/actions";
 
 function Badge({ cv }: { cv: CodeValue }) {
@@ -32,6 +32,9 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const [pdfBusy, setPdfBusy] = useState(false);
   const [briefBusy, setBriefBusy] = useState(false);
   const [coverBusy, setCoverBusy] = useState(false);
+  const [pkgFiles, setPkgFiles] = useState<File[]>([]);
+  const [assembleBusy, setAssembleBusy] = useState(false);
+  const [assembleErr, setAssembleErr] = useState("");
 
   async function downloadPdf() {
     setPdfBusy(true);
@@ -58,6 +61,36 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       await downloadSubmittalCoverPdf(pkg);
     } finally {
       setCoverBusy(false);
+    }
+  }
+
+  function onPkgFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const fs = e.target.files ? Array.from(e.target.files) : [];
+    setPkgFiles((prev) => [...prev, ...fs]);
+    setAssembleErr("");
+    e.target.value = "";
+  }
+  function removeFile(i: number) {
+    setPkgFiles((prev) => prev.filter((_, idx) => idx !== i));
+  }
+  function moveFile(i: number, dir: -1 | 1) {
+    setPkgFiles((prev) => {
+      const j = i + dir;
+      if (j < 0 || j >= prev.length) return prev;
+      const next = [...prev];
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
+    });
+  }
+  async function assemble() {
+    setAssembleBusy(true);
+    setAssembleErr("");
+    try {
+      await assembleSubmittalPackagePdf(pkg, pkgFiles);
+    } catch (e) {
+      setAssembleErr((e as Error).message);
+    } finally {
+      setAssembleBusy(false);
     }
   }
 
@@ -120,6 +153,42 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
           Print
         </button>
       </div>
+
+      <details className="assembler">
+        <summary>Assemble combined submittal package (cover + your calc PDFs)</summary>
+        <p className="note">
+          Combine the submittal cover with your own stamped PDFs (rack/seismic calculations, anchor
+          reports, drawings) into one file, in order, ready to upload to the AHJ. Files are merged in
+          your browser and never uploaded anywhere.
+        </p>
+        <input type="file" accept="application/pdf" multiple onChange={onPkgFiles} />
+        {pkgFiles.length > 0 && (
+          <table className="report">
+            <thead>
+              <tr><th style={{ width: 40 }}>#</th><th>File (after the cover)</th><th style={{ width: 130 }}>Order</th></tr>
+            </thead>
+            <tbody>
+              {pkgFiles.map((f, i) => (
+                <tr key={i}>
+                  <td>{i + 1}</td>
+                  <td>{f.name}</td>
+                  <td>
+                    <button className="btn btn-secondary" disabled={i === 0} onClick={() => moveFile(i, -1)}>↑</button>{" "}
+                    <button className="btn btn-secondary" disabled={i === pkgFiles.length - 1} onClick={() => moveFile(i, 1)}>↓</button>{" "}
+                    <button className="btn btn-secondary" onClick={() => removeFile(i)}>✕</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div className="toolbar">
+          <button className="btn" onClick={assemble} disabled={assembleBusy || pkgFiles.length === 0}>
+            {assembleBusy ? "Assembling…" : "⤓ Download combined package PDF"}
+          </button>
+          {assembleErr && <span className="save-err">{assembleErr}</span>}
+        </div>
+      </details>
 
       <div className="card">
         {(m.firm.firmName || m.firm.firmAddress || m.firm.firmContact) && (
