@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
@@ -27,6 +28,16 @@ function applicabilityLabel(a: ReviewPackage["jurisdiction"]["requiredDocuments"
 
 export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const m = pkg.meta;
+  const [pdfBusy, setPdfBusy] = useState(false);
+
+  async function downloadPdf() {
+    setPdfBusy(true);
+    try {
+      await downloadReviewPackagePdf(pkg);
+    } finally {
+      setPdfBusy(false);
+    }
+  }
 
   function downloadMarkdown() {
     const md = renderMarkdown(pkg);
@@ -50,8 +61,8 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       <ReadinessPanel r={pkg.readiness} />
 
       <div className="toolbar">
-        <button className="btn btn-secondary" onClick={() => downloadReviewPackagePdf(pkg)}>
-          ⤓ Download PDF
+        <button className="btn btn-secondary" onClick={downloadPdf} disabled={pdfBusy}>
+          {pdfBusy ? "Generating…" : "⤓ Download PDF"}
         </button>
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
           Markdown

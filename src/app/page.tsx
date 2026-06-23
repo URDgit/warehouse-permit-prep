@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { generateReviewPackage, getVerificationBrief, type GenerateResult } from "@/app/actions";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
@@ -67,6 +67,17 @@ const initialForm = {
 
 type Form = typeof initialForm;
 
+const STORAGE_KEY = "wpp-intake-v1";
+
+/** Merge a saved blob over the defaults so newly-added fields still get values. */
+function mergeForm(saved: Record<string, any>): Form {
+  const out: Record<string, any> = {};
+  for (const k of Object.keys(initialForm) as (keyof Form)[]) {
+    out[k] = { ...(initialForm[k] as object), ...((saved?.[k] as object) ?? {}) };
+  }
+  return out as Form;
+}
+
 function num(s: string): number {
   return s.trim() === "" ? NaN : Number(s);
 }
@@ -116,6 +127,35 @@ export default function Home() {
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [briefBusy, setBriefBusy] = useState<"" | "pdf" | "md">("");
+
+  // Restore the intake from the browser on first load, and auto-save on change,
+  // so a refresh or return visit doesn't lose work (no accounts, all local).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setForm(mergeForm(JSON.parse(raw)));
+    } catch {
+      /* ignore unreadable storage */
+    }
+  }, []);
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    } catch {
+      /* ignore unwritable storage */
+    }
+  }, [form]);
+
+  function resetToExample() {
+    setForm(initialForm);
+    setErrors({});
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
 
   function set(section: keyof Form, key: string, value: unknown) {
     setForm((f) => ({ ...f, [section]: { ...(f[section] as object), [key]: value } }));
@@ -135,20 +175,30 @@ export default function Home() {
   }
 
   async function downloadBrief() {
-    const brief = await getVerificationBrief();
-    const md = renderVerificationBriefMarkdown(brief);
-    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Engineer_Verification_Brief.md";
-    a.click();
-    URL.revokeObjectURL(url);
+    setBriefBusy("md");
+    try {
+      const brief = await getVerificationBrief();
+      const md = renderVerificationBriefMarkdown(brief);
+      const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Engineer_Verification_Brief.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setBriefBusy("");
+    }
   }
 
   async function downloadBriefPdf() {
-    const brief = await getVerificationBrief();
-    await downloadVerificationBriefPdf(brief);
+    setBriefBusy("pdf");
+    try {
+      const brief = await getVerificationBrief();
+      await downloadVerificationBriefPdf(brief);
+    } finally {
+      setBriefBusy("");
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -202,11 +252,14 @@ export default function Home() {
       </p>
 
       <div className="toolbar">
-        <button type="button" className="btn btn-secondary" onClick={downloadBriefPdf}>
-          ⤓ Engineer Verification Brief (PDF)
+        <button type="button" className="btn btn-secondary" onClick={downloadBriefPdf} disabled={briefBusy !== ""}>
+          {briefBusy === "pdf" ? "Generating…" : "⤓ Engineer Verification Brief (PDF)"}
         </button>
-        <button type="button" className="btn btn-secondary" onClick={downloadBrief}>
-          Markdown
+        <button type="button" className="btn btn-secondary" onClick={downloadBrief} disabled={briefBusy !== ""}>
+          {briefBusy === "md" ? "Generating…" : "Markdown"}
+        </button>
+        <button type="button" className="btn btn-secondary" onClick={resetToExample}>
+          Reset to example data
         </button>
         <span className="note">A checklist to hand a licensed engineer — what to verify, with citations.</span>
       </div>
