@@ -336,6 +336,15 @@ export async function buildSubmittalCoverPdf(pkg: ReviewPackage): Promise<Doc> {
     paragraph(ctx, `[  ]  ${d.name}${d.applicability === "verify" ? "  (verify applicability)" : ""}`);
   }
 
+  if (c.planContent.length) {
+    heading(ctx, "What the plans must show");
+    for (const it of c.planContent) paragraph(ctx, `[  ]  ${it.name}  (${it.source})`, { size: 9 });
+  }
+  if (c.structuralSubmittal.length) {
+    heading(ctx, "Structural / fire documents");
+    for (const it of c.structuralSubmittal) paragraph(ctx, `[  ]  ${it.name}  (${it.source})`, { size: 9 });
+  }
+
   heading(ctx, "Engineer of record");
   paragraph(ctx, `Engineer of record: ${c.firm.engineerName || "________________________"}`);
   paragraph(ctx, `License: ${[c.firm.licenseType, c.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);

@@ -26,6 +26,8 @@ export interface SubmittalCover {
   preparedBy: string;
   preparedDate: string;
   documents: SubmittalCoverDoc[];
+  planContent: { name: string; source: string }[];
+  structuralSubmittal: { name: string; source: string }[];
   disclaimer: string;
   demo: boolean;
 }
@@ -45,6 +47,8 @@ export function buildSubmittalCover(pkg: ReviewPackage): SubmittalCover {
     preparedBy: pkg.meta.preparedBy,
     preparedDate: pkg.meta.preparedDate,
     documents,
+    planContent: pkg.jurisdiction.planContent.map((i) => ({ name: i.name, source: i.source })),
+    structuralSubmittal: pkg.jurisdiction.structuralSubmittal.map((i) => ({ name: i.name, source: i.source })),
     disclaimer: pkg.meta.disclaimer,
     demo: !!pkg.demo,
   };
@@ -73,6 +77,18 @@ export function renderSubmittalCoverMarkdown(c: SubmittalCover): string {
   if (!c.documents.length) L.push("_No documents identified — verify jurisdiction requirements._");
   for (const d of c.documents) L.push(`- [ ] ${d.name}${d.applicability === "verify" ? " _(verify applicability)_" : ""}`);
   L.push("");
+  if (c.planContent.length) {
+    L.push(`## What the plans must show`);
+    L.push("");
+    for (const it of c.planContent) L.push(`- [ ] ${it.name} _(${it.source})_`);
+    L.push("");
+  }
+  if (c.structuralSubmittal.length) {
+    L.push(`## Structural / fire documents`);
+    L.push("");
+    for (const it of c.structuralSubmittal) L.push(`- [ ] ${it.name} _(${it.source})_`);
+    L.push("");
+  }
   L.push(`## Engineer of record`);
   L.push(`- Engineer of record: ${c.firm.engineerName || "________________________"}`);
   L.push(`- License: ${[c.firm.licenseType, c.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);

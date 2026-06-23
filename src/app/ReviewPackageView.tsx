@@ -235,6 +235,43 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         </table>
       </div>
 
+      {(pkg.jurisdiction.planContent.length > 0 || pkg.jurisdiction.structuralSubmittal.length > 0) && (
+        <div className="card">
+          <h2 style={{ marginTop: 0 }}>Submittal requirements checklist</h2>
+          <p className="note">
+            Code-grounded checklist to help assemble a complete, site-specific package (an incomplete
+            or generic package is the most common reason for plan-check rejection). Confirm each
+            citation against the current adopted code.
+          </p>
+          {pkg.jurisdiction.planContent.length > 0 && (
+            <>
+              <h3>What the plans must show</h3>
+              <table className="report">
+                <thead><tr><th style={{ width: 34 }}>✓</th><th>Item</th><th>Source</th></tr></thead>
+                <tbody>
+                  {pkg.jurisdiction.planContent.map((it) => (
+                    <tr key={it.id}><td>☐</td><td>{it.name}</td><td className="source">{it.source}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+          {pkg.jurisdiction.structuralSubmittal.length > 0 && (
+            <>
+              <h3>Structural / fire documents</h3>
+              <table className="report">
+                <thead><tr><th style={{ width: 34 }}>✓</th><th>Item</th><th>Source</th></tr></thead>
+                <tbody>
+                  {pkg.jurisdiction.structuralSubmittal.map((it) => (
+                    <tr key={it.id}><td>☐</td><td>{it.name}</td><td className="source">{it.source}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div>
+      )}
+
       {/* 5. All code values */}
       <h2>5. All code values used (with citations)</h2>
       <div className="card">

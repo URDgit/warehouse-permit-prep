@@ -37,11 +37,21 @@ export interface RequiredDocument {
   status: CodeValue;
 }
 
+export interface ChecklistItem {
+  id: string;
+  name: string;
+  source: string;
+}
+
 export interface JurisdictionResult {
   jurisdictionId: string;
   jurisdictionName: string;
   reviewingAgencies: string[];
   requiredDocuments: RequiredDocument[];
+  /** Code-grounded list of what the drawings must show (CFC §3201.3). */
+  planContent: ChecklistItem[];
+  /** Structural / fire documents reviewers expect in the package. */
+  structuralSubmittal: ChecklistItem[];
   /** Problems found in the submittal trigger data. */
   dataIssues: string[];
   audit: AuditEntry;
@@ -131,6 +141,15 @@ export function getLosAngelesRequirements(
     return { id, name, applicability, reason, status };
   });
 
+  const toChecklist = (arr: unknown): ChecklistItem[] =>
+    (Array.isArray(arr) ? (arr as Record<string, any>[]) : []).map((x) => ({
+      id: String(x.id ?? "item"),
+      name: String(x.name ?? "Unnamed requirement"),
+      source: String(x.source ?? "— VERIFY"),
+    }));
+  const planContent = toChecklist(j.plan_content_requirements);
+  const structuralSubmittal = toChecklist(j.structural_submittal_requirements);
+
   const audit: AuditEntry = {
     step: "Los Angeles submittal requirements",
     description: triggersVerified
@@ -157,6 +176,8 @@ export function getLosAngelesRequirements(
     jurisdictionName: String(meta.jurisdiction_name ?? "City of Los Angeles (LADBS / LAFD)"),
     reviewingAgencies: Array.isArray(meta.reviewing_agencies) ? meta.reviewing_agencies.map(String) : [],
     requiredDocuments,
+    planContent,
+    structuralSubmittal,
     dataIssues: issues,
     audit,
   };

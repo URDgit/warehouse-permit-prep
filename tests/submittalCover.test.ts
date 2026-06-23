@@ -20,10 +20,18 @@ describe("submittal cover", () => {
     expect(cover.documents.every((d) => d.applicability !== "not_required")).toBe(true);
   });
 
-  it("renders a transmittal markdown with a checklist and the seal block", () => {
+  it("includes the code-grounded submittal checklist (plan content + structural docs)", () => {
+    expect(cover.planContent.length).toBeGreaterThan(0);
+    expect(cover.structuralSubmittal.length).toBeGreaterThan(0);
+    expect(cover.planContent.every((i) => i.source.length > 0)).toBe(true);
+  });
+
+  it("renders a transmittal markdown with checklists and the seal block", () => {
     const md = renderSubmittalCoverMarkdown(cover);
     expect(md).toMatch(/Transmittal/);
     expect(md).toMatch(/Documents included/);
+    expect(md).toMatch(/What the plans must show/);
+    expect(md).toMatch(/Structural \/ fire documents/);
     expect(md).toMatch(/Engineer of record/);
     expect(md).toMatch(/- \[ \]/); // at least one checklist item
   });

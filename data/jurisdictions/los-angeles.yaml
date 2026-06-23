@@ -88,3 +88,82 @@ submittal_rules:
     high-piled area over a threshold, storage above a height, specific
     commodity classes), then set status: VERIFIED. No triggers are assumed;
     until then the app lists all documents as "verify applicability".
+
+# =====================================================================
+#  SUBMITTAL REQUIREMENTS CHECKLIST
+# =====================================================================
+#  A code-grounded checklist of (a) what the PLANS must show and (b) the
+#  structural/fire documents reviewers expect — to help prepare a complete,
+#  site-specific package (the #1 cause of plan-check rejection is an
+#  incomplete or generic submittal). These are submittal/documentation
+#  requirements, not engineering values. Confirm each citation against the
+#  CURRENT adopted code edition.
+
+# What the drawings must show (California Fire Code Ch. 32, §3201.3).
+plan_content_requirements:
+  - id: floor_plan
+    name: "Floor plan showing high-piled storage areas and dimensions"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: storage_height
+    name: "Usable storage height for each storage area"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: rack_tiers
+    name: "Number of tiers within each rack"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: commodity_clearance
+    name: "Clearance between top of storage and sprinkler deflector"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: aisle_dimensions
+    name: "Aisle dimensions between storage arrays"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: max_pile_volume
+    name: "Maximum pile volume for each storage array"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: commodity_classification
+    name: "Commodity location and classification (per §3203)"
+    source: "CFC 2022 §3201.3 / §3203 — VERIFY"
+  - id: encapsulated_locations
+    name: "Locations of banded or encapsulated commodities"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: fd_access_doors
+    name: "Fire department access door locations"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: suppression_detection
+    name: "Type of fire suppression and detection systems"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: sprinkler_valves
+    name: "Ceiling and in-rack sprinkler control valve locations"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: smoke_curtain
+    name: "Smoke removal and curtain board system specifications"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: flue_spaces
+    name: "Transverse and longitudinal flue space dimensions"
+    source: "CFC 2022 §3201.3 — VERIFY"
+
+# Structural / fire documents reviewers expect in the package.
+structural_submittal_requirements:
+  - id: pe_sealed_calcs
+    name: "Structural calculations sealed by the engineer of record"
+    source: "LADBS / CBC — VERIFY"
+  - id: rack_member_design
+    name: "Rack member design per ANSI/RMI MH16.1"
+    source: "ANSI/RMI MH16.1 — VERIFY edition"
+  - id: seismic_analysis
+    name: "Seismic analysis per ASCE 7"
+    source: "ASCE 7-16 (per 2022 CBC) — VERIFY"
+  - id: baseplate_anchorage
+    name: "Base plate sizing and anchorage to the existing slab"
+    source: "ACI 318 Ch. 17 / ANSI-RMI MH16.1 — VERIFY"
+  - id: floor_capacity
+    name: "Existing floor/slab capacity verification"
+    source: "Project record / field verification — VERIFY"
+  - id: manufacturer_load_tables
+    name: "Manufacturer shop drawings and rack load tables"
+    source: "Rack manufacturer — VERIFY"
+  - id: special_inspection
+    name: "Special inspection of rack anchorage"
+    source: "CBC Chapter 17 (special inspection) — VERIFY"
+  - id: deferred_sprinkler
+    name: "Deferred submittal: sprinkler / fire-protection (if applicable)"
+    source: "LAFD / LADBS — VERIFY"
