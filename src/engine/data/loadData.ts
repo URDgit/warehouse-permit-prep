@@ -13,6 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
+import { applyOverrides, type OverrideEntry } from "@/engine/data/overrides";
 
 /** A loosely-typed parsed YAML document. */
 export type RawDoc = Record<string, any>;
@@ -57,8 +58,22 @@ function readYaml(absPath: string): RawDoc {
  * @param dataDir Override the data directory (used by tests). Defaults to
  *                the "data" folder at the project root.
  */
+/** Read engineer-verified overrides, tolerating a missing or empty file. */
+function readOverrides(absPath: string): OverrideEntry[] {
+  if (!fs.existsSync(absPath)) return [];
+  try {
+    const parsed = yaml.load(fs.readFileSync(absPath, "utf8"));
+    if (parsed && typeof parsed === "object" && Array.isArray((parsed as Record<string, any>).overrides)) {
+      return (parsed as Record<string, any>).overrides as OverrideEntry[];
+    }
+  } catch {
+    /* ignore a malformed overrides file — verified values just won't apply */
+  }
+  return [];
+}
+
 export function loadCodeData(dataDir: string = path.join(process.cwd(), "data")): CodeData {
-  return {
+  const data: CodeData = {
     commodity: readYaml(path.join(dataDir, "commodity-classification.yaml")),
     fireCode: readYaml(path.join(dataDir, "fire-code-requirements.yaml")),
     seismic: readYaml(path.join(dataDir, "seismic.yaml")),
@@ -67,4 +82,7 @@ export function loadCodeData(dataDir: string = path.join(process.cwd(), "data"))
       "los-angeles": readYaml(path.join(dataDir, "jurisdictions", "los-angeles.yaml")),
     },
   };
+  // Layer engineer-verified values (from the in-app editor) on top.
+  applyOverrides(data, readOverrides(path.join(dataDir, "overrides.yaml")));
+  return data;
 }

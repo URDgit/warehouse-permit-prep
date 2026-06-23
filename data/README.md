@@ -120,6 +120,15 @@ may test include `high_piled_area_sqft`, `storage_height_ft`, `existing_sprinkle
 `anchored`, and `commodity_class` (the result of the classification step). The
 file header lists them all.
 
+## Engineer-verified values (overrides.yaml)
+
+The app's **"Verify data"** screen lets you enter engineer-verified values without
+hand-editing these files. Those values are saved to `data/overrides.yaml` and
+merged on top of the files here at load time — so the curated, commented files
+below are never changed. Delete `data/overrides.yaml` to clear all app-entered
+verified values. (Classification rules and submittal triggers are not handled by
+that screen — edit those here.)
+
 ## The files
 
 | File | What it holds |

@@ -97,6 +97,12 @@ table.report th { color: var(--muted); font-weight: 600; }
 .projectbar__select { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-right: auto; }
 .projectbar .btn { padding: 6px 12px; }
 
+/* Verification editor */
+.verify-table td { vertical-align: middle; }
+.verify-table input[type="text"], .verify-table input[type="number"] { width: 100%; }
+.save-ok { color: #1f5b30; font-size: 13px; align-self: center; }
+.save-err { color: var(--danger-ink); font-size: 13px; align-self: center; }
+
 /* Readiness / verification checklist */
 .readiness { border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; border: 2px solid; }
 .readiness--blocked { background: var(--warn-bg); border-color: var(--warn-line); }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { generateReviewPackage, getVerificationBrief, type GenerateResult } from "@/app/actions";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
@@ -364,6 +365,7 @@ export default function Home() {
         <button type="button" className="btn btn-secondary" onClick={downloadBrief} disabled={briefBusy !== ""}>
           {briefBusy === "md" ? "Generating…" : "Markdown"}
         </button>
+        <Link className="btn btn-secondary" href="/verify">Verify data (enter answers) →</Link>
         <span className="note">A checklist to hand a licensed engineer — what to verify, with citations.</span>
       </div>
 

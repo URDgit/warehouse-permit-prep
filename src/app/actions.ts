@@ -9,10 +9,14 @@
 //  The UI never touches the engine internals directly.
 // =====================================================================
 
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
 import { intakeSchema } from "@/engine/intake/schema";
 import { buildReviewPackage, type ReviewPackage } from "@/engine/report/buildReviewPackage";
 import { loadCodeData } from "@/engine/data/loadData";
 import { buildVerificationBrief, type VerificationBrief } from "@/engine/report/verificationBrief";
+import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "@/engine/data/overrides";
 
 export interface FieldError {
   path: string;
@@ -49,4 +53,28 @@ export async function generateReviewPackage(raw: unknown): Promise<GenerateResul
  */
 export async function getVerificationBrief(): Promise<VerificationBrief> {
   return buildVerificationBrief(loadCodeData());
+}
+
+/** Current state of every editable code value (with verified overrides applied). */
+export async function getVerifiableFields(): Promise<VerifiableField[]> {
+  return listVerifiableFields(loadCodeData());
+}
+
+export type SaveOverridesResult = { ok: true; count: number } | { ok: false; message: string };
+
+/** Persist engineer-verified values to data/overrides.yaml (curated YAML untouched). */
+export async function saveOverrides(entries: OverrideEntry[]): Promise<SaveOverridesResult> {
+  try {
+    const file = path.join(process.cwd(), "data", "overrides.yaml");
+    const header =
+      "# data/overrides.yaml\n" +
+      "# Engineer-verified values, managed by the app's \"Verify data\" screen.\n" +
+      "# Prefer editing through the app rather than by hand. The curated YAML files\n" +
+      "# are never modified; these values are merged on top of them at load time.\n\n";
+    const body = yaml.dump({ overrides: entries }, { lineWidth: 100 });
+    fs.writeFileSync(file, header + body, "utf8");
+    return { ok: true, count: entries.length };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
 }
