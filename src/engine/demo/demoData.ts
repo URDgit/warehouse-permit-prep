@@ -107,6 +107,7 @@ export const demoInput: IntakeInput = intakeSchema.parse({
   },
   rack: { rackType: "selective", storageHeightFt: 24, numberOfTiers: 5, rackDepthConfig: "double-row", aisleWidthFt: 9, anchored: true },
   loads: { productLoadPerLevelLb: 2500, numberOfLoadedLevels: 5, rackSelfWeightLb: 1800 },
+  slab: { thicknessIn: 6, compressiveStrengthPsi: 3000, reinforcement: "#4 @ 18 in o.c. (demo)" },
   commodity: { description: "Cartoned household goods (demo)", packaging: "cartoned", plasticContent: "limited" },
   sprinkler: { systemType: "ESFR" },
   seismic: { siteClass: "D", Ss: 1.5, S1: 0.6, Sds: 1.0, Sd1: 0.6, seismicDesignCategory: "D", riskCategory: "II" },

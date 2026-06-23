@@ -167,3 +167,25 @@ structural_submittal_requirements:
   - id: deferred_sprinkler
     name: "Deferred submittal: sprinkler / fire-protection (if applicable)"
     source: "LAFD / LADBS — VERIFY"
+
+# Special inspections the engineer of record identifies for the rack work.
+# (Confirm whether the AHJ requires its own Statement of Special Inspections form.)
+special_inspections:
+  - id: anchor_installation
+    name: "Installation of post-installed anchors (rack base plates to slab)"
+    source: "CBC Chapter 17 / ACI 318 Ch. 17 — VERIFY"
+  - id: anchor_testing
+    name: "Anchor proof-load / torque verification (per the anchor's ESR, if required)"
+    source: "Anchor ICC-ES ESR / CBC Chapter 17 — VERIFY"
+  - id: slab_verification
+    name: "Verification of existing slab conditions where required"
+    source: "CBC Chapter 17 — VERIFY"
+
+# Items expected to be submitted after permit issuance (deferred submittals).
+deferred_submittals:
+  - id: sprinkler_system
+    name: "Automatic sprinkler / in-rack sprinkler system"
+    source: "LAFD / NFPA 13 — VERIFY"
+  - id: fire_alarm
+    name: "Fire detection / alarm modifications (if applicable)"
+    source: "LAFD — VERIFY"

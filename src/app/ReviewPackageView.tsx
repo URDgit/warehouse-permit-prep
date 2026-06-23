@@ -5,7 +5,8 @@ import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
 import { inputRows } from "@/engine/report/inputRows";
-import { downloadReviewPackagePdf, downloadVerificationBriefPdf, downloadSubmittalCoverPdf, assembleSubmittalPackagePdf } from "@/app/pdf/pdfBuilders";
+import { downloadReviewPackagePdf, downloadVerificationBriefPdf, downloadSubmittalCoverPdf, assembleSubmittalPackagePdf, downloadSubmittalFormPdf } from "@/app/pdf/pdfBuilders";
+import { specialInspectionForm, deferredSubmittalForm } from "@/engine/report/forms";
 import { getVerificationBrief } from "@/app/actions";
 
 function Badge({ cv }: { cv: CodeValue }) {
@@ -35,6 +36,7 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const [pkgFiles, setPkgFiles] = useState<File[]>([]);
   const [assembleBusy, setAssembleBusy] = useState(false);
   const [assembleErr, setAssembleErr] = useState("");
+  const [formBusy, setFormBusy] = useState<"" | "si" | "ds">("");
 
   async function downloadPdf() {
     setPdfBusy(true);
@@ -94,6 +96,16 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
     }
   }
 
+  async function downloadForm(kind: "si" | "ds") {
+    setFormBusy(kind);
+    try {
+      const f = kind === "si" ? specialInspectionForm(pkg) : deferredSubmittalForm(pkg);
+      await downloadSubmittalFormPdf(f);
+    } finally {
+      setFormBusy("");
+    }
+  }
+
   function downloadMarkdown() {
     const md = renderMarkdown(pkg);
     const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
@@ -142,6 +154,12 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         </button>
         <button className="btn btn-secondary" onClick={downloadCover} disabled={coverBusy}>
           {coverBusy ? "Generating…" : "Submittal cover (PDF)"}
+        </button>
+        <button className="btn btn-secondary" onClick={() => downloadForm("si")} disabled={formBusy !== ""}>
+          {formBusy === "si" ? "Generating…" : "Special inspections (PDF)"}
+        </button>
+        <button className="btn btn-secondary" onClick={() => downloadForm("ds")} disabled={formBusy !== ""}>
+          {formBusy === "ds" ? "Generating…" : "Deferred submittals (PDF)"}
         </button>
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
           Markdown

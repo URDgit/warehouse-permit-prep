@@ -42,6 +42,11 @@ const initialForm = {
     numberOfLoadedLevels: "5",
     rackSelfWeightLb: "",
   },
+  slab: {
+    thicknessIn: "",
+    compressiveStrengthPsi: "",
+    reinforcement: "",
+  },
   commodity: {
     description: "Cartoned household goods",
     primaryMaterial: "",
@@ -121,6 +126,11 @@ function toPayload(f: Form) {
       productLoadPerLevelLb: optNum(f.loads.productLoadPerLevelLb),
       numberOfLoadedLevels: optNum(f.loads.numberOfLoadedLevels),
       rackSelfWeightLb: optNum(f.loads.rackSelfWeightLb),
+    },
+    slab: {
+      thicknessIn: optNum(f.slab.thicknessIn),
+      compressiveStrengthPsi: optNum(f.slab.compressiveStrengthPsi),
+      reinforcement: f.slab.reinforcement,
     },
     commodity: f.commodity,
     sprinkler: {
@@ -487,6 +497,15 @@ export default function Home() {
           <Num label="Product load per level" unit="lb" hint="Max stored weight on one level" value={form.loads.productLoadPerLevelLb} error={fe("loads", "productLoadPerLevelLb")} onChange={(v) => set("loads", "productLoadPerLevelLb", v)} />
           <Num label="Number of loaded levels" value={form.loads.numberOfLoadedLevels} error={fe("loads", "numberOfLoadedLevels")} onChange={(v) => set("loads", "numberOfLoadedLevels", v)} />
           <Num label="Rack self-weight" unit="lb" hint="Weight of the empty rack" value={form.loads.rackSelfWeightLb} error={fe("loads", "rackSelfWeightLb")} onChange={(v) => set("loads", "rackSelfWeightLb", v)} />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Existing slab (project conditions — from record drawings / field)</legend>
+        <div className="grid">
+          <Num label="Slab thickness" unit="in" value={form.slab.thicknessIn} onChange={(v) => set("slab", "thicknessIn", v)} />
+          <Num label="Slab concrete strength (f'c)" unit="psi" value={form.slab.compressiveStrengthPsi} onChange={(v) => set("slab", "compressiveStrengthPsi", v)} />
+          <Text label="Slab reinforcement (optional)" value={form.slab.reinforcement} onChange={(v) => set("slab", "reinforcement", v)} />
         </div>
       </fieldset>
 

@@ -52,6 +52,10 @@ export interface JurisdictionResult {
   planContent: ChecklistItem[];
   /** Structural / fire documents reviewers expect in the package. */
   structuralSubmittal: ChecklistItem[];
+  /** Special inspections identified for the rack work. */
+  specialInspections: ChecklistItem[];
+  /** Items deferred to a post-permit submittal. */
+  deferredSubmittals: ChecklistItem[];
   /** Problems found in the submittal trigger data. */
   dataIssues: string[];
   audit: AuditEntry;
@@ -149,6 +153,8 @@ export function getLosAngelesRequirements(
     }));
   const planContent = toChecklist(j.plan_content_requirements);
   const structuralSubmittal = toChecklist(j.structural_submittal_requirements);
+  const specialInspections = toChecklist(j.special_inspections);
+  const deferredSubmittals = toChecklist(j.deferred_submittals);
 
   const audit: AuditEntry = {
     step: "Los Angeles submittal requirements",
@@ -178,6 +184,8 @@ export function getLosAngelesRequirements(
     requiredDocuments,
     planContent,
     structuralSubmittal,
+    specialInspections,
+    deferredSubmittals,
     dataIssues: issues,
     audit,
   };

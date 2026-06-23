@@ -14,6 +14,7 @@ import type { VerificationBrief } from "@/engine/report/verificationBrief";
 import { inputRows } from "@/engine/report/inputRows";
 import { buildSubmittalCover } from "@/engine/report/submittalCover";
 import type { CorrectionLetterData } from "@/engine/corrections";
+import type { SubmittalForm } from "@/engine/report/forms";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Doc = any;
@@ -455,6 +456,51 @@ export async function assembleSubmittalPackagePdf(pkg: ReviewPackage, files: Fil
   a.download = `${safeFileName(pkg.meta.projectName)}_Submittal_Package.pdf`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// ---------------------------------------------------------------------
+//  Submittal forms (Statement of Special Inspections / Deferred Submittals)
+// ---------------------------------------------------------------------
+export async function buildSubmittalFormPdf(f: SubmittalForm): Promise<Doc> {
+  const { ctx } = await createCtx();
+
+  if (f.firm.firmName || f.firm.firmAddress || f.firm.firmContact) {
+    if (f.firm.firmName) paragraph(ctx, f.firm.firmName, { bold: true, size: 12 });
+    if (f.firm.firmAddress) paragraph(ctx, f.firm.firmAddress, { size: 9, color: MUTED });
+    if (f.firm.firmContact) paragraph(ctx, f.firm.firmContact, { size: 9, color: MUTED });
+    ctx.y += 4;
+  }
+  title(ctx, f.title);
+  disclaimerBox(ctx, f.disclaimer);
+  paragraph(ctx, `Project: ${f.projectName}`, { bold: true });
+  paragraph(ctx, `Address: ${f.projectAddress}`, { size: 9, color: MUTED });
+  paragraph(ctx, `Jurisdiction: ${f.jurisdiction}      Date: ${f.generatedAt}`, { size: 9, color: MUTED });
+  ctx.y += 4;
+  paragraph(ctx, f.intro);
+  if (!f.items.length) paragraph(ctx, "No items identified — verify requirements.", { color: MUTED });
+  for (const it of f.items) paragraph(ctx, `[  ]  ${it.name}  (${it.source})`);
+
+  heading(ctx, "Engineer of record");
+  paragraph(ctx, `Engineer of record: ${f.firm.engineerName || "________________________"}`);
+  paragraph(ctx, `License: ${[f.firm.licenseType, f.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);
+  ctx.y += 6;
+  paragraph(ctx, "Signature: ______________________________      Date: ______________");
+  ctx.y += 8;
+  ensure(ctx, 84);
+  ctx.doc.setDrawColor(...INK).setLineWidth(0.8);
+  ctx.doc.rect(M, ctx.y, 160, 72);
+  ctx.doc.setFont("helvetica", "normal").setFontSize(8).setTextColor(...MUTED);
+  ctx.doc.text("Seal / stamp", M + 8, ctx.y + 14);
+  ctx.y += 84;
+
+  if (f.demo) demoWatermark(ctx);
+  footer(ctx);
+  return ctx.doc;
+}
+
+export async function downloadSubmittalFormPdf(f: SubmittalForm): Promise<void> {
+  const doc = await buildSubmittalFormPdf(f);
+  doc.save(`${safeFileName(f.projectName)}_${safeFileName(f.title)}.pdf`);
 }
 
 function safeFileName(s: string): string {

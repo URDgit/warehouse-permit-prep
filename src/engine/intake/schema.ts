@@ -59,6 +59,14 @@ export const intakeSchema = z.object({
     rackSelfWeightLb: z.number().nonnegative().optional(),
   }),
 
+  // The EXISTING slab the rack anchors to — project conditions established from
+  // record drawings or field verification (never assumed). Used by anchorage.
+  slab: z.object({
+    thicknessIn: z.number().nonnegative().optional(),
+    compressiveStrengthPsi: z.number().nonnegative().optional(),
+    reinforcement: z.string().default(""),
+  }),
+
   commodity: z.object({
     description: z.string().min(1, "Commodity description is required"),
     primaryMaterial: z.string().default(""),

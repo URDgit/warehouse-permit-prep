@@ -29,6 +29,10 @@ export function makeInput(): IntakeInput {
       productLoadPerLevelLb: 2000,
       rackSelfWeightLb: 500,
     },
+    slab: {
+      thicknessIn: 6,
+      compressiveStrengthPsi: 3000,
+    },
     commodity: {
       description: "Cartoned goods",
       packaging: "cartoned",

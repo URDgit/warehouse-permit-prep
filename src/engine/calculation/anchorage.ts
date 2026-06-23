@@ -42,6 +42,8 @@ export function computeAnchorage(input: IntakeInput, data: CodeData): CalcResult
     anchorType: input.rack.anchorType,
     rackType: input.rack.rackType,
     storageHeightFt: input.rack.storageHeightFt,
+    slabThicknessIn: input.slab.thicknessIn ?? null,
+    slabCompressiveStrengthPsi: input.slab.compressiveStrengthPsi ?? null,
   };
 
   // Two independent gates (same pattern as the seismic calc): a vetted
