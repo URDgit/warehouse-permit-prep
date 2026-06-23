@@ -1,0 +1,11 @@
+# County of San Bernardino (unincorporated) — thin jurisdiction profile.
+# Inherits the statewide submittal checklists from ca-statewide.yaml.
+# Confirm the local AHJ's specific forms and any local amendments per project.
+meta:
+  jurisdiction_id: "san-bernardino-county"
+  jurisdiction_name: "County of San Bernardino (unincorporated)"
+  status: PLACEHOLDER
+  source: "San Bernardino County Land Use Services / Building & Safety + County Fire — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "County of San Bernardino — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "County fire authority having jurisdiction (high-piled storage) — VERIFY"

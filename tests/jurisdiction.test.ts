@@ -88,4 +88,14 @@ describe("multi-jurisdiction", () => {
     expect(county.requiredDocuments.length).toBeGreaterThan(0);
     expect(county.planContent.length).toBeGreaterThan(0);
   });
+
+  it("a thin city profile inherits the statewide checklists + its own agencies", () => {
+    const ontario = getJurisdictionRequirements(input, data, "ontario");
+    expect(ontario.jurisdictionName).toMatch(/Ontario/);
+    // ontario.yaml defines no lists — these come from ca-statewide:
+    expect(ontario.planContent.length).toBeGreaterThan(0);
+    expect(ontario.structuralSubmittal.length).toBeGreaterThan(0);
+    expect(ontario.requiredDocuments.length).toBeGreaterThan(0);
+    expect(ontario.reviewingAgencies.some((a) => /Ontario/.test(a))).toBe(true);
+  });
 });

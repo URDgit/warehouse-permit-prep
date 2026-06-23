@@ -85,8 +85,13 @@ export function getJurisdictionRequirements(
   classification?: ClassificationResult,
 ): JurisdictionResult {
   const j = (data.jurisdictions?.[jurisdictionId] ?? {}) as Record<string, any>;
+  // Thin jurisdiction files inherit shared lists from the statewide default.
+  const base = (data.jurisdictions?.["ca-statewide"] ?? {}) as Record<string, any>;
+  const inherit = (key: string): unknown => (j[key] !== undefined ? j[key] : base[key]);
   const meta = (j.meta ?? {}) as Record<string, any>;
-  const docs = Array.isArray(j.required_documents) ? (j.required_documents as Record<string, any>[]) : [];
+  const baseMeta = (base.meta ?? {}) as Record<string, any>;
+  const docsRaw = inherit("required_documents");
+  const docs = Array.isArray(docsRaw) ? (docsRaw as Record<string, any>[]) : [];
   const submittal = (j.submittal_rules ?? {}) as Record<string, any>;
   const triggersVerified = String(submittal.status ?? "PLACEHOLDER").toUpperCase() === "VERIFIED";
 
@@ -152,10 +157,10 @@ export function getJurisdictionRequirements(
       name: String(x.name ?? "Unnamed requirement"),
       source: String(x.source ?? "— VERIFY"),
     }));
-  const planContent = toChecklist(j.plan_content_requirements);
-  const structuralSubmittal = toChecklist(j.structural_submittal_requirements);
-  const specialInspections = toChecklist(j.special_inspections);
-  const deferredSubmittals = toChecklist(j.deferred_submittals);
+  const planContent = toChecklist(inherit("plan_content_requirements"));
+  const structuralSubmittal = toChecklist(inherit("structural_submittal_requirements"));
+  const specialInspections = toChecklist(inherit("special_inspections"));
+  const deferredSubmittals = toChecklist(inherit("deferred_submittals"));
 
   const audit: AuditEntry = {
     step: "Los Angeles submittal requirements",
@@ -181,7 +186,11 @@ export function getJurisdictionRequirements(
   return {
     jurisdictionId,
     jurisdictionName: String(meta.jurisdiction_name ?? jurisdictionId),
-    reviewingAgencies: Array.isArray(meta.reviewing_agencies) ? meta.reviewing_agencies.map(String) : [],
+    reviewingAgencies: Array.isArray(meta.reviewing_agencies)
+      ? meta.reviewing_agencies.map(String)
+      : Array.isArray(baseMeta.reviewing_agencies)
+        ? baseMeta.reviewing_agencies.map(String)
+        : [],
     requiredDocuments,
     planContent,
     structuralSubmittal,

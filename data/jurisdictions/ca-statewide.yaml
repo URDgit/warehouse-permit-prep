@@ -1,0 +1,133 @@
+# =====================================================================
+#  JURISDICTION  —  California (statewide default)
+# =====================================================================
+#
+#  A starting profile that works for ANY California city or county. It uses
+#  the statewide California codes (CFC Chapter 32, CBC, ASCE 7, ACI 318,
+#  ANSI/RMI MH16.1). The local AHJ's specific forms, submittal counts, and
+#  any local amendments must be confirmed per project.
+#
+#  Other jurisdiction files INHERIT these lists when they don't define their
+#  own — so a city file only needs its name and reviewing agencies. Confirm
+#  every item against the current adopted code and the local AHJ.
+# =====================================================================
+
+meta:
+  jurisdiction_id: "ca-statewide"
+  jurisdiction_name: "California — statewide default (confirm local AHJ)"
+  status: PLACEHOLDER
+  source: "Statewide California codes — VERIFY the local jurisdiction's specific submittal requirements"
+  reviewing_agencies:
+    - "Local building department / Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Local fire department / fire authority having jurisdiction (high-piled storage) — VERIFY"
+
+required_documents:
+  - id: permit_application
+    name: "Permit application form(s)"
+    status: PLACEHOLDER
+    source: "Local AHJ — VERIFY current form numbers"
+  - id: site_floor_plan
+    name: "Site / floor plan showing rack layout, aisles, and exits"
+    status: PLACEHOLDER
+    source: "Local building department — VERIFY"
+  - id: rack_elevations
+    name: "Rack elevations and sections (heights, tiers, dimensions)"
+    status: PLACEHOLDER
+    source: "Local building department — VERIFY"
+  - id: high_piled_storage_plan
+    name: "High-piled combustible storage plan / commodity description"
+    status: PLACEHOLDER
+    source: "Local fire AHJ — VERIFY"
+  - id: structural_calcs
+    name: "Stamped rack structural & seismic anchorage calculations"
+    status: PLACEHOLDER
+    source: "Local building department — VERIFY"
+  - id: sprinkler_documentation
+    name: "Sprinkler system documentation / fire protection plan"
+    status: PLACEHOLDER
+    source: "Local fire AHJ — VERIFY"
+
+submittal_rules:
+  status: PLACEHOLDER
+  source: "Local AHJ submittal triggers — VERIFY"
+  todo: >
+    Define the conditions under which each document is required, then set
+    status: VERIFIED. Until then all documents show "verify applicability".
+
+# Statewide California Fire Code Ch. 32, §3201.3 (verify local amendments).
+plan_content_requirements:
+  - id: floor_plan
+    name: "Floor plan showing high-piled storage areas and dimensions"
+    source: "CFC 2022 §3201.3 — VERIFY (local amendments)"
+  - id: storage_height
+    name: "Usable storage height for each storage area"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: rack_tiers
+    name: "Number of tiers within each rack"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: commodity_clearance
+    name: "Clearance between top of storage and sprinkler deflector"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: aisle_dimensions
+    name: "Aisle dimensions between storage arrays"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: max_pile_volume
+    name: "Maximum pile volume for each storage array"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: commodity_classification
+    name: "Commodity location and classification (per §3203)"
+    source: "CFC 2022 §3201.3 / §3203 — VERIFY"
+  - id: encapsulated_locations
+    name: "Locations of banded or encapsulated commodities"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: fd_access_doors
+    name: "Fire department access door locations"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: suppression_detection
+    name: "Type of fire suppression and detection systems"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: sprinkler_valves
+    name: "Ceiling and in-rack sprinkler control valve locations"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: smoke_curtain
+    name: "Smoke removal and curtain board system specifications"
+    source: "CFC 2022 §3201.3 — VERIFY"
+  - id: flue_spaces
+    name: "Transverse and longitudinal flue space dimensions"
+    source: "CFC 2022 §3201.3 — VERIFY"
+
+structural_submittal_requirements:
+  - id: pe_sealed_calcs
+    name: "Structural calculations sealed by the engineer of record"
+    source: "Local building department / CBC — VERIFY"
+  - id: rack_member_design
+    name: "Rack member design per ANSI/RMI MH16.1"
+    source: "ANSI/RMI MH16.1 — VERIFY edition"
+  - id: seismic_analysis
+    name: "Seismic analysis per ASCE 7"
+    source: "ASCE 7-16 (per 2022 CBC) — VERIFY"
+  - id: baseplate_anchorage
+    name: "Base plate sizing and anchorage to the existing slab"
+    source: "ACI 318 Ch. 17 / ANSI-RMI MH16.1 — VERIFY"
+  - id: floor_capacity
+    name: "Existing floor/slab capacity verification"
+    source: "Project record / field verification — VERIFY"
+  - id: manufacturer_load_tables
+    name: "Manufacturer shop drawings and rack load tables"
+    source: "Rack manufacturer — VERIFY"
+  - id: special_inspection
+    name: "Special inspection of rack anchorage"
+    source: "CBC Chapter 17 (special inspection) — VERIFY"
+
+special_inspections:
+  - id: anchor_installation
+    name: "Installation of post-installed anchors (rack base plates to slab)"
+    source: "CBC Chapter 17 / ACI 318 Ch. 17 — VERIFY"
+  - id: anchor_testing
+    name: "Anchor proof-load / torque verification (per the anchor's ESR, if required)"
+    source: "Anchor ICC-ES ESR / CBC Chapter 17 — VERIFY"
+
+deferred_submittals:
+  - id: sprinkler_system
+    name: "Automatic sprinkler / in-rack sprinkler system"
+    source: "Local fire AHJ / NFPA 13 — VERIFY"

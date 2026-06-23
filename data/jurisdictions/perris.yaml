@@ -1,0 +1,11 @@
+# City of Perris — thin jurisdiction profile.
+# Inherits the statewide submittal checklists from ca-statewide.yaml.
+# Confirm the local AHJ's specific forms and any local amendments per project.
+meta:
+  jurisdiction_id: "perris"
+  jurisdiction_name: "City of Perris"
+  status: PLACEHOLDER
+  source: "City of Perris Building & Safety + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Perris — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

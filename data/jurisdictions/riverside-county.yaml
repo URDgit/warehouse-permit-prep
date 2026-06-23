@@ -1,0 +1,11 @@
+# County of Riverside (unincorporated) — thin jurisdiction profile.
+# Inherits the statewide submittal checklists from ca-statewide.yaml.
+# Confirm the local AHJ's specific forms and any local amendments per project.
+meta:
+  jurisdiction_id: "riverside-county"
+  jurisdiction_name: "County of Riverside (unincorporated)"
+  status: PLACEHOLDER
+  source: "Riverside County Building & Safety + County Fire — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "County of Riverside — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "County fire authority having jurisdiction (high-piled storage) — VERIFY"

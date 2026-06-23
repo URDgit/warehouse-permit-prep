@@ -14,9 +14,18 @@
 // =====================================================================
 
 export const JURISDICTIONS = [
+  { id: "ca-statewide", name: "California — statewide default (confirm local AHJ)" },
   { id: "los-angeles", name: "City of Los Angeles (LADBS / LAFD)" },
   { id: "la-county", name: "County of Los Angeles (Public Works B&S / LA County Fire)" },
   { id: "long-beach", name: "City of Long Beach (LBDS / LBFD)" },
+  { id: "ontario", name: "City of Ontario" },
+  { id: "fontana", name: "City of Fontana" },
+  { id: "rialto", name: "City of Rialto" },
+  { id: "moreno-valley", name: "City of Moreno Valley" },
+  { id: "perris", name: "City of Perris" },
+  { id: "riverside-county", name: "County of Riverside (unincorporated)" },
+  { id: "san-bernardino-county", name: "County of San Bernardino (unincorporated)" },
+  { id: "stockton", name: "City of Stockton" },
 ] as const;
 
 export const JURISDICTION_IDS = JURISDICTIONS.map((j) => j.id) as unknown as readonly [string, ...string[]];
