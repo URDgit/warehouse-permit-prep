@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { generateReviewPackage, getVerificationBriefMarkdown, type GenerateResult } from "@/app/actions";
+import { generateReviewPackage, getVerificationBrief, type GenerateResult } from "@/app/actions";
 import { intakeSchema } from "@/engine/intake/schema";
+import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
+import { downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
 import ReviewPackageView from "@/app/ReviewPackageView";
 
 // Example data so the walking skeleton runs end-to-end on the first click.
@@ -133,7 +135,8 @@ export default function Home() {
   }
 
   async function downloadBrief() {
-    const md = await getVerificationBriefMarkdown();
+    const brief = await getVerificationBrief();
+    const md = renderVerificationBriefMarkdown(brief);
     const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -141,6 +144,11 @@ export default function Home() {
     a.download = "Engineer_Verification_Brief.md";
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  async function downloadBriefPdf() {
+    const brief = await getVerificationBrief();
+    await downloadVerificationBriefPdf(brief);
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -194,8 +202,11 @@ export default function Home() {
       </p>
 
       <div className="toolbar">
+        <button type="button" className="btn btn-secondary" onClick={downloadBriefPdf}>
+          ⤓ Engineer Verification Brief (PDF)
+        </button>
         <button type="button" className="btn btn-secondary" onClick={downloadBrief}>
-          ⤓ Download Engineer Verification Brief
+          Markdown
         </button>
         <span className="note">A checklist to hand a licensed engineer — what to verify, with citations.</span>
       </div>

@@ -3,6 +3,8 @@
 import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
+import { inputRows } from "@/engine/report/inputRows";
+import { downloadReviewPackagePdf } from "@/app/pdf/pdfBuilders";
 
 function Badge({ cv }: { cv: CodeValue }) {
   return cv.isPlaceholder ? (
@@ -48,11 +50,14 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       <ReadinessPanel r={pkg.readiness} />
 
       <div className="toolbar">
+        <button className="btn btn-secondary" onClick={() => downloadReviewPackagePdf(pkg)}>
+          ⤓ Download PDF
+        </button>
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
-          Download as Markdown
+          Markdown
         </button>
         <button className="btn btn-secondary" onClick={() => window.print()}>
-          Print / Save as PDF
+          Print
         </button>
       </div>
 
@@ -277,40 +282,7 @@ function ReadinessPanel({ r }: { r: ReviewPackage["readiness"] }) {
 }
 
 function InputsTable({ pkg }: { pkg: ReviewPackage }) {
-  const i = pkg.inputs;
-  const rows: [string, unknown][] = [
-    ["Building address", i.building.address],
-    ["Construction type", i.building.constructionType || "(not provided)"],
-    ["Total building area (sq ft)", i.building.totalBuildingAreaSqFt],
-    ["High-piled storage area (sq ft)", i.building.highPiledAreaSqFt],
-    ["Ceiling height (ft)", i.building.ceilingHeightFt],
-    ["Existing sprinkler system?", i.building.existingSprinkler ? "Yes" : "No"],
-    ["Sprinkler system type", i.sprinkler.systemType],
-    ["In-rack sprinklers?", i.sprinkler.inRackSprinklers ? "Yes" : "No"],
-    ["Rack type", i.rack.rackType],
-    ["Storage height (ft)", i.rack.storageHeightFt],
-    ["Number of tiers", i.rack.numberOfTiers],
-    ["Rack depth configuration", i.rack.rackDepthConfig],
-    ["Aisle width (ft)", i.rack.aisleWidthFt],
-    ["Anchored to slab?", i.rack.anchored ? "Yes" : "No"],
-    ["Anchor type", i.rack.anchorType || "(not provided)"],
-    ["Product load per level (lb)", i.loads.productLoadPerLevelLb ?? "(not provided)"],
-    ["Number of loaded levels", i.loads.numberOfLoadedLevels ?? "(not provided)"],
-    ["Rack self-weight (lb)", i.loads.rackSelfWeightLb ?? "(not provided)"],
-    ["Commodity description", i.commodity.description],
-    ["Primary material", i.commodity.primaryMaterial || "(not provided)"],
-    ["Packaging", i.commodity.packaging],
-    ["Plastic content", i.commodity.plasticContent],
-    ["Encapsulated?", i.commodity.encapsulated ? "Yes" : "No"],
-    ["Idle pallets stored?", i.commodity.idlePalletsStored ? "Yes" : "No"],
-    ["Site class", i.seismic.siteClass],
-    ["Ss", i.seismic.Ss ?? "(not provided)"],
-    ["S1", i.seismic.S1 ?? "(not provided)"],
-    ["Sds", i.seismic.Sds ?? "(not provided)"],
-    ["Sd1", i.seismic.Sd1 ?? "(not provided)"],
-    ["Seismic design category", i.seismic.seismicDesignCategory],
-    ["Risk category", i.seismic.riskCategory],
-  ];
+  const rows = inputRows(pkg.inputs);
   return (
     <div className="card">
       <table className="report">
@@ -318,7 +290,7 @@ function InputsTable({ pkg }: { pkg: ReviewPackage }) {
           {rows.map(([k, v]) => (
             <tr key={k}>
               <th style={{ width: "40%" }}>{k}</th>
-              <td>{String(v)}</td>
+              <td>{v}</td>
             </tr>
           ))}
         </tbody>

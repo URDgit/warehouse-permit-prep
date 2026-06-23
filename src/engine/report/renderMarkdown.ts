@@ -10,6 +10,7 @@
 
 import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
+import { inputRows } from "@/engine/report/inputRows";
 
 /** Collapse newlines/whitespace and escape pipes for safe Markdown table cells. */
 function mdCell(s: string): string {
@@ -64,44 +65,10 @@ export function renderMarkdown(pkg: ReviewPackage): string {
 
   // --- Inputs ---------------------------------------------------------
   L.push(`## 1. Inputs provided`);
-  const i = pkg.inputs;
-  const inputRows: [string, unknown][] = [
-    ["Building address", i.building.address],
-    ["Construction type", i.building.constructionType || "(not provided)"],
-    ["Total building area (sq ft)", i.building.totalBuildingAreaSqFt],
-    ["High-piled storage area (sq ft)", i.building.highPiledAreaSqFt],
-    ["Ceiling height (ft)", i.building.ceilingHeightFt],
-    ["Existing sprinkler system?", i.building.existingSprinkler ? "Yes" : "No"],
-    ["Sprinkler system type", i.sprinkler.systemType],
-    ["In-rack sprinklers?", i.sprinkler.inRackSprinklers ? "Yes" : "No"],
-    ["Rack type", i.rack.rackType],
-    ["Storage height (ft)", i.rack.storageHeightFt],
-    ["Number of tiers", i.rack.numberOfTiers],
-    ["Rack depth configuration", i.rack.rackDepthConfig],
-    ["Aisle width (ft)", i.rack.aisleWidthFt],
-    ["Anchored to slab?", i.rack.anchored ? "Yes" : "No"],
-    ["Anchor type", i.rack.anchorType || "(not provided)"],
-    ["Product load per level (lb)", i.loads.productLoadPerLevelLb ?? "(not provided)"],
-    ["Number of loaded levels", i.loads.numberOfLoadedLevels ?? "(not provided)"],
-    ["Rack self-weight (lb)", i.loads.rackSelfWeightLb ?? "(not provided)"],
-    ["Commodity description", i.commodity.description],
-    ["Primary material", i.commodity.primaryMaterial || "(not provided)"],
-    ["Packaging", i.commodity.packaging],
-    ["Plastic content", i.commodity.plasticContent],
-    ["Encapsulated?", i.commodity.encapsulated ? "Yes" : "No"],
-    ["Idle pallets stored?", i.commodity.idlePalletsStored ? "Yes" : "No"],
-    ["Site class", i.seismic.siteClass],
-    ["Ss", i.seismic.Ss ?? "(not provided)"],
-    ["S1", i.seismic.S1 ?? "(not provided)"],
-    ["Sds", i.seismic.Sds ?? "(not provided)"],
-    ["Sd1", i.seismic.Sd1 ?? "(not provided)"],
-    ["Seismic design category", i.seismic.seismicDesignCategory],
-    ["Risk category", i.seismic.riskCategory],
-  ];
   L.push("");
   L.push(`| Input | Value |`);
   L.push(`| --- | --- |`);
-  for (const [k, v] of inputRows) L.push(`| ${k} | ${String(v)} |`);
+  for (const [k, v] of inputRows(pkg.inputs)) L.push(`| ${mdCell(k)} | ${mdCell(v)} |`);
   L.push("");
 
   // --- Classification -------------------------------------------------
