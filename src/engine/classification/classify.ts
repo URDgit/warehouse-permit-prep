@@ -2,16 +2,21 @@
 //  CLASSIFICATION ENGINE  — commodity class + triggered requirements
 // =====================================================================
 //
-//  Pure function. Maps intake answers to a commodity class and the
-//  fire-code requirements that get triggered. Because the classification
-//  rules in the data file are still PLACEHOLDERs, this returns an explicit
-//  "UNDETERMINED" rather than guessing a class. When an engineer fills in
-//  the rules and marks them VERIFIED, this is where the real mapping runs.
+//  Pure function. Runs the engineer-written decision-tree rules (see
+//  rules.ts) to map the intake answers to a commodity class, and surfaces
+//  the fire-code requirements that get triggered.
+//
+//  Safety behavior is preserved end to end:
+//   - If the rules are not VERIFIED, the result is UNDETERMINED.
+//   - If the rules are verified but none match these inputs, the result is
+//     still UNDETERMINED (the engine never guesses to "fill the gap").
+//   - Bad rule data (unknown field/class, etc.) is reported, not acted on.
 // =====================================================================
 
 import type { CodeData } from "@/engine/data/loadData";
 import type { IntakeInput } from "@/engine/intake/schema";
 import { type AuditEntry, type CodeValue, toCodeValue } from "@/engine/provenance";
+import { evaluateRules, type ClassificationRule } from "@/engine/classification/rules";
 
 export interface TriggeredRequirement {
   id: string;
@@ -22,31 +27,74 @@ export interface TriggeredRequirement {
 export interface ClassificationResult {
   commodityClass: CodeValue<string>;
   triggeredRequirements: TriggeredRequirement[];
+  /** Problems found in the classification rules data (unknown fields, etc.). */
+  dataIssues: string[];
   audit: AuditEntry[];
 }
 
 export function classifyCommodity(input: IntakeInput, data: CodeData): ClassificationResult {
   const rules = (data.commodity?.classification_rules ?? {}) as Record<string, any>;
   const rulesVerified = String(rules.status ?? "PLACEHOLDER").toUpperCase() === "VERIFIED";
+  const ruleList: ClassificationRule[] = Array.isArray(rules.rules) ? rules.rules : [];
+  const classes = Array.isArray(data.commodity?.classes) ? (data.commodity.classes as Record<string, any>[]) : [];
+  const validClassIds = classes.map((c) => String(c.id));
+  const classNameById = (id: string) => String(classes.find((c) => String(c.id) === id)?.name ?? id);
+  const baseSource = String(rules.source ?? "CFC 2022 Chapter 32 — VERIFY");
 
-  // --- Commodity class -------------------------------------------------
-  // No verified rule set => UNDETERMINED. We never assign a class from a
-  // guess; misclassification is a life-safety issue.
-  const commodityClass: CodeValue<string> = {
-    id: "commodity.class",
-    label: "Commodity classification",
-    value: null, // remains null/UNDETERMINED until verified rules exist
-    unit: null,
-    source: String(rules.source ?? "CFC 2022 Chapter 32 — VERIFY"),
-    status: rulesVerified ? "VERIFIED" : "PLACEHOLDER",
-    isPlaceholder: !rulesVerified,
-    todo: rulesVerified
-      ? null
-      : String(
-          rules.todo ??
-            "Classification rules are not yet defined/verified. The engineer must map intake answers to a commodity class.",
-        ),
-  };
+  let commodityClass: CodeValue<string>;
+  let dataIssues: string[] = [];
+  let classDescription: string;
+  let classStatus: "ok" | "blocked_by_placeholder";
+
+  if (rulesVerified && ruleList.length > 0) {
+    const match = evaluateRules(input, ruleList, validClassIds);
+    dataIssues = match.issues;
+    if (match.matched && match.classId) {
+      commodityClass = {
+        id: "commodity.class",
+        label: "Commodity classification",
+        value: classNameById(match.classId),
+        unit: null,
+        source: String(match.source ?? baseSource),
+        status: "VERIFIED",
+        isPlaceholder: false,
+        todo: null,
+      };
+      classDescription = `Commodity classified as "${classNameById(match.classId)}" by verified rule #${(match.ruleIndex ?? 0) + 1}.`;
+      classStatus = "ok";
+    } else {
+      commodityClass = {
+        id: "commodity.class",
+        label: "Commodity classification",
+        value: null,
+        unit: null,
+        source: baseSource,
+        status: "PLACEHOLDER",
+        isPlaceholder: true,
+        todo: "No verified rule matched these inputs. The engineer should review the inputs and extend the classification rules to cover this case.",
+      };
+      classDescription =
+        "Commodity class left UNDETERMINED: the verified rules did not match these inputs. The app does not guess; the engineer should extend the rules.";
+      classStatus = "blocked_by_placeholder";
+    }
+  } else {
+    commodityClass = {
+      id: "commodity.class",
+      label: "Commodity classification",
+      value: null,
+      unit: null,
+      source: baseSource,
+      status: "PLACEHOLDER",
+      isPlaceholder: true,
+      todo: String(
+        rules.todo ??
+          "Classification rules are not yet defined/verified. The engineer must define how intake answers map to a commodity class and set status: VERIFIED.",
+      ),
+    };
+    classDescription =
+      "Commodity class left UNDETERMINED: the classification rules in commodity-classification.yaml are not yet verified. The app intentionally does not guess a class.";
+    classStatus = "blocked_by_placeholder";
+  }
 
   const inputsUsed = {
     description: input.commodity.description,
@@ -59,18 +107,16 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
 
   const classAudit: AuditEntry = {
     step: "Commodity classification",
-    description: rulesVerified
-      ? "Commodity class determined from verified classification rules."
-      : "Commodity class left UNDETERMINED: the classification rules in commodity-classification.yaml are placeholders. The app intentionally does not guess a class.",
+    description: classDescription,
     inputsUsed,
     codeValues: [commodityClass],
-    assumptions: [],
+    assumptions: dataIssues.length > 0 ? [`Classification data issues: ${dataIssues.join(" ")}`] : [],
     result: commodityClass.value ?? "UNDETERMINED",
-    status: rulesVerified ? "ok" : "blocked_by_placeholder",
+    status: classStatus,
   };
 
   // --- Triggered fire-code requirements --------------------------------
-  // We surface the relevant requirement values from the data file so the
+  // Surface the relevant requirement values from the data file so the
   // engineer sees exactly what is pending. All are placeholders today.
   const fc = (data.fireCode ?? {}) as Record<string, any>;
   const triggeredRequirements: TriggeredRequirement[] = [
@@ -86,20 +132,12 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
     {
       id: "aisle_width.minimum",
       name: "Minimum aisle width",
-      codeValue: toCodeValue(
-        "fire_code.aisle_width.minimum",
-        "Minimum aisle width",
-        fc.aisle_width?.minimum,
-      ),
+      codeValue: toCodeValue("fire_code.aisle_width.minimum", "Minimum aisle width", fc.aisle_width?.minimum),
     },
     {
       id: "heights.max_pile_height",
       name: "Maximum pile/storage height",
-      codeValue: toCodeValue(
-        "fire_code.heights.max_pile_height",
-        "Maximum pile/storage height",
-        fc.heights?.max_pile_height,
-      ),
+      codeValue: toCodeValue("fire_code.heights.max_pile_height", "Maximum pile/storage height", fc.heights?.max_pile_height),
     },
     {
       id: "sprinkler_design.design_density",
@@ -135,14 +173,13 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
     codeValues: triggeredRequirements.map((r) => r.codeValue),
     assumptions: [],
     result: `${triggeredRequirements.length} requirement values surfaced`,
-    status: triggeredRequirements.every((r) => r.codeValue.isPlaceholder)
-      ? "blocked_by_placeholder"
-      : "ok",
+    status: triggeredRequirements.every((r) => r.codeValue.isPlaceholder) ? "blocked_by_placeholder" : "ok",
   };
 
   return {
     commodityClass,
     triggeredRequirements,
+    dataIssues,
     audit: [classAudit, reqAudit],
   };
 }

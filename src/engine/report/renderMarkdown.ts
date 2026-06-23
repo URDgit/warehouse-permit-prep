@@ -57,6 +57,9 @@ export function renderMarkdown(pkg: ReviewPackage): string {
     ["Aisle width (ft)", i.rack.aisleWidthFt],
     ["Anchored to slab?", i.rack.anchored ? "Yes" : "No"],
     ["Anchor type", i.rack.anchorType || "(not provided)"],
+    ["Product load per level (lb)", i.loads.productLoadPerLevelLb ?? "(not provided)"],
+    ["Number of loaded levels", i.loads.numberOfLoadedLevels ?? "(not provided)"],
+    ["Rack self-weight (lb)", i.loads.rackSelfWeightLb ?? "(not provided)"],
     ["Commodity description", i.commodity.description],
     ["Primary material", i.commodity.primaryMaterial || "(not provided)"],
     ["Packaging", i.commodity.packaging],
@@ -84,6 +87,7 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   L.push(`**Result:** ${cc.isPlaceholder ? "UNDETERMINED (PLACEHOLDER — needs engineer)" : String(cc.value)}`);
   L.push(`**Source:** ${cc.source}`);
   if (cc.todo) L.push(`**TODO:** ${cc.todo}`);
+  if (pkg.classification.dataIssues.length > 0) L.push(`**Rule data issues:** ${pkg.classification.dataIssues.join(" ")}`);
   L.push("");
   L.push(`### Triggered fire-code requirements`);
   L.push("");

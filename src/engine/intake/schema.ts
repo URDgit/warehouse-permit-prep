@@ -51,6 +51,14 @@ export const intakeSchema = z.object({
     anchorType: z.string().default(""),
   }),
 
+  // Storage loads. Used (with an engineer-verified reduction factor) to
+  // derive the rack's seismic mass. These are project inputs, not code values.
+  loads: z.object({
+    productLoadPerLevelLb: z.number().nonnegative().optional(),
+    numberOfLoadedLevels: z.number().int().nonnegative().optional(),
+    rackSelfWeightLb: z.number().nonnegative().optional(),
+  }),
+
   commodity: z.object({
     description: z.string().min(1, "Commodity description is required"),
     primaryMaterial: z.string().default(""),

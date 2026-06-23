@@ -32,6 +32,11 @@ const initialForm = {
     anchored: true,
     anchorType: "",
   },
+  loads: {
+    productLoadPerLevelLb: "2000",
+    numberOfLoadedLevels: "5",
+    rackSelfWeightLb: "",
+  },
   commodity: {
     description: "Cartoned household goods",
     primaryMaterial: "",
@@ -81,6 +86,11 @@ function toPayload(f: Form) {
       storageHeightFt: num(f.rack.storageHeightFt),
       numberOfTiers: num(f.rack.numberOfTiers),
       aisleWidthFt: num(f.rack.aisleWidthFt),
+    },
+    loads: {
+      productLoadPerLevelLb: optNum(f.loads.productLoadPerLevelLb),
+      numberOfLoadedLevels: optNum(f.loads.numberOfLoadedLevels),
+      rackSelfWeightLb: optNum(f.loads.rackSelfWeightLb),
     },
     commodity: f.commodity,
     sprinkler: {
@@ -186,6 +196,15 @@ export default function Home() {
           <Num label="Aisle width (ft)" req value={form.rack.aisleWidthFt} onChange={(v) => set("rack", "aisleWidthFt", v)} />
           <Check label="Anchored to slab?" checked={form.rack.anchored} onChange={(v) => set("rack", "anchored", v)} />
           <Text label="Anchor type (optional)" value={form.rack.anchorType} onChange={(v) => set("rack", "anchorType", v)} />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Storage loads (used with a verified factor to derive seismic mass)</legend>
+        <div className="grid">
+          <Num label="Product load per level (lb, optional)" value={form.loads.productLoadPerLevelLb} onChange={(v) => set("loads", "productLoadPerLevelLb", v)} />
+          <Num label="Number of loaded levels (optional)" value={form.loads.numberOfLoadedLevels} onChange={(v) => set("loads", "numberOfLoadedLevels", v)} />
+          <Num label="Rack self-weight (lb, optional)" value={form.loads.rackSelfWeightLb} onChange={(v) => set("loads", "rackSelfWeightLb", v)} />
         </div>
       </fieldset>
 

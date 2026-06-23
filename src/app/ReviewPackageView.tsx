@@ -89,6 +89,9 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         {pkg.classification.commodityClass.todo && (
           <p className="note">TODO: {pkg.classification.commodityClass.todo}</p>
         )}
+        {pkg.classification.dataIssues.length > 0 && (
+          <p className="note"><strong>Rule data issues:</strong> {pkg.classification.dataIssues.join(" ")}</p>
+        )}
         <h3>Triggered fire-code requirements</h3>
         <table className="report">
           <thead>
@@ -231,6 +234,9 @@ function InputsTable({ pkg }: { pkg: ReviewPackage }) {
     ["Aisle width (ft)", i.rack.aisleWidthFt],
     ["Anchored to slab?", i.rack.anchored ? "Yes" : "No"],
     ["Anchor type", i.rack.anchorType || "(not provided)"],
+    ["Product load per level (lb)", i.loads.productLoadPerLevelLb ?? "(not provided)"],
+    ["Number of loaded levels", i.loads.numberOfLoadedLevels ?? "(not provided)"],
+    ["Rack self-weight (lb)", i.loads.rackSelfWeightLb ?? "(not provided)"],
     ["Commodity description", i.commodity.description],
     ["Primary material", i.commodity.primaryMaterial || "(not provided)"],
     ["Packaging", i.commodity.packaging],

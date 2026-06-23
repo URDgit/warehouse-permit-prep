@@ -14,7 +14,7 @@
 
 import type { CodeData } from "@/engine/data/loadData";
 import type { IntakeInput } from "@/engine/intake/schema";
-import { type AuditEntry, type CodeValue, toCodeValue } from "@/engine/provenance";
+import { allVerified, type AuditEntry, type CodeValue, toCodeValue } from "@/engine/provenance";
 import type { CalcResult } from "@/engine/calculation/types";
 
 export function computeAnchorage(input: IntakeInput, data: CodeData): CalcResult {
@@ -44,7 +44,10 @@ export function computeAnchorage(input: IntakeInput, data: CodeData): CalcResult
     storageHeightFt: input.rack.storageHeightFt,
   };
 
-  const blocked = true; // no vetted method implemented yet; values are placeholders
+  // Two independent gates (same pattern as the seismic calc): a vetted
+  // method must be implemented AND every supporting value must be verified.
+  const METHOD_IMPLEMENTED = false;
+  const blocked = !METHOD_IMPLEMENTED || !allVerified(supportingValues);
 
   const result: CodeValue<number> = {
     id: "anchorage.check",

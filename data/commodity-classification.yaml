@@ -102,8 +102,32 @@ classification_rules:
     etc.) map to a commodity class. Because misclassification is a life-
     safety issue, no default mapping is provided. When ready, replace
     this block with explicit rules and set status to VERIFIED.
-  # Example of the SHAPE a future rule could take (NOT active, NOT a real rule):
-  # rules:
-  #   - when: { plastic_content: "significant", encapsulated: true }
-  #     assign_class: group_a_plastics
-  #     source: "CFC 2022 §32xx.x"
+  # ------------------------------------------------------------------
+  #  THE DECISION TREE (engineer-defined)
+  #  When ready, the engineer lists rules under `rules:` below and sets
+  #  the `status:` above to VERIFIED. The app checks each rule from top to
+  #  bottom and uses the FIRST one whose conditions all match. While status
+  #  is not VERIFIED, the app ignores these rules and returns UNDETERMINED.
+  #
+  #  Condition formats allowed inside `when:`
+  #    plastic_content: significant            # equals
+  #    packaging: { in: [cartoned, exposed] }  # matches any value in the list
+  #    plastic_content: { not: none }          # not equal
+  #    storage_height_ft: { gte: 12 }          # number >= (also lte, gt, lt)
+  #  Fields you may test:
+  #    plastic_content, packaging, encapsulated, idle_pallets,
+  #    primary_material, storage_height_ft, ceiling_height_ft,
+  #    high_piled_area_sqft
+  #  `assign_class` must be one of the class ids listed above.
+  # ------------------------------------------------------------------
+  rules: []
+
+  # EXAMPLE ONLY — never read by the app (the key is `example_rules`, not
+  # `rules`). Copy entries into `rules:` above and VERIFY them before use.
+  example_rules:
+    - when: { plastic_content: significant, encapsulated: true }
+      assign_class: group_a_plastics
+      source: "CFC 2022 §32xx.x (EXAMPLE — verify)"
+    - when: { packaging: cartoned, plastic_content: { in: [none, limited] } }
+      assign_class: class_III
+      source: "CFC 2022 §32xx.x (EXAMPLE — verify)"

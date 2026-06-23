@@ -59,6 +59,15 @@ seismic_force:
       source: "ASCE 7-16 §1.5 / Table 1.5-2 (Risk Category) — VERIFY"
       todo: "Seismic importance factor based on Risk Category for the use."
 
+# Portion of the stored product weight that counts toward seismic mass.
+# Rack design typically uses a REDUCED product load; the engineer sets this.
+seismic_weight:
+  product_load_reduction_factor:
+    value: null
+    status: PLACEHOLDER
+    source: "ANSI/RMI MH16.1 / ASCE 7-16 — product load factor for seismic mass — VERIFY"
+    todo: "Fraction of the stored product weight included in the rack's seismic mass (e.g. a load reduction factor per RMI). The engineer sets this value."
+
 # Site-specific ground motion parameters. These are PROJECT INPUTS that
 # the user/engineer provides (e.g. from a USGS/geotech report). They are
 # collected on the intake form, but defaults are intentionally empty here.

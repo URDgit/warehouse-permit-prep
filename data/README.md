@@ -62,6 +62,44 @@ YAML cares about a few things. If the app shows a “YAML formatting error”, c
 When in doubt, change only what is inside the quotes and leave the structure
 alone. After editing, just reload the app and generate a new report.
 
+## Defining the commodity-classification decision tree
+
+In `commodity-classification.yaml` there is a `classification_rules:` block.
+This is where an engineer teaches the app how to pick a commodity class. Until
+it is filled in and marked `status: VERIFIED`, the app reports the class as
+**UNDETERMINED** (it will not guess).
+
+A rule has three parts:
+
+```yaml
+rules:
+  - when: { packaging: cartoned, plastic_content: { in: [none, limited] } }
+    assign_class: class_III
+    source: "CFC 2022 §32xx.x"
+```
+
+- `when:` lists the conditions. **All** must be true for the rule to apply.
+- `assign_class:` is the class to assign — must be one of the `id`s under `classes:`.
+- `source:` is the code citation shown in the report.
+
+The app checks rules **top to bottom and uses the first one that matches**, so
+put more specific rules first. Condition formats you can use:
+
+| You want… | Write it like… |
+| --- | --- |
+| equals | `plastic_content: significant` |
+| any of a list | `packaging: { in: [cartoned, exposed] }` |
+| not equal | `plastic_content: { not: none }` |
+| number ≥ / ≤ / > / < | `storage_height_ft: { gte: 12 }` (or `lte`, `gt`, `lt`) |
+
+Fields you may test: `plastic_content`, `packaging`, `encapsulated`,
+`idle_pallets`, `primary_material`, `storage_height_ft`, `ceiling_height_ft`,
+`high_piled_area_sqft`. If you mistype a field or class name, the app will not
+silently guess — it lists the problem under "Rule data issues" in the report.
+
+The file ships with an `example_rules:` block showing the format. The app
+**never reads** `example_rules` — copy entries into `rules:` and verify them.
+
 ## The files
 
 | File | What it holds |

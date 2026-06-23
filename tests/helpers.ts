@@ -25,6 +25,10 @@ export function makeInput(): IntakeInput {
       aisleWidthFt: 8,
       anchored: true,
     },
+    loads: {
+      productLoadPerLevelLb: 2000,
+      rackSelfWeightLb: 500,
+    },
     commodity: {
       description: "Cartoned goods",
       packaging: "cartoned",
