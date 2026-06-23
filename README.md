@@ -117,6 +117,40 @@ the interface ever changes.
   intentionally placeholder-blocked; a flag is flipped once a formula is added).
 - Additional jurisdictions as new files under `data/jurisdictions/`.
 
+## Deploy it online (share a live URL)
+
+The easiest host is **Vercel** (made by the Next.js team, free tier, zero config).
+
+**Option A — from GitHub (recommended):**
+1. Push this folder to a GitHub repo.
+2. Go to <https://vercel.com>, "Add New… → Project", and import the repo.
+3. Accept the defaults (Vercel detects Next.js) and deploy. No environment
+   variables or database are needed.
+
+**Option B — from your machine:**
+```bash
+npx vercel        # first run links/creates the project
+npx vercel --prod # deploy to production
+```
+
+### What works on the hosted version vs. local
+A hosted serverless function has a **read-only filesystem**, so the three
+*server-side* "Save" buttons can't persist there:
+
+- **Works hosted:** the whole intake → report flow, every PDF/Markdown export,
+  the submittal cover / forms / package assembler, Demo mode, and anything stored
+  in the browser (saved **projects** and **plan-check corrections**).
+- **Local only (for now):** saving the **Firm profile**, **Libraries**, and
+  **Verify-data** verified values writes to files under `data/` — that fails on a
+  read-only host (you'll see a friendly message). To ship those on the hosted
+  version, set them **locally** first, then commit the generated files
+  (`data/firm-profile.json`, `data/libraries.json`, `data/overrides.yaml`) before
+  deploying — they'll be bundled and used as the defaults. (Full hosted editing
+  would come with firm accounts + a database.)
+
+The `outputFileTracingIncludes` setting in `next.config.mjs` ensures the `data/`
+files are bundled into the deployment so reports generate correctly.
+
 ## Version control
 
 This folder is a git repository. After changes you can save a snapshot with:

@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Nothing custom yet. The engine reads YAML data files from disk at
-  // request time, which works out of the box on the Node.js runtime.
+  // The engine reads the YAML/JSON files in `data/` from disk at request time.
+  // On serverless hosts (e.g. Vercel) those files must be bundled into the
+  // function, so trace them in explicitly. (Locally this is a no-op.)
+  outputFileTracingIncludes: {
+    "/**": ["./data/**/*"],
+  },
 };
 
 export default nextConfig;

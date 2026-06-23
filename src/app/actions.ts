@@ -21,6 +21,15 @@ import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "
 import { loadFirmProfile, EMPTY_FIRM, type FirmProfile } from "@/engine/firm";
 import { loadLibraries, type Libraries } from "@/engine/libraries";
 
+/** Friendly message for write failures, esp. read-only hosted filesystems. */
+function writeError(e: unknown): string {
+  const msg = (e as Error)?.message ?? String(e);
+  if (/EROFS|EACCES|read-only/i.test(msg)) {
+    return "Saving to the server isn't available on this hosted version (read-only filesystem). Run the app locally to save these, or this becomes available with firm accounts.";
+  }
+  return msg;
+}
+
 export interface FieldError {
   path: string;
   message: string;
@@ -73,7 +82,7 @@ export async function saveFirmProfile(profile: FirmProfile): Promise<{ ok: true 
     fs.writeFileSync(file, JSON.stringify({ ...EMPTY_FIRM, ...profile }, null, 2), "utf8");
     return { ok: true };
   } catch (e) {
-    return { ok: false, message: (e as Error).message };
+    return { ok: false, message: writeError(e) };
   }
 }
 
@@ -91,7 +100,7 @@ export async function saveLibraries(lib: Libraries): Promise<{ ok: true } | { ok
     fs.writeFileSync(file, JSON.stringify(clean, null, 2), "utf8");
     return { ok: true };
   } catch (e) {
-    return { ok: false, message: (e as Error).message };
+    return { ok: false, message: writeError(e) };
   }
 }
 
@@ -115,6 +124,6 @@ export async function saveOverrides(entries: OverrideEntry[]): Promise<SaveOverr
     fs.writeFileSync(file, header + body, "utf8");
     return { ok: true, count: entries.length };
   } catch (e) {
-    return { ok: false, message: (e as Error).message };
+    return { ok: false, message: writeError(e) };
   }
 }
