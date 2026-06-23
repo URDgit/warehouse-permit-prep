@@ -5,7 +5,7 @@ import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
 import { inputRows } from "@/engine/report/inputRows";
-import { downloadReviewPackagePdf, downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
+import { downloadReviewPackagePdf, downloadVerificationBriefPdf, downloadSubmittalCoverPdf } from "@/app/pdf/pdfBuilders";
 import { getVerificationBrief } from "@/app/actions";
 
 function Badge({ cv }: { cv: CodeValue }) {
@@ -31,6 +31,7 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const m = pkg.meta;
   const [pdfBusy, setPdfBusy] = useState(false);
   const [briefBusy, setBriefBusy] = useState(false);
+  const [coverBusy, setCoverBusy] = useState(false);
 
   async function downloadPdf() {
     setPdfBusy(true);
@@ -48,6 +49,15 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       await downloadVerificationBriefPdf(brief);
     } finally {
       setBriefBusy(false);
+    }
+  }
+
+  async function downloadCover() {
+    setCoverBusy(true);
+    try {
+      await downloadSubmittalCoverPdf(pkg);
+    } finally {
+      setCoverBusy(false);
     }
   }
 
@@ -96,6 +106,9 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       <div className="toolbar">
         <button className="btn btn-secondary" onClick={downloadPdf} disabled={pdfBusy}>
           {pdfBusy ? "Generating…" : "⤓ Download PDF"}
+        </button>
+        <button className="btn btn-secondary" onClick={downloadCover} disabled={coverBusy}>
+          {coverBusy ? "Generating…" : "Submittal cover (PDF)"}
         </button>
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
           Markdown

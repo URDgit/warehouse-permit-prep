@@ -12,6 +12,7 @@
 import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { VerificationBrief } from "@/engine/report/verificationBrief";
 import { inputRows } from "@/engine/report/inputRows";
+import { buildSubmittalCover } from "@/engine/report/submittalCover";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Doc = any;
@@ -303,6 +304,59 @@ export async function buildVerificationBriefPdf(brief: VerificationBrief): Promi
 
   footer(ctx);
   return ctx.doc;
+}
+
+// ---------------------------------------------------------------------
+//  Submittal cover / transmittal PDF
+// ---------------------------------------------------------------------
+export async function buildSubmittalCoverPdf(pkg: ReviewPackage): Promise<Doc> {
+  const c = buildSubmittalCover(pkg);
+  const { ctx } = await createCtx();
+
+  if (c.firm.firmName || c.firm.firmAddress || c.firm.firmContact) {
+    if (c.firm.firmName) paragraph(ctx, c.firm.firmName, { bold: true, size: 12 });
+    if (c.firm.firmAddress) paragraph(ctx, c.firm.firmAddress, { size: 9, color: MUTED });
+    if (c.firm.firmContact) paragraph(ctx, c.firm.firmContact, { size: 9, color: MUTED });
+    ctx.y += 4;
+  }
+  title(ctx, "Permit Submittal — Transmittal & Document Checklist");
+  disclaimerBox(ctx, c.disclaimer);
+
+  if (c.reviewingAgencies.length) paragraph(ctx, `To: ${c.reviewingAgencies.join("; ")}`, { bold: true });
+  paragraph(ctx, `Project: ${c.projectName}`, { bold: true });
+  paragraph(ctx, `Address: ${c.projectAddress}`, { size: 9, color: MUTED });
+  paragraph(ctx, `Jurisdiction: ${c.jurisdiction}`, { size: 9, color: MUTED });
+  paragraph(ctx, `Prepared by: ${c.preparedBy}      Date: ${c.preparedDate}`, { size: 9, color: MUTED });
+  ctx.y += 4;
+  paragraph(ctx, "We are submitting the following for the high-piled combustible storage / storage-rack permit review for the project above.");
+
+  heading(ctx, "Documents included in this submittal");
+  if (!c.documents.length) paragraph(ctx, "No documents identified — verify jurisdiction requirements.", { color: MUTED });
+  for (const d of c.documents) {
+    paragraph(ctx, `[  ]  ${d.name}${d.applicability === "verify" ? "  (verify applicability)" : ""}`);
+  }
+
+  heading(ctx, "Engineer of record");
+  paragraph(ctx, `Engineer of record: ${c.firm.engineerName || "________________________"}`);
+  paragraph(ctx, `License: ${[c.firm.licenseType, c.firm.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);
+  ctx.y += 6;
+  paragraph(ctx, "Signature: ______________________________      Date: ______________");
+  ctx.y += 8;
+  ensure(ctx, 84);
+  ctx.doc.setDrawColor(...INK).setLineWidth(0.8);
+  ctx.doc.rect(M, ctx.y, 160, 72);
+  ctx.doc.setFont("helvetica", "normal").setFontSize(8).setTextColor(...MUTED);
+  ctx.doc.text("Seal / stamp", M + 8, ctx.y + 14);
+  ctx.y += 84;
+
+  if (c.demo) demoWatermark(ctx);
+  footer(ctx);
+  return ctx.doc;
+}
+
+export async function downloadSubmittalCoverPdf(pkg: ReviewPackage): Promise<void> {
+  const doc = await buildSubmittalCoverPdf(pkg);
+  doc.save(`${safeFileName(pkg.meta.projectName)}_Submittal_Cover.pdf`);
 }
 
 function safeFileName(s: string): string {
