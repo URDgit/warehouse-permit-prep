@@ -103,6 +103,21 @@ table.report th { color: var(--muted); font-weight: 600; }
 .save-ok { color: #1f5b30; font-size: 13px; align-self: center; }
 .save-err { color: var(--danger-ink); font-size: 13px; align-self: center; }
 
+/* "How this works" guide */
+.guide { margin: 0 0 16px; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; background: #fff; }
+.guide summary { cursor: pointer; font-weight: 600; }
+.guide ol { margin: 8px 0 4px; padding-left: 20px; }
+.guide li { margin: 4px 0; }
+
+/* Print: drop interactive chrome and print the report cleanly */
+@media print {
+  .app-header, .app-footer, .toolbar, .projectbar, .guide, .btn, button { display: none !important; }
+  body { background: #fff; }
+  .container { max-width: none; margin: 0; padding: 0; }
+  .card, .banner, .readiness, .audit__entry, table.report { break-inside: avoid; }
+  h2 { break-after: avoid; }
+}
+
 /* Readiness / verification checklist */
 .readiness { border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; border: 2px solid; }
 .readiness--blocked { background: var(--warn-bg); border-color: var(--warn-line); }

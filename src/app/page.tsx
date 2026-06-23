@@ -358,6 +358,16 @@ export default function Home() {
         code determinations on its own.
       </p>
 
+      <details className="guide">
+        <summary>How this works (4 steps)</summary>
+        <ol>
+          <li><strong>Fill the intake</strong> and click <em>Generate draft review package</em> to see the report.</li>
+          <li><strong>Download the Engineer Verification Brief</strong> and give it to a licensed engineer to fill in and verify.</li>
+          <li>Enter their answers on the <strong>Verify data</strong> screen (or in the data files).</li>
+          <li><strong>Re-generate</strong> — verified values fill in and the readiness checklist clears toward &ldquo;ready&rdquo;. Nothing here is valid until reviewed and stamped by a licensed engineer.</li>
+        </ol>
+      </details>
+
       <div className="toolbar">
         <button type="button" className="btn btn-secondary" onClick={downloadBriefPdf} disabled={briefBusy !== ""}>
           {briefBusy === "pdf" ? "Generating…" : "⤓ Engineer Verification Brief (PDF)"}

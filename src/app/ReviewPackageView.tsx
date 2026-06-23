@@ -5,7 +5,8 @@ import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 import { renderMarkdown } from "@/engine/report/renderMarkdown";
 import { inputRows } from "@/engine/report/inputRows";
-import { downloadReviewPackagePdf } from "@/app/pdf/pdfBuilders";
+import { downloadReviewPackagePdf, downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
+import { getVerificationBrief } from "@/app/actions";
 
 function Badge({ cv }: { cv: CodeValue }) {
   return cv.isPlaceholder ? (
@@ -29,6 +30,7 @@ function applicabilityLabel(a: ReviewPackage["jurisdiction"]["requiredDocuments"
 export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const m = pkg.meta;
   const [pdfBusy, setPdfBusy] = useState(false);
+  const [briefBusy, setBriefBusy] = useState(false);
 
   async function downloadPdf() {
     setPdfBusy(true);
@@ -36,6 +38,16 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
       await downloadReviewPackagePdf(pkg);
     } finally {
       setPdfBusy(false);
+    }
+  }
+
+  async function downloadBriefPdf() {
+    setBriefBusy(true);
+    try {
+      const brief = await getVerificationBrief();
+      await downloadVerificationBriefPdf(brief);
+    } finally {
+      setBriefBusy(false);
     }
   }
 
@@ -82,6 +94,9 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         </button>
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
           Markdown
+        </button>
+        <button className="btn btn-secondary" onClick={downloadBriefPdf} disabled={briefBusy}>
+          {briefBusy ? "Generating…" : "Engineer Brief (PDF)"}
         </button>
         <button className="btn btn-secondary" onClick={() => window.print()}>
           Print
