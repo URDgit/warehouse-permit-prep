@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AuthStatus from "./AuthStatus";
 
 export const metadata: Metadata = {
   title: "Storage-Rack Permit Package — Draft Preparation Aid",
@@ -14,7 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="app-header">
           <div className="app-header__inner">
             <strong>Storage-Rack Permit Package</strong>
-            <span className="app-header__sub">Draft Preparation Aid · Los Angeles (LADBS/LAFD)</span>
+            <span className="app-header__sub">Draft Preparation Aid · California</span>
+            <AuthStatus />
           </div>
         </header>
         <main className="container">{children}</main>

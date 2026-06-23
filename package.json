@@ -13,6 +13,8 @@
     "check-data": "vitest run tests/dataIntegrity.test.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.2",
     "js-yaml": "^4.1.0",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
