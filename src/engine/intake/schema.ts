@@ -13,6 +13,7 @@
 // =====================================================================
 
 import { z } from "zod";
+import { JURISDICTION_IDS } from "@/engine/jurisdictions/registry";
 
 const positive = (label: string) => z.number({ invalid_type_error: `${label} must be a number` }).positive(`${label} must be greater than 0`);
 const nonNegative = (label: string) => z.number({ invalid_type_error: `${label} must be a number` }).nonnegative(`${label} cannot be negative`);
@@ -22,7 +23,7 @@ export const intakeSchema = z.object({
     projectName: z.string().min(1, "Project name is required"),
     preparedBy: z.string().min(1, "Preparer name is required"),
     preparedDate: z.string().min(1, "Date is required"),
-    jurisdiction: z.literal("los-angeles"),
+    jurisdiction: z.enum(JURISDICTION_IDS),
   }),
 
   building: z.object({

@@ -18,7 +18,7 @@ import { classifyCommodity, type ClassificationResult } from "@/engine/classific
 import { computeSeismicDemand } from "@/engine/calculation/seismic";
 import { computeAnchorage } from "@/engine/calculation/anchorage";
 import type { CalcResult } from "@/engine/calculation/types";
-import { getLosAngelesRequirements, type JurisdictionResult } from "@/engine/jurisdictions/losAngeles";
+import { getJurisdictionRequirements, type JurisdictionResult } from "@/engine/jurisdictions/losAngeles";
 import { type AuditEntry, type CodeValue } from "@/engine/provenance";
 import { buildReadiness, type Readiness } from "@/engine/report/readiness";
 import { validateCodeData, type ValidationIssue } from "@/engine/data/validate";
@@ -74,7 +74,7 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
   const classification = classifyCommodity(input, data);
   const seismic = computeSeismicDemand(input, data);
   const anchorage = computeAnchorage(input, data);
-  const jurisdiction = getLosAngelesRequirements(input, data, classification);
+  const jurisdiction = getJurisdictionRequirements(input, data, input.project.jurisdiction, classification);
 
   const auditTrail: AuditEntry[] = [
     ...classification.audit,

@@ -78,12 +78,13 @@ const JURISDICTION_FIELDS: Record<string, (i: IntakeInput) => unknown> = {
 /** Field names available to submittal-trigger authors (for docs/messages). */
 export const JURISDICTION_TRIGGER_FIELDS = [...Object.keys(JURISDICTION_FIELDS), "commodity_class"];
 
-export function getLosAngelesRequirements(
+export function getJurisdictionRequirements(
   input: IntakeInput,
   data: CodeData,
+  jurisdictionId: string = JURISDICTION_ID,
   classification?: ClassificationResult,
 ): JurisdictionResult {
-  const j = (data.jurisdictions?.[JURISDICTION_ID] ?? {}) as Record<string, any>;
+  const j = (data.jurisdictions?.[jurisdictionId] ?? {}) as Record<string, any>;
   const meta = (j.meta ?? {}) as Record<string, any>;
   const docs = Array.isArray(j.required_documents) ? (j.required_documents as Record<string, any>[]) : [];
   const submittal = (j.submittal_rules ?? {}) as Record<string, any>;
@@ -178,8 +179,8 @@ export function getLosAngelesRequirements(
   };
 
   return {
-    jurisdictionId: JURISDICTION_ID,
-    jurisdictionName: String(meta.jurisdiction_name ?? "City of Los Angeles (LADBS / LAFD)"),
+    jurisdictionId,
+    jurisdictionName: String(meta.jurisdiction_name ?? jurisdictionId),
     reviewingAgencies: Array.isArray(meta.reviewing_agencies) ? meta.reviewing_agencies.map(String) : [],
     requiredDocuments,
     planContent,

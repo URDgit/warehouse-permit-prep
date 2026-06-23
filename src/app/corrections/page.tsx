@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getFirmProfile } from "@/app/actions";
 import { downloadCorrectionLetterPdf } from "@/app/pdf/pdfBuilders";
 import type { Correction, CorrectionLetterData } from "@/engine/corrections";
+import { jurisdictionName } from "@/engine/jurisdictions/registry";
 
 const PROJECTS_KEY = "wpp-projects-v1";
 const CORR_KEY = "wpp-corrections-v1";
@@ -14,6 +15,7 @@ interface ProjMeta {
   id: string;
   name: string;
   address: string;
+  jurisdiction: string;
 }
 interface CorrSet {
   revision: number;
@@ -32,6 +34,7 @@ function readProjects(): { activeId: string; projects: ProjMeta[] } {
       id: String(p.id),
       name: p.form?.project?.projectName || "Untitled project",
       address: p.form?.building?.address || "",
+      jurisdiction: jurisdictionName(p.form?.project?.jurisdiction ?? "los-angeles"),
     }));
     return { activeId: store.activeId ?? projects[0]?.id ?? "", projects };
   } catch {
@@ -91,7 +94,7 @@ export default function CorrectionsPage() {
       licenseNumber: firm.licenseNumber,
       projectName: proj?.name ?? "Project",
       projectAddress: proj?.address ?? "",
-      jurisdiction: "City of Los Angeles (LADBS / LAFD)",
+      jurisdiction: proj?.jurisdiction ?? "City of Los Angeles (LADBS / LAFD)",
       revision: current.revision,
       generatedAt: new Date().toISOString().slice(0, 10),
       items: current.items,

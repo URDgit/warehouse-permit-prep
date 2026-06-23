@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { generateReviewPackage, getVerificationBrief, getDemoPackage, getLibraries, type GenerateResult } from "@/app/actions";
 import type { Libraries } from "@/engine/libraries";
+import { JURISDICTIONS } from "@/engine/jurisdictions/registry";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
 import { downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
@@ -461,7 +462,14 @@ export default function Home() {
           <Text label="Project name" req value={form.project.projectName} error={fe("project", "projectName")} onChange={(v) => set("project", "projectName", v)} />
           <Text label="Prepared by" req value={form.project.preparedBy} error={fe("project", "preparedBy")} onChange={(v) => set("project", "preparedBy", v)} />
           <Text label="Date" req value={form.project.preparedDate} error={fe("project", "preparedDate")} onChange={(v) => set("project", "preparedDate", v)} />
-          <Text label="Jurisdiction" value="Los Angeles (LADBS/LAFD)" onChange={() => {}} disabled />
+          <label className="field">
+            <span>Jurisdiction</span>
+            <select value={form.project.jurisdiction} onChange={(e) => set("project", "jurisdiction", e.target.value)}>
+              {JURISDICTIONS.map((j) => (
+                <option key={j.id} value={j.id}>{j.name}</option>
+              ))}
+            </select>
+          </label>
         </div>
       </fieldset>
 

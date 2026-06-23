@@ -105,8 +105,7 @@ function checkClassification(commodity: any, issues: ValidationIssue[]) {
   });
 }
 
-function checkJurisdiction(jur: any, issues: ValidationIssue[]) {
-  const file = "jurisdictions/los-angeles.yaml";
+function checkJurisdiction(jur: any, file: string, issues: ValidationIssue[]) {
   const docs = Array.isArray(jur?.required_documents) ? jur.required_documents : [];
   docs.forEach((d: any, i: number) => {
     const p = `required_documents[${d?.id ?? i}]`;
@@ -130,9 +129,11 @@ export function validateCodeData(data: CodeData): ValidationIssue[] {
   walk(data.fireCode, "fire-code-requirements.yaml", "", issues);
   walk(data.seismic, "seismic.yaml", "", issues);
   walk(data.anchorage, "anchorage.yaml", "", issues);
-  walk(data.jurisdictions?.["los-angeles"], "jurisdictions/los-angeles.yaml", "", issues);
+  for (const [id, jur] of Object.entries(data.jurisdictions ?? {})) {
+    walk(jur, `jurisdictions/${id}.yaml`, "", issues);
+    checkJurisdiction(jur, `jurisdictions/${id}.yaml`, issues);
+  }
   checkClassification(data.commodity, issues);
-  checkJurisdiction(data.jurisdictions?.["los-angeles"], issues);
   return issues;
 }
 

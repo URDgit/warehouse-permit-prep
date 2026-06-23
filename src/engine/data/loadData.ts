@@ -72,15 +72,30 @@ function readOverrides(absPath: string): OverrideEntry[] {
   return [];
 }
 
+/** Load every jurisdiction file, keyed by its meta.jurisdiction_id (or filename). */
+function loadJurisdictions(dir: string): Record<string, RawDoc> {
+  const out: Record<string, RawDoc> = {};
+  let files: string[] = [];
+  try {
+    files = fs.readdirSync(dir).filter((f) => /\.ya?ml$/i.test(f));
+  } catch {
+    return out;
+  }
+  for (const f of files) {
+    const doc = readYaml(path.join(dir, f));
+    const id = String(doc?.meta?.jurisdiction_id ?? f.replace(/\.ya?ml$/i, ""));
+    out[id] = doc;
+  }
+  return out;
+}
+
 export function loadCodeData(dataDir: string = path.join(process.cwd(), "data")): CodeData {
   const data: CodeData = {
     commodity: readYaml(path.join(dataDir, "commodity-classification.yaml")),
     fireCode: readYaml(path.join(dataDir, "fire-code-requirements.yaml")),
     seismic: readYaml(path.join(dataDir, "seismic.yaml")),
     anchorage: readYaml(path.join(dataDir, "anchorage.yaml")),
-    jurisdictions: {
-      "los-angeles": readYaml(path.join(dataDir, "jurisdictions", "los-angeles.yaml")),
-    },
+    jurisdictions: loadJurisdictions(path.join(dataDir, "jurisdictions")),
   };
   // Layer engineer-verified values (from the in-app editor) on top.
   applyOverrides(data, readOverrides(path.join(dataDir, "overrides.yaml")));
