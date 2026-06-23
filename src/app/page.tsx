@@ -67,7 +67,21 @@ const initialForm = {
 
 type Form = typeof initialForm;
 
-const STORAGE_KEY = "wpp-intake-v1";
+const PROJECTS_KEY = "wpp-projects-v1";
+const LEGACY_KEY = "wpp-intake-v1";
+
+interface Project {
+  id: string;
+  form: Form;
+  savedAt: string;
+}
+
+function newId(): string {
+  return Math.random().toString(36).slice(2, 9);
+}
+function projectName(p: Project): string {
+  return p.form.project.projectName?.trim() || "Untitled project";
+}
 
 /** Merge a saved blob over the defaults so newly-added fields still get values. */
 function mergeForm(saved: Record<string, any>): Form {
@@ -128,32 +142,105 @@ export default function Home() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [briefBusy, setBriefBusy] = useState<"" | "pdf" | "md">("");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [activeId, setActiveId] = useState<string>("");
 
-  // Restore the intake from the browser on first load, and auto-save on change,
-  // so a refresh or return visit doesn't lose work (no accounts, all local).
+  // Load saved projects on first mount (migrating the old single-draft store).
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setForm(mergeForm(JSON.parse(raw)));
+      const raw = localStorage.getItem(PROJECTS_KEY);
+      if (raw) {
+        const store = JSON.parse(raw) as { activeId?: string; projects?: any[] };
+        const ps: Project[] = (store.projects ?? []).map((p) => ({
+          id: String(p.id ?? newId()),
+          form: mergeForm(p.form ?? {}),
+          savedAt: String(p.savedAt ?? ""),
+        }));
+        if (ps.length > 0) {
+          const active = ps.find((p) => p.id === store.activeId) ?? ps[0];
+          setProjects(ps);
+          setActiveId(active.id);
+          setForm(active.form);
+          return;
+        }
+      }
+      // First run (or migrate the previous single auto-saved draft).
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      const f = legacy ? mergeForm(JSON.parse(legacy)) : initialForm;
+      const p: Project = { id: newId(), form: f, savedAt: new Date().toISOString() };
+      setProjects([p]);
+      setActiveId(p.id);
+      setForm(p.form);
     } catch {
-      /* ignore unreadable storage */
+      const p: Project = { id: newId(), form: initialForm, savedAt: new Date().toISOString() };
+      setProjects([p]);
+      setActiveId(p.id);
     }
   }, []);
+
+  // Keep the active project synced with the form, and persist the whole store.
   useEffect(() => {
+    if (!activeId) return;
+    setProjects((prev) => prev.map((p) => (p.id === activeId ? { ...p, form, savedAt: new Date().toISOString() } : p)));
+  }, [form, activeId]);
+  useEffect(() => {
+    if (!activeId || projects.length === 0) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+      localStorage.setItem(PROJECTS_KEY, JSON.stringify({ activeId, projects }));
     } catch {
       /* ignore unwritable storage */
     }
-  }, [form]);
+  }, [projects, activeId]);
 
-  function resetToExample() {
-    setForm(initialForm);
+  function selectProject(id: string) {
+    const p = projects.find((x) => x.id === id);
+    if (!p) return;
+    setActiveId(id);
+    setForm(p.form);
     setErrors({});
+  }
+  function newProject() {
+    const p: Project = {
+      id: newId(),
+      form: { ...initialForm, project: { ...initialForm.project, projectName: "New project" } },
+      savedAt: new Date().toISOString(),
+    };
+    setProjects((prev) => [...prev, p]);
+    setActiveId(p.id);
+    setForm(p.form);
+    setErrors({});
+  }
+  function deleteProject() {
+    if (projects.length <= 1) return;
+    const remaining = projects.filter((p) => p.id !== activeId);
+    setProjects(remaining);
+    setActiveId(remaining[0].id);
+    setForm(remaining[0].form);
+    setErrors({});
+  }
+  function exportProject() {
+    const blob = new Blob([JSON.stringify({ kind: "wpp-project", form }, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${(form.project.projectName || "project").replace(/[^\w.-]+/g, "_")}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  async function importProject(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
     try {
-      localStorage.removeItem(STORAGE_KEY);
+      const obj = JSON.parse(await file.text());
+      const f = mergeForm(obj?.form ?? obj ?? {});
+      const p: Project = { id: newId(), form: f, savedAt: new Date().toISOString() };
+      setProjects((prev) => [...prev, p]);
+      setActiveId(p.id);
+      setForm(f);
+      setErrors({});
     } catch {
-      /* ignore */
+      alert("Could not import that file — it doesn't look like a saved project export.");
     }
   }
 
@@ -243,6 +330,25 @@ export default function Home() {
 
   return (
     <form onSubmit={onSubmit} noValidate>
+      <div className="projectbar">
+        <label className="projectbar__select">
+          <span>Project</span>
+          <select value={activeId} onChange={(e) => selectProject(e.target.value)}>
+            {projects.map((p) => (
+              <option key={p.id} value={p.id}>{projectName(p)}</option>
+            ))}
+          </select>
+        </label>
+        <button type="button" className="btn btn-secondary" onClick={newProject}>New</button>
+        <button type="button" className="btn btn-secondary" onClick={deleteProject} disabled={projects.length <= 1}>
+          Delete
+        </button>
+        <button type="button" className="btn btn-secondary" onClick={exportProject}>Export</button>
+        <label className="btn btn-secondary" style={{ cursor: "pointer" }}>
+          Import
+          <input type="file" accept="application/json" style={{ display: "none" }} onChange={importProject} />
+        </label>
+      </div>
       <h1>Storage-Rack Permit — Intake</h1>
       <p className="note">
         Fill in the project details below, then generate a draft review package. The form is
@@ -257,9 +363,6 @@ export default function Home() {
         </button>
         <button type="button" className="btn btn-secondary" onClick={downloadBrief} disabled={briefBusy !== ""}>
           {briefBusy === "md" ? "Generating…" : "Markdown"}
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={resetToExample}>
-          Reset to example data
         </button>
         <span className="note">A checklist to hand a licensed engineer — what to verify, with citations.</span>
       </div>

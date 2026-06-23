@@ -92,6 +92,11 @@ table.report th { color: var(--muted); font-weight: 600; }
 .toolbar { display: flex; gap: 10px; margin: 6px 0 18px; flex-wrap: wrap; }
 .note { color: var(--muted); font-size: 13px; }
 
+/* Project bar (saved projects) */
+.projectbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 16px; background: #eef1f5; border: 1px solid var(--line); border-radius: 10px; }
+.projectbar__select { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-right: auto; }
+.projectbar .btn { padding: 6px 12px; }
+
 /* Readiness / verification checklist */
 .readiness { border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; border: 2px solid; }
 .readiness--blocked { background: var(--warn-bg); border-color: var(--warn-line); }
