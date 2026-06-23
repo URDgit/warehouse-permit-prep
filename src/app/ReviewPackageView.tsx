@@ -1,0 +1,262 @@
+"use client";
+
+import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
+import type { CodeValue } from "@/engine/provenance";
+import { renderMarkdown } from "@/engine/report/renderMarkdown";
+
+function Badge({ cv }: { cv: CodeValue }) {
+  return cv.isPlaceholder ? (
+    <span className="badge badge--placeholder">PLACEHOLDER</span>
+  ) : (
+    <span className="badge badge--verified">VERIFIED</span>
+  );
+}
+
+function valueText(cv: CodeValue): string {
+  if (cv.isPlaceholder) return "— needs engineer —";
+  return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""}`;
+}
+
+export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
+  const m = pkg.meta;
+
+  function downloadMarkdown() {
+    const md = renderMarkdown(pkg);
+    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${m.projectName.replace(/[^\w.-]+/g, "_") || "review-package"}_DRAFT.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div>
+      {/* Non-negotiable disclaimer, top and prominent */}
+      <div className="banner banner--danger" role="alert">
+        <strong>Draft — not an engineered or approved document</strong>
+        {m.disclaimer}
+      </div>
+
+      <div className="banner banner--warn">
+        <strong>Review status</strong>
+        {pkg.placeholderCount} of {pkg.codeValuesUsed.length} code values are unverified{" "}
+        <em>placeholders</em> that a licensed engineer must supply or confirm before this package
+        can be used.
+      </div>
+
+      <div className="toolbar">
+        <button className="btn btn-secondary" onClick={downloadMarkdown}>
+          Download as Markdown
+        </button>
+        <button className="btn btn-secondary" onClick={() => window.print()}>
+          Print / Save as PDF
+        </button>
+      </div>
+
+      <div className="card">
+        <h1>{m.title}</h1>
+        <div className="kv">
+          <div><strong>Project:</strong> {m.projectName}</div>
+          <div><strong>Prepared by:</strong> {m.preparedBy} &nbsp;·&nbsp; <strong>Date:</strong> {m.preparedDate}</div>
+          <div><strong>Jurisdiction:</strong> {m.jurisdiction}</div>
+          <div><strong>Generated:</strong> {m.generatedAt}</div>
+        </div>
+        <h3>Code basis (subject to verification)</h3>
+        <ul className="note">
+          {m.codeBasis.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* 1. Inputs */}
+      <h2>1. Inputs provided</h2>
+      <InputsTable pkg={pkg} />
+
+      {/* 2. Classification */}
+      <h2>2. Commodity classification</h2>
+      <div className="card">
+        <p>
+          <strong>Result:</strong>{" "}
+          {pkg.classification.commodityClass.isPlaceholder
+            ? "UNDETERMINED"
+            : String(pkg.classification.commodityClass.value)}{" "}
+          <Badge cv={pkg.classification.commodityClass} />
+        </p>
+        <p className="source">Source: {pkg.classification.commodityClass.source}</p>
+        {pkg.classification.commodityClass.todo && (
+          <p className="note">TODO: {pkg.classification.commodityClass.todo}</p>
+        )}
+        <h3>Triggered fire-code requirements</h3>
+        <table className="report">
+          <thead>
+            <tr><th>Requirement</th><th>Value</th><th>Status</th><th>Source</th></tr>
+          </thead>
+          <tbody>
+            {pkg.classification.triggeredRequirements.map((r) => (
+              <tr key={r.id}>
+                <td>{r.name}</td>
+                <td>{valueText(r.codeValue)}</td>
+                <td><Badge cv={r.codeValue} /></td>
+                <td className="source">{r.codeValue.source}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 3. Calculations */}
+      <h2>3. Calculations</h2>
+      {[pkg.calculations.seismic, pkg.calculations.anchorage].map((calc) => (
+        <div className="card" key={calc.id}>
+          <h3>{calc.label} <Badge cv={calc.result} /></h3>
+          <p><strong>Result:</strong> {valueText(calc.result)}</p>
+          <p className="source">
+            Formula reference: {valueText(calc.formula)} ({calc.formula.source})
+          </p>
+          {calc.result.todo && <p className="note"><strong>Why not computed:</strong> {calc.result.todo}</p>}
+          <p className="kv"><strong>Inputs used:</strong> {JSON.stringify(calc.inputsUsed)}</p>
+          {calc.audit.assumptions.length > 0 && (
+            <>
+              <p className="kv"><strong>Assumptions:</strong></p>
+              <ul className="note">
+                {calc.audit.assumptions.map((a, idx) => <li key={idx}>{a}</li>)}
+              </ul>
+            </>
+          )}
+        </div>
+      ))}
+
+      {/* 4. Jurisdiction */}
+      <h2>4. {pkg.jurisdiction.jurisdictionName} — submittal documents</h2>
+      <div className="card">
+        {pkg.jurisdiction.reviewingAgencies.length > 0 && (
+          <ul className="note">
+            {pkg.jurisdiction.reviewingAgencies.map((a) => <li key={a}>{a}</li>)}
+          </ul>
+        )}
+        <table className="report">
+          <thead>
+            <tr><th>Document</th><th>Applicability</th><th>Source</th></tr>
+          </thead>
+          <tbody>
+            {pkg.jurisdiction.requiredDocuments.map((d) => (
+              <tr key={d.id}>
+                <td>{d.name}</td>
+                <td>{d.status.isPlaceholder ? "Verify applicability" : "Required"} <Badge cv={d.status} /></td>
+                <td className="source">{d.status.source}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 5. All code values */}
+      <h2>5. All code values used (with citations)</h2>
+      <div className="card">
+        <table className="report">
+          <thead>
+            <tr><th>Value</th><th>Result</th><th>Status</th><th>Source</th></tr>
+          </thead>
+          <tbody>
+            {pkg.codeValuesUsed.map((cv) => (
+              <tr key={cv.id}>
+                <td>{cv.label}</td>
+                <td>{valueText(cv)}</td>
+                <td><Badge cv={cv} /></td>
+                <td className="source">{cv.source}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 6. Assumptions */}
+      <h2>6. Assumptions</h2>
+      <div className="card">
+        {pkg.assumptions.length === 0 ? (
+          <p className="note">None recorded.</p>
+        ) : (
+          <ul>{pkg.assumptions.map((a, idx) => <li key={idx}>{a}</li>)}</ul>
+        )}
+      </div>
+
+      {/* 7. Audit trail */}
+      <h2>7. Audit trail</h2>
+      <div className="card audit">
+        {pkg.auditTrail.map((a, idx) => (
+          <div className={`audit__entry ${a.status === "ok" ? "" : "blocked"}`} key={idx}>
+            <strong>{a.step}</strong>{" "}
+            {a.status === "ok" ? (
+              <span className="badge badge--verified">OK</span>
+            ) : (
+              <span className="badge badge--placeholder">BLOCKED BY PLACEHOLDER</span>
+            )}
+            <p>{a.description}</p>
+            <p className="kv"><strong>Inputs used:</strong> {JSON.stringify(a.inputsUsed)}</p>
+            <p className="kv">
+              <strong>Code values / rules:</strong>{" "}
+              {a.codeValues.map((c) => `${c.label} (${c.source})`).join("; ") || "none"}
+            </p>
+            <p className="kv"><strong>Result:</strong> {JSON.stringify(a.result)}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="banner banner--danger" role="alert" style={{ marginTop: 20 }}>
+        <strong>Reminder</strong>
+        {m.disclaimer}
+      </div>
+    </div>
+  );
+}
+
+function InputsTable({ pkg }: { pkg: ReviewPackage }) {
+  const i = pkg.inputs;
+  const rows: [string, unknown][] = [
+    ["Building address", i.building.address],
+    ["Construction type", i.building.constructionType || "(not provided)"],
+    ["Total building area (sq ft)", i.building.totalBuildingAreaSqFt],
+    ["High-piled storage area (sq ft)", i.building.highPiledAreaSqFt],
+    ["Ceiling height (ft)", i.building.ceilingHeightFt],
+    ["Existing sprinkler system?", i.building.existingSprinkler ? "Yes" : "No"],
+    ["Sprinkler system type", i.sprinkler.systemType],
+    ["In-rack sprinklers?", i.sprinkler.inRackSprinklers ? "Yes" : "No"],
+    ["Rack type", i.rack.rackType],
+    ["Storage height (ft)", i.rack.storageHeightFt],
+    ["Number of tiers", i.rack.numberOfTiers],
+    ["Rack depth configuration", i.rack.rackDepthConfig],
+    ["Aisle width (ft)", i.rack.aisleWidthFt],
+    ["Anchored to slab?", i.rack.anchored ? "Yes" : "No"],
+    ["Anchor type", i.rack.anchorType || "(not provided)"],
+    ["Commodity description", i.commodity.description],
+    ["Primary material", i.commodity.primaryMaterial || "(not provided)"],
+    ["Packaging", i.commodity.packaging],
+    ["Plastic content", i.commodity.plasticContent],
+    ["Encapsulated?", i.commodity.encapsulated ? "Yes" : "No"],
+    ["Idle pallets stored?", i.commodity.idlePalletsStored ? "Yes" : "No"],
+    ["Site class", i.seismic.siteClass],
+    ["Ss", i.seismic.Ss ?? "(not provided)"],
+    ["S1", i.seismic.S1 ?? "(not provided)"],
+    ["Sds", i.seismic.Sds ?? "(not provided)"],
+    ["Sd1", i.seismic.Sd1 ?? "(not provided)"],
+    ["Seismic design category", i.seismic.seismicDesignCategory],
+    ["Risk category", i.seismic.riskCategory],
+  ];
+  return (
+    <div className="card">
+      <table className="report">
+        <tbody>
+          {rows.map(([k, v]) => (
+            <tr key={k}>
+              <th style={{ width: "40%" }}>{k}</th>
+              <td>{String(v)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}

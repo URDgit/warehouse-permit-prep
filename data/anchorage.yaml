@@ -1,0 +1,69 @@
+# =====================================================================
+#  RACK ANCHORAGE BASIS  —  ASCE 7-16 / ACI 318 / ANSI-RMI MH16.1
+# =====================================================================
+#
+#  This file holds the references and factors used to evaluate base-plate
+#  anchorage of the rack columns to the existing slab.
+#
+#  As with seismic.yaml, the calculation engine will REFUSE to output an
+#  anchor demand or capacity until the values below are VERIFIED. The
+#  report will show "PLACEHOLDER — verified values required" instead of a
+#  fabricated number.
+#
+#  See commodity-classification.yaml for how to read a value.
+# =====================================================================
+
+meta:
+  references:
+    - "ASCE 7-16 (seismic demand on anchorage)"
+    - "ACI 318 Chapter 17 (anchoring to concrete) — VERIFY edition referenced by 2022 CBC"
+    - "ANSI/RMI MH16.1 (rack anchorage provisions) — VERIFY edition"
+  status: PLACEHOLDER
+
+# Demand side: forces the anchors must resist.
+anchor_demand:
+  formula_reference:
+    value: null
+    status: PLACEHOLDER
+    source: "ASCE 7-16 / ANSI-RMI MH16.1 anchorage demand — VERIFY"
+    todo: "Record the governing equations for anchor tension/shear demand (overturning from seismic base shear, etc.)."
+
+# Capacity side: anchor strength from the existing slab + anchor type.
+anchor_capacity:
+  concrete_slab_properties:
+    compressive_strength_fc:
+      value: null
+      unit: "psi"
+      status: PLACEHOLDER
+      source: "Project record / field verification of EXISTING slab — VERIFY"
+      todo: "Existing slab concrete strength must be established (record drawings or testing), not assumed."
+    slab_thickness:
+      value: null
+      unit: "inches"
+      status: PLACEHOLDER
+      source: "Project record / field verification of EXISTING slab — VERIFY"
+      todo: "Existing slab thickness; affects anchor embedment and edge/breakout capacity."
+    reinforcement:
+      value: null
+      status: PLACEHOLDER
+      source: "Project record / field verification — VERIFY"
+      todo: "Existing slab reinforcement, if any; affects anchorage design."
+  anchor_strength:
+    formula_reference:
+      value: null
+      status: PLACEHOLDER
+      source: "ACI 318 Ch.17 (concrete breakout, pullout, pryout, etc.) — VERIFY"
+      todo: "Anchor capacity must come from ACI 318 Ch.17 using the actual anchor product's evaluation report (ICC-ES ESR) values."
+    product_evaluation_report:
+      value: null
+      status: PLACEHOLDER
+      source: "Manufacturer ICC-ES ESR for the specified anchor — VERIFY"
+      todo: "Capacities are anchor-product specific; cite the ESR number and values used."
+
+# Load combinations applied to demand vs capacity.
+load_combinations:
+  reference:
+    value: null
+    status: PLACEHOLDER
+    source: "ASCE 7-16 §2.3 / §2.4 load combinations — VERIFY"
+    todo: "Record which load combinations govern the anchorage check."

@@ -1,0 +1,109 @@
+# =====================================================================
+#  COMMODITY CLASSIFICATION  —  California Fire Code (CFC), 2022 edition
+# =====================================================================
+#
+#  WHAT THIS FILE IS
+#  -----------------
+#  This file tells the app how a stored commodity is classified
+#  (Class I, II, III, IV, or a plastics group) and which code section
+#  that classification comes from. The app does NOT know any of this on
+#  its own — it only reads what is written here.
+#
+#  HOW TO READ A VALUE
+#  -------------------
+#  Every code value is an object with these fields:
+#     value   : the actual value (a number, text, or null if not set yet)
+#     status  : PLACEHOLDER  = NOT yet verified — do not trust it
+#               VERIFIED     = a licensed engineer has confirmed it
+#     source  : the exact code citation it comes from
+#     todo    : (placeholders only) what is needed and where to find it
+#
+#  RULE: The app will NEVER treat a PLACEHOLDER as a real answer. It will
+#  carry it into the report clearly marked "PLACEHOLDER — needs engineer".
+#
+#  Edit the text inside quotes. Keep the field names (value, status, ...)
+#  and the indentation exactly as they are. When you and your engineer
+#  confirm a value, fill in `value:` and change `status:` to VERIFIED.
+# =====================================================================
+
+meta:
+  code_edition: "2022 California Fire Code (CFC)"
+  edition_status: PLACEHOLDER   # VERIFY which CFC edition LADBS/LAFD enforces for this project
+  governing_chapter: "CFC 2022 Chapter 32 — High-Piled Combustible Storage"
+  source_note: "Commodity classes are defined in CFC Chapter 32. Confirm exact section and table numbers against the adopted code."
+
+# ---------------------------------------------------------------------
+#  The list of commodity classes the app can assign.
+#  Definitions are PLACEHOLDERs until verified — they are intentionally
+#  left as TODOs rather than filled in from memory.
+# ---------------------------------------------------------------------
+classes:
+  - id: class_I
+    name: "Class I"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 (commodity classification) — VERIFY exact section/table"
+      todo: "Enter the code definition of a Class I commodity."
+  - id: class_II
+    name: "Class II"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of a Class II commodity."
+  - id: class_III
+    name: "Class III"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of a Class III commodity."
+  - id: class_IV
+    name: "Class IV"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of a Class IV commodity."
+  - id: group_a_plastics
+    name: "Group A Plastics"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of Group A plastics (and note Group B / Group C if used)."
+  - id: group_b_plastics
+    name: "Group B Plastics"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of Group B plastics."
+  - id: group_c_plastics
+    name: "Group C Plastics"
+    description:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      todo: "Enter the code definition of Group C plastics."
+
+# ---------------------------------------------------------------------
+#  The decision logic that maps intake answers to one of the classes
+#  above. This is intentionally NOT implemented with guessed rules.
+#  Until an engineer defines it, the app returns "UNDETERMINED".
+# ---------------------------------------------------------------------
+classification_rules:
+  status: PLACEHOLDER
+  source: "CFC 2022 Chapter 32 commodity classification provisions and tables — VERIFY"
+  todo: >
+    A licensed engineer must define how the intake answers (primary
+    material, packaging, plastic content, encapsulation, idle pallets,
+    etc.) map to a commodity class. Because misclassification is a life-
+    safety issue, no default mapping is provided. When ready, replace
+    this block with explicit rules and set status to VERIFIED.
+  # Example of the SHAPE a future rule could take (NOT active, NOT a real rule):
+  # rules:
+  #   - when: { plastic_content: "significant", encapsulated: true }
+  #     assign_class: group_a_plastics
+  #     source: "CFC 2022 §32xx.x"

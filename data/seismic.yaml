@@ -1,0 +1,66 @@
+# =====================================================================
+#  SEISMIC DESIGN BASIS  —  ASCE 7-16 (as referenced by 2022 CBC)
+# =====================================================================
+#
+#  This file holds the seismic design parameters and the formula
+#  references used to evaluate the storage rack's seismic demand.
+#
+#  IMPORTANT ENGINEERING DECISION (must be made by the engineer):
+#  A steel storage rack can be designed either as a NONBUILDING
+#  STRUCTURE (ASCE 7-16 Chapter 15, incl. §15.5.3 steel storage racks)
+#  or, in some cases, evaluated using component provisions (Chapter 13).
+#  This choice changes which formula and coefficients apply. The app does
+#  NOT pick for you — it records your choice and the source.
+#
+#  Until the coefficients below are VERIFIED, the calculation engine will
+#  REFUSE to output a seismic force. It will instead report
+#  "PLACEHOLDER — verified coefficients/formula required". This is by
+#  design, so the report never shows a made-up number.
+#
+#  See commodity-classification.yaml for how to read a value.
+# =====================================================================
+
+meta:
+  standard: "ASCE 7-16"
+  standard_status: PLACEHOLDER   # VERIFY edition referenced by the adopted 2022 CBC for this project
+  also_reference: "ANSI/RMI MH16.1 (Design of Steel Storage Racks) — VERIFY edition"
+
+# Which design path applies to the rack. Engineer sets this.
+design_basis:
+  rack_design_path:
+    value: null   # expected: "nonbuilding_structure" or "nonstructural_component"
+    status: PLACEHOLDER
+    source: "ASCE 7-16 Ch. 15 (§15.5.3) vs. Ch. 13 — engineer determination required"
+    todo: "Decide whether the rack is designed as a nonbuilding structure (Ch.15) or via component provisions (Ch.13). This selects the formula below."
+
+# Seismic force formula references. Coefficients MUST be set by engineer.
+# NOTE: We store FORMULA REFERENCES, not the formulas themselves, so that
+# the actual math lives in reviewed code and cannot be silently wrong.
+seismic_force:
+  formula_reference:
+    value: null
+    status: PLACEHOLDER
+    source: "ASCE 7-16 — VERIFY governing equation (e.g. Ch.15 base shear or Ch.13 Fp)"
+    todo: "Record the exact governing equation reference once the design path is chosen."
+  coefficients:
+    response_modification_R:
+      value: null
+      status: PLACEHOLDER
+      source: "ASCE 7-16 Table (per chosen path) — VERIFY"
+      todo: "R (or Rp) for the selected rack design path."
+    overstrength_omega0:
+      value: null
+      status: PLACEHOLDER
+      source: "ASCE 7-16 Table (per chosen path) — VERIFY"
+      todo: "Overstrength factor, if applicable."
+    importance_factor_Ie:
+      value: null
+      status: PLACEHOLDER
+      source: "ASCE 7-16 §1.5 / Table 1.5-2 (Risk Category) — VERIFY"
+      todo: "Seismic importance factor based on Risk Category for the use."
+
+# Site-specific ground motion parameters. These are PROJECT INPUTS that
+# the user/engineer provides (e.g. from a USGS/geotech report). They are
+# collected on the intake form, but defaults are intentionally empty here.
+site_parameters:
+  note: "Ss, S1, Sds, Sd1, Site Class, and SDC are entered per project on the intake form (from the project's geotechnical/USGS seismic data). They are not fixed code values and are never assumed by the app."

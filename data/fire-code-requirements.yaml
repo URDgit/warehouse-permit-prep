@@ -1,0 +1,109 @@
+# =====================================================================
+#  FIRE-CODE REQUIREMENTS  —  California Fire Code (CFC), 2022 edition
+# =====================================================================
+#
+#  These are the fire-protection requirements that get TRIGGERED once a
+#  commodity is classified and the storage arrangement is known
+#  (e.g. minimum aisle width, sprinkler design density, maximum pile and
+#  storage heights, smoke/heat removal, etc.).
+#
+#  See commodity-classification.yaml for how to read a value
+#  (value / status / source / todo). Every value below is a PLACEHOLDER
+#  until a licensed engineer verifies it against the cited source.
+# =====================================================================
+
+meta:
+  code_edition: "2022 California Fire Code (CFC)"
+  edition_status: PLACEHOLDER
+  governing_chapter: "CFC 2022 Chapter 32 — High-Piled Combustible Storage"
+  reference_standard: "NFPA 13 (as referenced/adopted) for sprinkler design — VERIFY edition"
+
+# When do high-piled storage requirements apply at all?
+applicability:
+  high_piled_area_threshold:
+    value: null
+    unit: "square feet"
+    status: PLACEHOLDER
+    source: "CFC 2022 Chapter 32 (high-piled storage area thresholds) — VERIFY table"
+    todo: "Floor area (by commodity class / sprinklered vs not) that triggers high-piled storage provisions."
+  storage_height_threshold:
+    value: null
+    unit: "feet"
+    status: PLACEHOLDER
+    source: "CFC 2022 Chapter 2 / Chapter 32 definition of 'high-piled storage' — VERIFY"
+    todo: "Storage height above which storage is considered 'high-piled'."
+
+# Minimum aisle width between racks / piles.
+aisle_width:
+  minimum:
+    value: null
+    unit: "feet"
+    status: PLACEHOLDER
+    source: "CFC 2022 Chapter 32 (aisle width requirements) — VERIFY section/table"
+    todo: "Depends on commodity class, storage height, and whether sprinklered. Provide the governing minimum."
+
+# Maximum permitted heights.
+heights:
+  max_pile_height:
+    value: null
+    unit: "feet"
+    status: PLACEHOLDER
+    source: "CFC 2022 Chapter 32 — VERIFY"
+    todo: "Maximum pile/storage height permitted for the given commodity & protection."
+  max_storage_to_ceiling_clearance:
+    value: null
+    unit: "feet"
+    status: PLACEHOLDER
+    source: "CFC 2022 Chapter 32 / NFPA 13 clearance to sprinklers — VERIFY"
+    todo: "Required clearance between top of storage and sprinkler deflectors / ceiling."
+
+# Automatic sprinkler design basis (NFPA 13 / CFC).
+sprinkler_design:
+  design_density:
+    value: null
+    unit: "gpm/sq ft"
+    status: PLACEHOLDER
+    source: "Applicable NFPA 13 storage design tables / CFC Chapter 32 — VERIFY"
+    todo: "Design density depends on commodity class, storage height, ceiling height, and system type (ESFR / CMSA / control-mode)."
+  design_area:
+    value: null
+    unit: "square feet"
+    status: PLACEHOLDER
+    source: "Applicable NFPA 13 storage design tables — VERIFY"
+    todo: "Design area of sprinkler operation associated with the density above."
+  in_rack_sprinklers_required:
+    value: null   # expected: true / false once determined by rule
+    status: PLACEHOLDER
+    source: "NFPA 13 storage provisions / CFC Chapter 32 — VERIFY"
+    todo: "Whether in-rack sprinklers are required depends on commodity, height, and ceiling protection."
+
+# Other commonly triggered requirements (kept as a checklist of placeholders).
+other_requirements:
+  - id: smoke_and_heat_removal
+    name: "Smoke and heat removal"
+    required:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 (smoke and heat removal) — VERIFY"
+      todo: "Determine if/when smoke & heat removal (e.g. roof vents, mechanical) is required."
+  - id: draft_curtains
+    name: "Draft curtains / curtain boards"
+    required:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY"
+      todo: "Determine applicability of draft curtains."
+  - id: fire_department_access
+    name: "Fire department access doors / aisles"
+    required:
+      value: null
+      status: PLACEHOLDER
+      source: "CFC 2022 Chapter 32 — VERIFY"
+      todo: "Determine access door spacing and access aisle requirements."
+  - id: flue_spaces
+    name: "Rack flue spaces (transverse / longitudinal)"
+    required:
+      value: null
+      status: PLACEHOLDER
+      source: "NFPA 13 / CFC Chapter 32 flue space provisions — VERIFY"
+      todo: "Determine required transverse and longitudinal flue space dimensions."

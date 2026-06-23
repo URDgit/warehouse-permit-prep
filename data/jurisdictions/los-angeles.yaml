@@ -1,0 +1,66 @@
+# =====================================================================
+#  JURISDICTION  —  City of Los Angeles (LADBS / LAFD)
+# =====================================================================
+#
+#  This file lists the submittal requirements and required documents for
+#  a storage-rack / high-piled storage permit package in the City of
+#  Los Angeles. It is structured as a self-contained "plug-in" so other
+#  cities can later be added as their own files without changing code.
+#
+#  Every item is a PLACEHOLDER until verified against the CURRENT LADBS
+#  and LAFD submittal requirements / information bulletins.
+#
+#  See commodity-classification.yaml for how to read a value.
+# =====================================================================
+
+meta:
+  jurisdiction_id: "los-angeles"
+  jurisdiction_name: "City of Los Angeles (LADBS / LAFD)"
+  status: PLACEHOLDER
+  source: "LADBS plan-check submittal requirements + LAFD high-piled combustible storage permit — VERIFY current bulletins/forms"
+  reviewing_agencies:
+    - "Los Angeles Department of Building and Safety (LADBS) — structural / rack anchorage"
+    - "Los Angeles Fire Department (LAFD) — high-piled combustible storage / fire protection"
+
+# Documents typically required in the submittal package.
+required_documents:
+  - id: permit_application
+    name: "Permit application form(s)"
+    status: PLACEHOLDER
+    source: "LADBS / LAFD — VERIFY current form numbers"
+    todo: "Confirm which application forms LADBS and LAFD require."
+  - id: site_floor_plan
+    name: "Site / floor plan showing rack layout, aisles, and exits"
+    status: PLACEHOLDER
+    source: "LADBS / LAFD — VERIFY"
+    todo: "Confirm plan content, scale, and number of copies/format."
+  - id: rack_elevations
+    name: "Rack elevations and sections (heights, tiers, dimensions)"
+    status: PLACEHOLDER
+    source: "LADBS — VERIFY"
+    todo: "Confirm required rack drawing details."
+  - id: high_piled_storage_plan
+    name: "High-piled combustible storage plan / commodity description"
+    status: PLACEHOLDER
+    source: "LAFD high-piled storage requirements — VERIFY"
+    todo: "Confirm required commodity/storage information and format."
+  - id: structural_calcs
+    name: "Stamped rack structural & seismic anchorage calculations"
+    status: PLACEHOLDER
+    source: "LADBS — VERIFY"
+    todo: "Confirm calculation submittal requirements and engineer-of-record stamp requirements."
+  - id: sprinkler_documentation
+    name: "Sprinkler system documentation / fire protection plan"
+    status: PLACEHOLDER
+    source: "LAFD / LADBS — VERIFY"
+    todo: "Confirm whether existing-system documentation and/or deferred sprinkler submittal is required."
+
+# Rules for WHEN each requirement is triggered (by area, height, commodity).
+submittal_rules:
+  status: PLACEHOLDER
+  source: "LADBS / LAFD submittal triggers — VERIFY"
+  todo: >
+    Define the conditions under which each document is required (e.g.
+    high-piled area over a threshold, storage above a height, specific
+    commodity classes). No triggers are assumed; until defined, the app
+    lists all documents as "potentially required — verify applicability".
