@@ -19,6 +19,7 @@ import { buildVerificationBrief, type VerificationBrief } from "@/engine/report/
 import { buildDemoPackage } from "@/engine/demo/buildDemoPackage";
 import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "@/engine/data/overrides";
 import { loadFirmProfile, EMPTY_FIRM, type FirmProfile } from "@/engine/firm";
+import { loadLibraries, type Libraries } from "@/engine/libraries";
 
 export interface FieldError {
   path: string;
@@ -70,6 +71,24 @@ export async function saveFirmProfile(profile: FirmProfile): Promise<{ ok: true 
   try {
     const file = path.join(process.cwd(), "data", "firm-profile.json");
     fs.writeFileSync(file, JSON.stringify({ ...EMPTY_FIRM, ...profile }, null, 2), "utf8");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, message: (e as Error).message };
+  }
+}
+
+export async function getLibraries(): Promise<Libraries> {
+  return loadLibraries();
+}
+
+export async function saveLibraries(lib: Libraries): Promise<{ ok: true } | { ok: false; message: string }> {
+  try {
+    const file = path.join(process.cwd(), "data", "libraries.json");
+    const clean: Libraries = {
+      anchors: Array.isArray(lib?.anchors) ? lib.anchors : [],
+      commodities: Array.isArray(lib?.commodities) ? lib.commodities : [],
+    };
+    fs.writeFileSync(file, JSON.stringify(clean, null, 2), "utf8");
     return { ok: true };
   } catch (e) {
     return { ok: false, message: (e as Error).message };

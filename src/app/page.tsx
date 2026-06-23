@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { generateReviewPackage, getVerificationBrief, getDemoPackage, type GenerateResult } from "@/app/actions";
+import { generateReviewPackage, getVerificationBrief, getDemoPackage, getLibraries, type GenerateResult } from "@/app/actions";
+import type { Libraries } from "@/engine/libraries";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
 import { downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
@@ -146,6 +147,27 @@ export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const [demoBusy, setDemoBusy] = useState(false);
+  const [libraries, setLibraries] = useState<Libraries>({ anchors: [], commodities: [] });
+
+  useEffect(() => {
+    getLibraries().then(setLibraries);
+  }, []);
+
+  function loadCommodity(id: string) {
+    const c = libraries.commodities.find((x) => x.id === id);
+    if (!c) return;
+    setForm((f) => ({
+      ...f,
+      commodity: {
+        description: c.description,
+        primaryMaterial: c.primaryMaterial,
+        packaging: c.packaging,
+        plasticContent: c.plasticContent,
+        encapsulated: c.encapsulated,
+        idlePalletsStored: c.idlePalletsStored,
+      },
+    }));
+  }
 
   // Load saved projects on first mount (migrating the old single-draft store).
   useEffect(() => {
@@ -362,6 +384,7 @@ export default function Home() {
           <input type="file" accept="application/json" style={{ display: "none" }} onChange={importProject} />
         </label>
         <Link className="btn btn-secondary" href="/settings">Firm profile</Link>
+        <Link className="btn btn-secondary" href="/libraries">Libraries</Link>
       </div>
       <h1>Storage-Rack Permit — Intake</h1>
       <p className="note">
@@ -453,7 +476,7 @@ export default function Home() {
           <Sel label="Rack depth configuration" value={form.rack.rackDepthConfig} onChange={(v) => set("rack", "rackDepthConfig", v)} options={["single-row", "double-row", "multi-row", "unknown"]} />
           <Num label="Aisle width" unit="ft" req value={form.rack.aisleWidthFt} error={fe("rack", "aisleWidthFt")} onChange={(v) => set("rack", "aisleWidthFt", v)} />
           <Check label="Anchored to slab?" checked={form.rack.anchored} onChange={(v) => set("rack", "anchored", v)} />
-          <Text label="Anchor type (optional)" value={form.rack.anchorType} onChange={(v) => set("rack", "anchorType", v)} />
+          <Text label="Anchor type (optional)" value={form.rack.anchorType} onChange={(v) => set("rack", "anchorType", v)} suggestions={libraries.anchors.map((a) => a.name).filter(Boolean)} />
         </div>
       </fieldset>
 
@@ -468,6 +491,17 @@ export default function Home() {
 
       <fieldset>
         <legend>Commodity (one type per project)</legend>
+        {libraries.commodities.length > 0 && (
+          <label className="field" style={{ marginBottom: 10 }}>
+            <span>Load saved commodity</span>
+            <select value="" onChange={(e) => { if (e.target.value) loadCommodity(e.target.value); e.currentTarget.value = ""; }}>
+              <option value="">— choose a saved commodity to pre-fill —</option>
+              {libraries.commodities.map((c) => (
+                <option key={c.id} value={c.id}>{c.label || c.description || "(unnamed)"}</option>
+              ))}
+            </select>
+          </label>
+        )}
         <div className="grid">
           <Text label="Commodity description" req value={form.commodity.description} error={fe("commodity", "description")} onChange={(v) => set("commodity", "description", v)} />
           <Text label="Primary material (optional)" value={form.commodity.primaryMaterial} onChange={(v) => set("commodity", "primaryMaterial", v)} />
@@ -527,16 +561,25 @@ function FieldShell(props: { label: string; req?: boolean; unit?: string; hint?:
   );
 }
 
-function Text(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean; disabled?: boolean; error?: string; hint?: string }) {
+function Text(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean; disabled?: boolean; error?: string; hint?: string; suggestions?: string[] }) {
+  const listId = props.suggestions && props.suggestions.length > 0 ? "dl-" + props.label.replace(/\W+/g, "-").toLowerCase() : undefined;
   return (
     <FieldShell label={props.label} req={props.req} hint={props.hint} error={props.error}>
       <input
         className={props.error ? "input-error" : ""}
         value={props.value}
+        list={listId}
         onChange={(e) => props.onChange(e.target.value)}
         disabled={props.disabled}
         aria-invalid={props.error ? true : undefined}
       />
+      {listId && (
+        <datalist id={listId}>
+          {props.suggestions!.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
+      )}
     </FieldShell>
   );
 }
