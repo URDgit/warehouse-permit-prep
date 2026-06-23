@@ -129,6 +129,23 @@ below are never changed. Delete `data/overrides.yaml` to clear all app-entered
 verified values. (Classification rules and submittal triggers are not handled by
 that screen — edit those here.)
 
+## Adding another jurisdiction
+
+The app loads **every** file in `jurisdictions/`. To add a city or county:
+
+1. Copy `jurisdictions/los-angeles.yaml` (or `la-county.yaml`) to a new file,
+   e.g. `jurisdictions/ontario.yaml`.
+2. Edit its `meta.jurisdiction_id` and `meta.jurisdiction_name`, then update the
+   documents, checklists, and citations for that jurisdiction (with your
+   engineer). The statewide California Fire Code (Chapter 32) plan-content list
+   carries over — confirm any local amendments.
+3. Add a one-line entry to `src/engine/jurisdictions/registry.ts` with the same
+   `id` and a display name, so it appears in the intake's Jurisdiction dropdown.
+
+The shared code values (fire-code, seismic, anchorage) are statewide / national
+and are **not** per-jurisdiction — only the submittal documents, plan checklist,
+forms, and triggers live in the jurisdiction file.
+
 ## The files
 
 | File | What it holds |

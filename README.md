@@ -12,7 +12,8 @@ permit in the **City of Los Angeles (LADBS/LAFD)**.
 ## What it does (MVP scope)
 
 - **One scenario:** installing storage racks in an *existing* warehouse.
-- **One jurisdiction:** City of Los Angeles (LADBS/LAFD).
+- **California jurisdictions** (selectable): City of Los Angeles (LADBS/LAFD),
+  County of Los Angeles, and City of Long Beach — more added as data files.
 - **One commodity type per project.**
 - Pipeline: **Intake → classification → calculations → review package (report).**
 - No CAD/drawings, no user accounts, no payments. Runs on your computer.

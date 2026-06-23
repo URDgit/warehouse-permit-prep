@@ -23,7 +23,7 @@ export const CODE_BASIS = [
   "ASCE 7-16 — seismic design (as referenced by the 2022 CBC)",
   "ACI 318 — anchoring to concrete (Chapter 17)",
   "ANSI/RMI MH16.1 — design of steel storage racks",
-  "City of Los Angeles (LADBS / LAFD) submittal requirements",
+  "Local jurisdiction (city / county) submittal requirements",
 ];
 
 export const APP_TITLE = "Storage-Rack Permit Package — Draft Preparation Aid";

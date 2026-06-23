@@ -16,6 +16,7 @@
 export const JURISDICTIONS = [
   { id: "los-angeles", name: "City of Los Angeles (LADBS / LAFD)" },
   { id: "la-county", name: "County of Los Angeles (Public Works B&S / LA County Fire)" },
+  { id: "long-beach", name: "City of Long Beach (LBDS / LBFD)" },
 ] as const;
 
 export const JURISDICTION_IDS = JURISDICTIONS.map((j) => j.id) as unknown as readonly [string, ...string[]];

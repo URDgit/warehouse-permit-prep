@@ -226,7 +226,7 @@ export function renderVerificationBriefMarkdown(brief: VerificationBrief): strin
   L.push("");
   L.push(
     "**Purpose.** This software helps prepare a high-piled storage / storage-rack permit package " +
-      "for the City of Los Angeles (LADBS/LAFD). It deliberately contains **no code values of its own**. " +
+      "for a California jurisdiction (e.g. LA City, LA County, Long Beach). It deliberately contains **no code values of its own**. " +
       "This brief lists everything a California-licensed engineer must supply or verify so the tool can " +
       "produce trustworthy draft output. Please provide a value and an exact code citation for each item " +
       "below (or confirm/correct the cited reference).",
