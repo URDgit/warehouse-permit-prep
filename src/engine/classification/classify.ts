@@ -26,6 +26,8 @@ export interface TriggeredRequirement {
 
 export interface ClassificationResult {
   commodityClass: CodeValue<string>;
+  /** The matched class id (machine-readable), or null if UNDETERMINED. */
+  commodityClassId: string | null;
   triggeredRequirements: TriggeredRequirement[];
   /** Problems found in the classification rules data (unknown fields, etc.). */
   dataIssues: string[];
@@ -42,6 +44,7 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
   const baseSource = String(rules.source ?? "CFC 2022 Chapter 32 — VERIFY");
 
   let commodityClass: CodeValue<string>;
+  let commodityClassId: string | null = null;
   let dataIssues: string[] = [];
   let classDescription: string;
   let classStatus: "ok" | "blocked_by_placeholder";
@@ -62,6 +65,7 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
       };
       classDescription = `Commodity classified as "${classNameById(match.classId)}" by verified rule #${(match.ruleIndex ?? 0) + 1}.`;
       classStatus = "ok";
+      commodityClassId = match.classId;
     } else {
       commodityClass = {
         id: "commodity.class",
@@ -178,6 +182,7 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
 
   return {
     commodityClass,
+    commodityClassId,
     triggeredRequirements,
     dataIssues,
     audit: [classAudit, reqAudit],

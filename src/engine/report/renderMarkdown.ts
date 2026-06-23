@@ -138,10 +138,15 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   L.push("");
   for (const agency of pkg.jurisdiction.reviewingAgencies) L.push(`- _Reviewing agency:_ ${agency}`);
   L.push("");
-  L.push(`| Document | Status | Source |`);
-  L.push(`| --- | --- | --- |`);
+  if (pkg.jurisdiction.dataIssues.length) {
+    L.push(`Submittal trigger data issues: ${pkg.jurisdiction.dataIssues.join(" ")}`);
+    L.push("");
+  }
+  L.push(`| Document | Applicability | Why | Source |`);
+  L.push(`| --- | --- | --- | --- |`);
   for (const d of pkg.jurisdiction.requiredDocuments) {
-    L.push(`| ${d.name} | ${d.status.isPlaceholder ? "Verify applicability" : "Required"} | ${d.status.source} |`);
+    const label = d.applicability === "required" ? "Required" : d.applicability === "not_required" ? "Not required" : "Verify applicability";
+    L.push(`| ${d.name} | ${label} | ${d.reason} | ${d.status.source} |`);
   }
   L.push("");
 

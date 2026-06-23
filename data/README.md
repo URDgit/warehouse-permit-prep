@@ -100,6 +100,26 @@ silently guess — it lists the problem under "Rule data issues" in the report.
 The file ships with an `example_rules:` block showing the format. The app
 **never reads** `example_rules` — copy entries into `rules:` and verify them.
 
+## Defining when each submittal document is required (LA triggers)
+
+`jurisdictions/los-angeles.yaml` uses the **same condition format** to decide
+which documents apply. Until its `submittal_rules: status:` is `VERIFIED`, every
+document shows as "verify applicability". Once verified, give a document an
+`applies_when:` block to make it conditional:
+
+```yaml
+required_documents:
+  - id: high_piled_storage_plan
+    name: "High-piled combustible storage plan"
+    source: "LAFD — VERIFY"
+    applies_when: { high_piled_area_sqft: { gte: 500 } }
+```
+
+A document with no `applies_when:` is required for every submittal. Fields you
+may test include `high_piled_area_sqft`, `storage_height_ft`, `existing_sprinkler`,
+`anchored`, and `commodity_class` (the result of the classification step). The
+file header lists them all.
+
 ## The files
 
 | File | What it holds |

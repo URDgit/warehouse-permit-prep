@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { generateReviewPackage, type GenerateResult } from "@/app/actions";
+import { intakeSchema } from "@/engine/intake/schema";
 import ReviewPackageView from "@/app/ReviewPackageView";
 
 // Example data so the walking skeleton runs end-to-end on the first click.
@@ -111,17 +112,46 @@ function toPayload(f: Form) {
 export default function Home() {
   const [form, setForm] = useState<Form>(initialForm);
   const [result, setResult] = useState<GenerateResult | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   function set(section: keyof Form, key: string, value: unknown) {
     setForm((f) => ({ ...f, [section]: { ...(f[section] as object), [key]: value } }));
+    // Clear this field's error as soon as the user edits it.
+    setErrors((errs) => {
+      const k = `${String(section)}.${key}`;
+      if (!errs[k]) return errs;
+      const next = { ...errs };
+      delete next[k];
+      return next;
+    });
+  }
+
+  /** Error message for a given field path, if any. */
+  function fe(section: keyof Form, key: string): string | undefined {
+    return errors[`${String(section)}.${key}`];
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setResult(null);
-    const res = await generateReviewPackage(toPayload(form));
+
+    // Validate in the browser first, using the SAME schema the engine uses.
+    const parsed = intakeSchema.safeParse(toPayload(form));
+    if (!parsed.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of parsed.error.issues) {
+        const key = issue.path.join(".");
+        if (!fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    setErrors({});
+    setLoading(true);
+    const res = await generateReviewPackage(parsed.data);
     setResult(res);
     setLoading(false);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
@@ -140,8 +170,10 @@ export default function Home() {
     );
   }
 
+  const errorCount = Object.keys(errors).length;
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} noValidate>
       <h1>Storage-Rack Permit — Intake</h1>
       <p className="note">
         Fill in the project details below, then generate a draft review package. The form is
@@ -150,9 +182,18 @@ export default function Home() {
         code determinations on its own.
       </p>
 
+      {errorCount > 0 && (
+        <div className="errors">
+          <strong>
+            Please fix {errorCount} highlighted {errorCount === 1 ? "field" : "fields"} below before
+            generating.
+          </strong>
+        </div>
+      )}
+
       {result && !result.ok && (
         <div className="errors">
-          <strong>Please fix the following before generating:</strong>
+          <strong>Could not generate the report:</strong>
           <ul>
             {result.errors.map((er, i) => (
               <li key={i}>
@@ -166,9 +207,9 @@ export default function Home() {
       <fieldset>
         <legend>Project</legend>
         <div className="grid">
-          <Text label="Project name" req value={form.project.projectName} onChange={(v) => set("project", "projectName", v)} />
-          <Text label="Prepared by" req value={form.project.preparedBy} onChange={(v) => set("project", "preparedBy", v)} />
-          <Text label="Date" req value={form.project.preparedDate} onChange={(v) => set("project", "preparedDate", v)} />
+          <Text label="Project name" req value={form.project.projectName} error={fe("project", "projectName")} onChange={(v) => set("project", "projectName", v)} />
+          <Text label="Prepared by" req value={form.project.preparedBy} error={fe("project", "preparedBy")} onChange={(v) => set("project", "preparedBy", v)} />
+          <Text label="Date" req value={form.project.preparedDate} error={fe("project", "preparedDate")} onChange={(v) => set("project", "preparedDate", v)} />
           <Text label="Jurisdiction" value="Los Angeles (LADBS/LAFD)" onChange={() => {}} disabled />
         </div>
       </fieldset>
@@ -176,11 +217,11 @@ export default function Home() {
       <fieldset>
         <legend>Building</legend>
         <div className="grid">
-          <Text label="Building address" req value={form.building.address} onChange={(v) => set("building", "address", v)} />
+          <Text label="Building address" req value={form.building.address} error={fe("building", "address")} onChange={(v) => set("building", "address", v)} />
           <Text label="Construction type (optional)" value={form.building.constructionType} onChange={(v) => set("building", "constructionType", v)} />
-          <Num label="Total building area (sq ft)" req value={form.building.totalBuildingAreaSqFt} onChange={(v) => set("building", "totalBuildingAreaSqFt", v)} />
-          <Num label="High-piled storage area (sq ft)" req value={form.building.highPiledAreaSqFt} onChange={(v) => set("building", "highPiledAreaSqFt", v)} />
-          <Num label="Ceiling height (ft)" req value={form.building.ceilingHeightFt} onChange={(v) => set("building", "ceilingHeightFt", v)} />
+          <Num label="Total building area" unit="sq ft" req value={form.building.totalBuildingAreaSqFt} error={fe("building", "totalBuildingAreaSqFt")} onChange={(v) => set("building", "totalBuildingAreaSqFt", v)} />
+          <Num label="High-piled storage area" unit="sq ft" req value={form.building.highPiledAreaSqFt} error={fe("building", "highPiledAreaSqFt")} onChange={(v) => set("building", "highPiledAreaSqFt", v)} />
+          <Num label="Ceiling height" unit="ft" req value={form.building.ceilingHeightFt} error={fe("building", "ceilingHeightFt")} onChange={(v) => set("building", "ceilingHeightFt", v)} />
           <Check label="Existing sprinkler system?" checked={form.building.existingSprinkler} onChange={(v) => set("building", "existingSprinkler", v)} />
           <Sel label="Sprinkler system type" value={form.building.sprinklerSystemType} onChange={(v) => set("building", "sprinklerSystemType", v)} options={["ESFR", "CMSA", "control-mode", "none", "unknown"]} />
         </div>
@@ -190,10 +231,10 @@ export default function Home() {
         <legend>Rack configuration</legend>
         <div className="grid">
           <Sel label="Rack type" value={form.rack.rackType} onChange={(v) => set("rack", "rackType", v)} options={["selective", "drive-in", "push-back", "cantilever", "other", "unknown"]} />
-          <Num label="Storage height (ft)" req value={form.rack.storageHeightFt} onChange={(v) => set("rack", "storageHeightFt", v)} />
-          <Num label="Number of tiers" req value={form.rack.numberOfTiers} onChange={(v) => set("rack", "numberOfTiers", v)} />
+          <Num label="Storage height" unit="ft" hint="Top of storage above the floor" req value={form.rack.storageHeightFt} error={fe("rack", "storageHeightFt")} onChange={(v) => set("rack", "storageHeightFt", v)} />
+          <Num label="Number of tiers" req value={form.rack.numberOfTiers} error={fe("rack", "numberOfTiers")} onChange={(v) => set("rack", "numberOfTiers", v)} />
           <Sel label="Rack depth configuration" value={form.rack.rackDepthConfig} onChange={(v) => set("rack", "rackDepthConfig", v)} options={["single-row", "double-row", "multi-row", "unknown"]} />
-          <Num label="Aisle width (ft)" req value={form.rack.aisleWidthFt} onChange={(v) => set("rack", "aisleWidthFt", v)} />
+          <Num label="Aisle width" unit="ft" req value={form.rack.aisleWidthFt} error={fe("rack", "aisleWidthFt")} onChange={(v) => set("rack", "aisleWidthFt", v)} />
           <Check label="Anchored to slab?" checked={form.rack.anchored} onChange={(v) => set("rack", "anchored", v)} />
           <Text label="Anchor type (optional)" value={form.rack.anchorType} onChange={(v) => set("rack", "anchorType", v)} />
         </div>
@@ -202,16 +243,16 @@ export default function Home() {
       <fieldset>
         <legend>Storage loads (used with a verified factor to derive seismic mass)</legend>
         <div className="grid">
-          <Num label="Product load per level (lb, optional)" value={form.loads.productLoadPerLevelLb} onChange={(v) => set("loads", "productLoadPerLevelLb", v)} />
-          <Num label="Number of loaded levels (optional)" value={form.loads.numberOfLoadedLevels} onChange={(v) => set("loads", "numberOfLoadedLevels", v)} />
-          <Num label="Rack self-weight (lb, optional)" value={form.loads.rackSelfWeightLb} onChange={(v) => set("loads", "rackSelfWeightLb", v)} />
+          <Num label="Product load per level" unit="lb" hint="Max stored weight on one level" value={form.loads.productLoadPerLevelLb} error={fe("loads", "productLoadPerLevelLb")} onChange={(v) => set("loads", "productLoadPerLevelLb", v)} />
+          <Num label="Number of loaded levels" value={form.loads.numberOfLoadedLevels} error={fe("loads", "numberOfLoadedLevels")} onChange={(v) => set("loads", "numberOfLoadedLevels", v)} />
+          <Num label="Rack self-weight" unit="lb" hint="Weight of the empty rack" value={form.loads.rackSelfWeightLb} error={fe("loads", "rackSelfWeightLb")} onChange={(v) => set("loads", "rackSelfWeightLb", v)} />
         </div>
       </fieldset>
 
       <fieldset>
         <legend>Commodity (one type per project)</legend>
         <div className="grid">
-          <Text label="Commodity description" req value={form.commodity.description} onChange={(v) => set("commodity", "description", v)} />
+          <Text label="Commodity description" req value={form.commodity.description} error={fe("commodity", "description")} onChange={(v) => set("commodity", "description", v)} />
           <Text label="Primary material (optional)" value={form.commodity.primaryMaterial} onChange={(v) => set("commodity", "primaryMaterial", v)} />
           <Sel label="Packaging" value={form.commodity.packaging} onChange={(v) => set("commodity", "packaging", v)} options={["none", "cartoned", "exposed", "palletized", "unknown"]} />
           <Sel label="Plastic content" value={form.commodity.plasticContent} onChange={(v) => set("commodity", "plasticContent", v)} options={["none", "limited", "significant", "unknown"]} />
@@ -224,8 +265,8 @@ export default function Home() {
         <legend>Sprinkler</legend>
         <div className="grid">
           <Sel label="System type" value={form.sprinkler.systemType} onChange={(v) => set("sprinkler", "systemType", v)} options={["ESFR", "CMSA", "control-mode", "none", "unknown"]} />
-          <Num label="Design density (gpm/sq ft, optional)" value={form.sprinkler.designDensityGpmPerSqFt} onChange={(v) => set("sprinkler", "designDensityGpmPerSqFt", v)} />
-          <Num label="K-factor (optional)" value={form.sprinkler.kFactor} onChange={(v) => set("sprinkler", "kFactor", v)} />
+          <Num label="Design density" unit="gpm/sq ft" value={form.sprinkler.designDensityGpmPerSqFt} error={fe("sprinkler", "designDensityGpmPerSqFt")} onChange={(v) => set("sprinkler", "designDensityGpmPerSqFt", v)} />
+          <Num label="K-factor (optional)" value={form.sprinkler.kFactor} error={fe("sprinkler", "kFactor")} onChange={(v) => set("sprinkler", "kFactor", v)} />
           <Check label="In-rack sprinklers present?" checked={form.sprinkler.inRackSprinklers} onChange={(v) => set("sprinkler", "inRackSprinklers", v)} />
         </div>
       </fieldset>
@@ -234,10 +275,10 @@ export default function Home() {
         <legend>Seismic site data (from the project's geotechnical / USGS data)</legend>
         <div className="grid">
           <Sel label="Site class" value={form.seismic.siteClass} onChange={(v) => set("seismic", "siteClass", v)} options={["A", "B", "C", "D", "E", "F", "unknown"]} />
-          <Num label="Ss (optional)" value={form.seismic.Ss} onChange={(v) => set("seismic", "Ss", v)} />
-          <Num label="S1 (optional)" value={form.seismic.S1} onChange={(v) => set("seismic", "S1", v)} />
-          <Num label="Sds (optional)" value={form.seismic.Sds} onChange={(v) => set("seismic", "Sds", v)} />
-          <Num label="Sd1 (optional)" value={form.seismic.Sd1} onChange={(v) => set("seismic", "Sd1", v)} />
+          <Num label="Ss" unit="g" hint="Mapped spectral accel., short period" value={form.seismic.Ss} error={fe("seismic", "Ss")} onChange={(v) => set("seismic", "Ss", v)} />
+          <Num label="S1" unit="g" hint="Mapped spectral accel., 1-second" value={form.seismic.S1} error={fe("seismic", "S1")} onChange={(v) => set("seismic", "S1", v)} />
+          <Num label="Sds" unit="g" hint="Design spectral accel., short period" value={form.seismic.Sds} error={fe("seismic", "Sds")} onChange={(v) => set("seismic", "Sds", v)} />
+          <Num label="Sd1" unit="g" hint="Design spectral accel., 1-second" value={form.seismic.Sd1} error={fe("seismic", "Sd1")} onChange={(v) => set("seismic", "Sd1", v)} />
           <Sel label="Seismic design category" value={form.seismic.seismicDesignCategory} onChange={(v) => set("seismic", "seismicDesignCategory", v)} options={["A", "B", "C", "D", "E", "F", "unknown"]} />
           <Sel label="Risk category" value={form.seismic.riskCategory} onChange={(v) => set("seismic", "riskCategory", v)} options={["I", "II", "III", "IV", "unknown"]} />
         </div>
@@ -254,34 +295,59 @@ export default function Home() {
 
 /* ---- small input helpers (kept local to the form) ---- */
 
-function Text(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean; disabled?: boolean }) {
+function FieldShell(props: { label: string; req?: boolean; unit?: string; hint?: string; error?: string; children: React.ReactNode }) {
   return (
     <label className="field">
-      <span>{props.label} {props.req && <span className="req">*</span>}</span>
-      <input value={props.value} onChange={(e) => props.onChange(e.target.value)} disabled={props.disabled} />
+      <span>
+        {props.label}
+        {props.unit ? <span className="unit"> ({props.unit})</span> : null}
+        {props.req && <span className="req"> *</span>}
+      </span>
+      {props.children}
+      {props.hint && !props.error && <small className="hint">{props.hint}</small>}
+      {props.error && <small className="field-error">{props.error}</small>}
     </label>
   );
 }
 
-function Num(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean }) {
+function Text(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean; disabled?: boolean; error?: string; hint?: string }) {
   return (
-    <label className="field">
-      <span>{props.label} {props.req && <span className="req">*</span>}</span>
-      <input type="number" step="any" value={props.value} onChange={(e) => props.onChange(e.target.value)} />
-    </label>
+    <FieldShell label={props.label} req={props.req} hint={props.hint} error={props.error}>
+      <input
+        className={props.error ? "input-error" : ""}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+        disabled={props.disabled}
+        aria-invalid={props.error ? true : undefined}
+      />
+    </FieldShell>
+  );
+}
+
+function Num(props: { label: string; value: string; onChange: (v: string) => void; req?: boolean; unit?: string; hint?: string; error?: string }) {
+  return (
+    <FieldShell label={props.label} req={props.req} unit={props.unit} hint={props.hint} error={props.error}>
+      <input
+        type="number"
+        step="any"
+        className={props.error ? "input-error" : ""}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+        aria-invalid={props.error ? true : undefined}
+      />
+    </FieldShell>
   );
 }
 
 function Sel(props: { label: string; value: string; onChange: (v: string) => void; options: string[] }) {
   return (
-    <label className="field">
-      <span>{props.label}</span>
+    <FieldShell label={props.label}>
       <select value={props.value} onChange={(e) => props.onChange(e.target.value)}>
         {props.options.map((o) => (
           <option key={o} value={o}>{o}</option>
         ))}
       </select>
-    </label>
+    </FieldShell>
   );
 }
 

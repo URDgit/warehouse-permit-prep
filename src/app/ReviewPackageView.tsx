@@ -17,6 +17,12 @@ function valueText(cv: CodeValue): string {
   return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""}`;
 }
 
+function applicabilityLabel(a: ReviewPackage["jurisdiction"]["requiredDocuments"][number]["applicability"]): string {
+  if (a === "required") return "Required";
+  if (a === "not_required") return "Not required";
+  return "Verify applicability";
+}
+
 export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
   const m = pkg.meta;
 
@@ -135,6 +141,9 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
             {pkg.jurisdiction.reviewingAgencies.map((a) => <li key={a}>{a}</li>)}
           </ul>
         )}
+        {pkg.jurisdiction.dataIssues.length > 0 && (
+          <p className="note"><strong>Submittal trigger data issues:</strong> {pkg.jurisdiction.dataIssues.join(" ")}</p>
+        )}
         <table className="report">
           <thead>
             <tr><th>Document</th><th>Applicability</th><th>Source</th></tr>
@@ -143,7 +152,10 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
             {pkg.jurisdiction.requiredDocuments.map((d) => (
               <tr key={d.id}>
                 <td>{d.name}</td>
-                <td>{d.status.isPlaceholder ? "Verify applicability" : "Required"} <Badge cv={d.status} /></td>
+                <td>
+                  {applicabilityLabel(d.applicability)} <Badge cv={d.status} />
+                  <br /><span className="source">{d.reason}</span>
+                </td>
                 <td className="source">{d.status.source}</td>
               </tr>
             ))}

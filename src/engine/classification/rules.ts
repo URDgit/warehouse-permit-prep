@@ -1,26 +1,15 @@
 // =====================================================================
-//  CLASSIFICATION RULES EVALUATOR  — the decision-tree machinery
+//  CLASSIFICATION RULES  — commodity-specific rule evaluation
 // =====================================================================
 //
-//  Pure functions that execute the commodity-classification rules an
-//  engineer writes in commodity-classification.yaml. This is *machinery
-//  only*: it invents no values. It decides which (engineer-written,
-//  verified) rule matches the intake answers.
-//
-//  A rule looks like:
-//    when: { plastic_content: significant, encapsulated: true }
-//    assign_class: group_a_plastics
-//    source: "CFC 2022 §32xx.x"
-//
-//  Rules are checked in order; the FIRST whose conditions ALL match wins.
-//  Supported condition forms inside `when`:
-//    field: value                 -> equals (strings compared case-insensitively)
-//    field: { in: [a, b] }        -> matches any value in the list
-//    field: { not: value }        -> not equal
-//    field: { gte: n } / lte/gt/lt -> numeric comparison
+//  Executes the commodity-classification rules an engineer writes in
+//  commodity-classification.yaml, using the shared condition machinery in
+//  conditions.ts. Rules are checked in order; the FIRST whose conditions
+//  all match wins. Bad rule data is reported, never acted on.
 // =====================================================================
 
 import type { IntakeInput } from "@/engine/intake/schema";
+import { evaluateWhen, type FieldLookup } from "@/engine/conditions";
 
 export interface ClassificationRule {
   when: Record<string, unknown>;
@@ -38,7 +27,7 @@ export interface RuleMatch {
   issues: string[];
 }
 
-// The friendly field names a rule author may test, mapped to the intake value.
+// The friendly field names a classification rule may test.
 const FIELD_RESOLVERS: Record<string, (i: IntakeInput) => unknown> = {
   plastic_content: (i) => i.commodity.plasticContent,
   packaging: (i) => i.commodity.packaging,
@@ -50,83 +39,17 @@ const FIELD_RESOLVERS: Record<string, (i: IntakeInput) => unknown> = {
   high_piled_area_sqft: (i) => i.building.highPiledAreaSqFt,
 };
 
-/** The field names available to rule authors (also used in error messages/docs). */
+/** Field names available to classification rule authors (for docs/messages). */
 export const RULE_FIELDS = Object.keys(FIELD_RESOLVERS);
 
-function equals(a: unknown, b: unknown): boolean {
-  if (typeof a === "string" && typeof b === "string") return a.toLowerCase() === b.toLowerCase();
-  return a === b;
-}
-
-function numCompare(
-  actual: unknown,
-  operand: unknown,
-  op: (a: number, b: number) => boolean,
-  field: string,
-  issues: string[],
-): boolean {
-  const a = Number(actual);
-  const b = Number(operand);
-  if (Number.isNaN(a) || Number.isNaN(b)) {
-    issues.push(`Rule field "${field}": numeric comparison needs numbers on both sides.`);
-    return false;
-  }
-  return op(a, b);
-}
-
-/** Does a single field's condition match the actual intake value? */
-function matchCondition(actual: unknown, matcher: unknown, field: string, issues: string[]): boolean {
-  if (matcher === null || typeof matcher !== "object" || Array.isArray(matcher)) {
-    return equals(actual, matcher);
-  }
-  const m = matcher as Record<string, unknown>;
-  let ok = true;
-  for (const op of Object.keys(m)) {
-    const operand = m[op];
-    switch (op) {
-      case "in":
-        if (!Array.isArray(operand)) {
-          issues.push(`Rule field "${field}": 'in' expects a list.`);
-          ok = false;
-        } else {
-          ok = ok && operand.some((o) => equals(actual, o));
-        }
-        break;
-      case "not":
-        ok = ok && !equals(actual, operand);
-        break;
-      case "gte":
-        ok = ok && numCompare(actual, operand, (a, b) => a >= b, field, issues);
-        break;
-      case "lte":
-        ok = ok && numCompare(actual, operand, (a, b) => a <= b, field, issues);
-        break;
-      case "gt":
-        ok = ok && numCompare(actual, operand, (a, b) => a > b, field, issues);
-        break;
-      case "lt":
-        ok = ok && numCompare(actual, operand, (a, b) => a < b, field, issues);
-        break;
-      default:
-        issues.push(`Rule field "${field}": unknown operator "${op}".`);
-        ok = false;
-    }
-  }
-  return ok;
-}
-
-/**
- * Evaluate classification rules against the intake. Returns the first match,
- * plus any data problems found. Does not throw on bad data — it records an
- * issue and treats that rule as non-matching, so a typo can never silently
- * assign a class.
- */
 export function evaluateRules(
   input: IntakeInput,
   rules: ClassificationRule[],
   validClassIds: string[] = [],
 ): RuleMatch {
   const issues: string[] = [];
+  const resolve = (field: string): FieldLookup =>
+    field in FIELD_RESOLVERS ? { known: true, value: FIELD_RESOLVERS[field](input) } : { known: false };
 
   for (let idx = 0; idx < rules.length; idx++) {
     const rule = rules[idx];
@@ -145,21 +68,7 @@ export function evaluateRules(
       continue;
     }
 
-    let allMatch = true;
-    for (const field of Object.keys(rule.when)) {
-      const resolver = FIELD_RESOLVERS[field];
-      if (!resolver) {
-        issues.push(`Rule #${ruleNo} references unknown field "${field}". Allowed: ${RULE_FIELDS.join(", ")}.`);
-        allMatch = false;
-        break;
-      }
-      if (!matchCondition(resolver(input), rule.when[field], field, issues)) {
-        allMatch = false;
-        break;
-      }
-    }
-
-    if (allMatch) {
+    if (evaluateWhen(rule.when, resolve, issues) === "match") {
       return { matched: true, classId: rule.assign_class, source: rule.source, ruleIndex: idx, issues };
     }
   }

@@ -65,7 +65,7 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
   const classification = classifyCommodity(input, data);
   const seismic = computeSeismicDemand(input, data);
   const anchorage = computeAnchorage(input, data);
-  const jurisdiction = getLosAngelesRequirements(input, data);
+  const jurisdiction = getLosAngelesRequirements(input, data, classification);
 
   const auditTrail: AuditEntry[] = [
     ...classification.audit,
@@ -95,7 +95,8 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
 
   const assumptions = Array.from(new Set(auditTrail.flatMap((a) => a.assumptions)));
   const placeholderCount = codeValuesUsed.filter((cv) => cv.isPlaceholder).length;
-  const readiness = buildReadiness(codeValuesUsed, { seismic, anchorage }, classification.dataIssues);
+  const allDataIssues = [...classification.dataIssues, ...jurisdiction.dataIssues];
+  const readiness = buildReadiness(codeValuesUsed, { seismic, anchorage }, allDataIssues);
 
   return {
     meta: {

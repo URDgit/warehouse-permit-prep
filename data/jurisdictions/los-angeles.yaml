@@ -56,11 +56,35 @@ required_documents:
     todo: "Confirm whether existing-system documentation and/or deferred sprinkler submittal is required."
 
 # Rules for WHEN each requirement is triggered (by area, height, commodity).
+#
+# HOW TRIGGERS WORK
+# -----------------
+# While status below is not VERIFIED, the app lists every document as
+# "verify applicability" and decides nothing. When an engineer sets
+# status: VERIFIED, the app evaluates each document:
+#   - a document with NO `applies_when:` is required for every submittal;
+#   - a document WITH an `applies_when:` is Required / Not required /
+#     "verify" depending on whether its conditions match the project inputs.
+#
+# Give a document an `applies_when:` block (same condition format as the
+# commodity rules) to make it conditional, for example:
+#
+#   - id: high_piled_storage_plan
+#     name: "High-piled combustible storage plan"
+#     source: "LAFD — VERIFY"
+#     applies_when: { high_piled_area_sqft: { gte: 500 } }
+#
+# Fields you may test in `applies_when`:
+#   high_piled_area_sqft, total_building_area_sqft, storage_height_ft,
+#   ceiling_height_ft, aisle_width_ft, existing_sprinkler,
+#   sprinkler_system_type, anchored, commodity_class
+# (commodity_class is the result of the classification step; if it is still
+#  UNDETERMINED, any document that depends on it shows "verify".)
 submittal_rules:
   status: PLACEHOLDER
   source: "LADBS / LAFD submittal triggers — VERIFY"
   todo: >
     Define the conditions under which each document is required (e.g.
     high-piled area over a threshold, storage above a height, specific
-    commodity classes). No triggers are assumed; until defined, the app
-    lists all documents as "potentially required — verify applicability".
+    commodity classes), then set status: VERIFIED. No triggers are assumed;
+    until then the app lists all documents as "verify applicability".
