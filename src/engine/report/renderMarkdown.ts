@@ -11,6 +11,11 @@
 import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { CodeValue } from "@/engine/provenance";
 
+/** Collapse newlines/whitespace and escape pipes for safe Markdown table cells. */
+function mdCell(s: string): string {
+  return String(s).replace(/\s*\r?\n\s*/g, " ").replace(/\s{2,}/g, " ").replace(/\|/g, "\\|").trim();
+}
+
 function fmtValue(cv: CodeValue): string {
   if (cv.isPlaceholder) return "PLACEHOLDER — needs engineer";
   const unit = cv.unit ? ` ${cv.unit}` : "";
@@ -53,7 +58,7 @@ export function renderMarkdown(pkg: ReviewPackage): string {
     L.push(`### ${g.area} (${g.items.length})`);
     L.push(`| Item | What's needed | Source |`);
     L.push(`| --- | --- | --- |`);
-    for (const it of g.items) L.push(`| ${it.label} | ${it.need} | ${it.source} |`);
+    for (const it of g.items) L.push(`| ${mdCell(it.label)} | ${mdCell(it.need)} | ${mdCell(it.source)} |`);
     L.push("");
   }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { generateReviewPackage, type GenerateResult } from "@/app/actions";
+import { generateReviewPackage, getVerificationBriefMarkdown, type GenerateResult } from "@/app/actions";
 import { intakeSchema } from "@/engine/intake/schema";
 import ReviewPackageView from "@/app/ReviewPackageView";
 
@@ -132,6 +132,17 @@ export default function Home() {
     return errors[`${String(section)}.${key}`];
   }
 
+  async function downloadBrief() {
+    const md = await getVerificationBriefMarkdown();
+    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Engineer_Verification_Brief.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setResult(null);
@@ -181,6 +192,13 @@ export default function Home() {
         with your real values. This tool prepares a draft for a licensed engineer; it does not make
         code determinations on its own.
       </p>
+
+      <div className="toolbar">
+        <button type="button" className="btn btn-secondary" onClick={downloadBrief}>
+          ⤓ Download Engineer Verification Brief
+        </button>
+        <span className="note">A checklist to hand a licensed engineer — what to verify, with citations.</span>
+      </div>
 
       {errorCount > 0 && (
         <div className="errors">

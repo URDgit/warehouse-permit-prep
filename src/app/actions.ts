@@ -11,6 +11,8 @@
 
 import { intakeSchema } from "@/engine/intake/schema";
 import { buildReviewPackage, type ReviewPackage } from "@/engine/report/buildReviewPackage";
+import { loadCodeData } from "@/engine/data/loadData";
+import { buildVerificationBrief, renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
 
 export interface FieldError {
   path: string;
@@ -38,4 +40,14 @@ export async function generateReviewPackage(raw: unknown): Promise<GenerateResul
     // Most likely a data-file (YAML) problem; surface it plainly.
     return { ok: false, errors: [{ path: "data", message: (e as Error).message }] };
   }
+}
+
+/**
+ * Produce the Engineer Verification Brief (Markdown) from the current data
+ * files. Project-agnostic: it lists everything an engineer must verify so the
+ * tool can produce trustworthy output.
+ */
+export async function getVerificationBriefMarkdown(): Promise<string> {
+  const brief = buildVerificationBrief(loadCodeData());
+  return renderVerificationBriefMarkdown(brief);
 }
