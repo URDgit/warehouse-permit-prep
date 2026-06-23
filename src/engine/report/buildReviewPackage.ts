@@ -21,6 +21,7 @@ import type { CalcResult } from "@/engine/calculation/types";
 import { getLosAngelesRequirements, type JurisdictionResult } from "@/engine/jurisdictions/losAngeles";
 import { type AuditEntry, type CodeValue } from "@/engine/provenance";
 import { buildReadiness, type Readiness } from "@/engine/report/readiness";
+import { validateCodeData, type ValidationIssue } from "@/engine/data/validate";
 import { APP_TITLE, CODE_BASIS, DISCLAIMER } from "@/engine/constants";
 
 export interface ReviewPackage {
@@ -43,6 +44,8 @@ export interface ReviewPackage {
   jurisdiction: JurisdictionResult;
   /** Plain-language checklist of what still needs a licensed engineer. */
   readiness: Readiness;
+  /** Structural problems found in the data files (errors + warnings). */
+  dataIntegrity: ValidationIssue[];
   /** Every code value used anywhere, de-duplicated, with citations. */
   codeValuesUsed: CodeValue[];
   /** Every assumption surfaced anywhere in the engine. */
@@ -97,6 +100,7 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
   const placeholderCount = codeValuesUsed.filter((cv) => cv.isPlaceholder).length;
   const allDataIssues = [...classification.dataIssues, ...jurisdiction.dataIssues];
   const readiness = buildReadiness(codeValuesUsed, { seismic, anchorage }, allDataIssues);
+  const dataIntegrity = validateCodeData(data);
 
   return {
     meta: {
@@ -114,6 +118,7 @@ export function buildReviewPackage(input: IntakeInput, options: BuildOptions = {
     calculations: { seismic, anchorage },
     jurisdiction,
     readiness,
+    dataIntegrity,
     codeValuesUsed,
     assumptions,
     auditTrail,

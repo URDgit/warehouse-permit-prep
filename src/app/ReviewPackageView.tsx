@@ -60,6 +60,22 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
 
       <ReadinessPanel r={pkg.readiness} />
 
+      {pkg.dataIntegrity.some((i) => i.level === "error") && (
+        <div className="banner banner--danger" role="alert">
+          <strong>Data file problems detected</strong>
+          The data files have structural errors that must be fixed before relying on this output:
+          <ul>
+            {pkg.dataIntegrity
+              .filter((i) => i.level === "error")
+              .map((i, idx) => (
+                <li key={idx}>
+                  <code>{i.file} › {i.path}</code> — {i.message}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+
       <div className="toolbar">
         <button className="btn btn-secondary" onClick={downloadPdf} disabled={pdfBusy}>
           {pdfBusy ? "Generating…" : "⤓ Download PDF"}
