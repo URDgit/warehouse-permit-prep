@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { generateReviewPackage, getVerificationBrief, type GenerateResult } from "@/app/actions";
+import { generateReviewPackage, getVerificationBrief, getDemoPackage, type GenerateResult } from "@/app/actions";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
 import { downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
@@ -145,6 +145,7 @@ export default function Home() {
   const [briefBusy, setBriefBusy] = useState<"" | "pdf" | "md">("");
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const [demoBusy, setDemoBusy] = useState(false);
 
   // Load saved projects on first mount (migrating the old single-draft store).
   useEffect(() => {
@@ -289,6 +290,17 @@ export default function Home() {
     }
   }
 
+  async function viewDemo() {
+    setDemoBusy(true);
+    try {
+      const pkg = await getDemoPackage();
+      setResult({ ok: true, package: pkg });
+      if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setDemoBusy(false);
+    }
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setResult(null);
@@ -367,6 +379,13 @@ export default function Home() {
           <li><strong>Re-generate</strong> — verified values fill in and the readiness checklist clears toward &ldquo;ready&rdquo;. Nothing here is valid until reviewed and stamped by a licensed engineer.</li>
         </ol>
       </details>
+
+      <div className="toolbar">
+        <button type="button" className="btn btn-secondary" onClick={viewDemo} disabled={demoBusy}>
+          {demoBusy ? "Loading…" : "▶ View example DEMO report (fabricated data)"}
+        </button>
+        <span className="note">For pitching/illustration only — a fully filled-in report with fake values. Never touches your data.</span>
+      </div>
 
       <div className="toolbar">
         <button type="button" className="btn btn-secondary" onClick={downloadBriefPdf} disabled={briefBusy !== ""}>

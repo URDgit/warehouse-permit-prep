@@ -54,6 +54,8 @@ export interface ReviewPackage {
   auditTrail: AuditEntry[];
   /** How many of the used code values are still unverified placeholders. */
   placeholderCount: number;
+  /** True ONLY for the fabricated demonstration package — never for a real report. */
+  demo?: boolean;
 }
 
 export interface BuildOptions {

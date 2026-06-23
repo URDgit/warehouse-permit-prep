@@ -64,6 +64,11 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
 
   return (
     <div>
+      {pkg.demo && (
+        <div className="demo-ribbon" role="alert">
+          DEMO MODE — every value below is FABRICATED. Not real, not code-based, not usable for any purpose.
+        </div>
+      )}
       {/* Non-negotiable disclaimer, top and prominent */}
       <div className="banner banner--danger" role="alert">
         <strong>Draft — not an engineered or approved document</strong>

@@ -125,6 +125,16 @@ function footer(ctx: Ctx) {
   }
 }
 
+/** Diagonal "DEMO — FABRICATED" watermark on every page (demo report only). */
+function demoWatermark(ctx: Ctx) {
+  const n = ctx.doc.getNumberOfPages();
+  for (let i = 1; i <= n; i++) {
+    ctx.doc.setPage(i);
+    ctx.doc.setFont("helvetica", "bold").setFontSize(58).setTextColor(232, 196, 196);
+    ctx.doc.text("DEMO — FABRICATED", ctx.pageW / 2, ctx.pageH / 2, { align: "center", angle: 35 });
+  }
+}
+
 function applicabilityLabel(a: string): string {
   if (a === "required") return "Required";
   if (a === "not_required") return "Not required";
@@ -221,6 +231,7 @@ export async function buildReviewPackagePdf(pkg: ReviewPackage): Promise<Doc> {
     });
   }
 
+  if (pkg.demo) demoWatermark(ctx);
   footer(ctx);
   return ctx.doc;
 }

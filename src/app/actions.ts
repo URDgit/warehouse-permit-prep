@@ -16,6 +16,7 @@ import { intakeSchema } from "@/engine/intake/schema";
 import { buildReviewPackage, type ReviewPackage } from "@/engine/report/buildReviewPackage";
 import { loadCodeData } from "@/engine/data/loadData";
 import { buildVerificationBrief, type VerificationBrief } from "@/engine/report/verificationBrief";
+import { buildDemoPackage } from "@/engine/demo/buildDemoPackage";
 import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "@/engine/data/overrides";
 
 export interface FieldError {
@@ -53,6 +54,11 @@ export async function generateReviewPackage(raw: unknown): Promise<GenerateResul
  */
 export async function getVerificationBrief(): Promise<VerificationBrief> {
   return buildVerificationBrief(loadCodeData());
+}
+
+/** A fabricated, watermarked demonstration report. Never reads the real data files. */
+export async function getDemoPackage(): Promise<ReviewPackage> {
+  return buildDemoPackage();
 }
 
 /** Current state of every editable code value (with verified overrides applied). */
