@@ -385,6 +385,7 @@ export default function Home() {
         </label>
         <Link className="btn btn-secondary" href="/settings">Firm profile</Link>
         <Link className="btn btn-secondary" href="/libraries">Libraries</Link>
+        <Link className="btn btn-secondary" href="/corrections">Plan-check corrections</Link>
       </div>
       <h1>Storage-Rack Permit — Intake</h1>
       <p className="note">

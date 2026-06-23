@@ -13,6 +13,7 @@ import type { ReviewPackage } from "@/engine/report/buildReviewPackage";
 import type { VerificationBrief } from "@/engine/report/verificationBrief";
 import { inputRows } from "@/engine/report/inputRows";
 import { buildSubmittalCover } from "@/engine/report/submittalCover";
+import type { CorrectionLetterData } from "@/engine/corrections";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Doc = any;
@@ -366,6 +367,56 @@ export async function buildSubmittalCoverPdf(pkg: ReviewPackage): Promise<Doc> {
 export async function downloadSubmittalCoverPdf(pkg: ReviewPackage): Promise<void> {
   const doc = await buildSubmittalCoverPdf(pkg);
   doc.save(`${safeFileName(pkg.meta.projectName)}_Submittal_Cover.pdf`);
+}
+
+// ---------------------------------------------------------------------
+//  Plan-check correction response letter PDF
+// ---------------------------------------------------------------------
+export async function buildCorrectionLetterPdf(d: CorrectionLetterData): Promise<Doc> {
+  const { ctx } = await createCtx();
+
+  if (d.firmName || d.firmAddress || d.firmContact) {
+    if (d.firmName) paragraph(ctx, d.firmName, { bold: true, size: 12 });
+    if (d.firmAddress) paragraph(ctx, d.firmAddress, { size: 9, color: MUTED });
+    if (d.firmContact) paragraph(ctx, d.firmContact, { size: 9, color: MUTED });
+    ctx.y += 4;
+  }
+  title(ctx, "Plan Check Correction Responses");
+  paragraph(ctx, `Project: ${d.projectName}`, { bold: true });
+  paragraph(ctx, `Address: ${d.projectAddress}`, { size: 9, color: MUTED });
+  paragraph(ctx, `Jurisdiction: ${d.jurisdiction}      Plan check round: ${d.revision}      Date: ${d.generatedAt}`, { size: 9, color: MUTED });
+  ctx.y += 4;
+  paragraph(ctx, "The following responses address the plan check corrections issued for the project above.");
+
+  if (!d.items.length) paragraph(ctx, "No corrections logged.", { color: MUTED });
+  d.items.forEach((it, idx) => {
+    heading(ctx, `${idx + 1}. Comment ${it.number || idx + 1}${it.agency ? ` (${it.agency})` : ""} — ${it.status === "addressed" ? "addressed" : "open"}`);
+    if (it.codeRef) paragraph(ctx, `Code reference: ${it.codeRef}`, { size: 9, color: MUTED });
+    paragraph(ctx, `Reviewer comment: ${it.comment || "—"}`, { size: 9.5 });
+    paragraph(ctx, `Response: ${it.response || "—"}`, { size: 9.5 });
+  });
+
+  heading(ctx, "Engineer of record");
+  paragraph(ctx, `Engineer of record: ${d.engineerName || "________________________"}`);
+  paragraph(ctx, `License: ${[d.licenseType, d.licenseNumber].filter(Boolean).join(" ") || "________________________"}`);
+  ctx.y += 6;
+  paragraph(ctx, "Signature: ______________________________      Date: ______________");
+  ctx.y += 8;
+  ensure(ctx, 84);
+  ctx.doc.setDrawColor(...INK).setLineWidth(0.8);
+  ctx.doc.rect(M, ctx.y, 160, 72);
+  ctx.doc.setFont("helvetica", "normal").setFontSize(8).setTextColor(...MUTED);
+  ctx.doc.text("Seal / stamp", M + 8, ctx.y + 14);
+  ctx.y += 84;
+  if (d.disclaimer) paragraph(ctx, d.disclaimer, { size: 8, color: MUTED });
+
+  footer(ctx);
+  return ctx.doc;
+}
+
+export async function downloadCorrectionLetterPdf(d: CorrectionLetterData): Promise<void> {
+  const doc = await buildCorrectionLetterPdf(d);
+  doc.save(`${safeFileName(d.projectName)}_Correction_Responses_R${d.revision}.pdf`);
 }
 
 function safeFileName(s: string): string {
