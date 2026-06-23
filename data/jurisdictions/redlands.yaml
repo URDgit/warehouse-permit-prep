@@ -1,0 +1,11 @@
+# City of Redlands — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "redlands"
+  jurisdiction_name: "City of Redlands"
+  status: PLACEHOLDER
+  source: "City of Redlands building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Redlands — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

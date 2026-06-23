@@ -1,0 +1,11 @@
+# City of Norco — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "norco"
+  jurisdiction_name: "City of Norco"
+  status: PLACEHOLDER
+  source: "City of Norco building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Norco — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

@@ -1,0 +1,11 @@
+# City of Lancaster — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "lancaster"
+  jurisdiction_name: "City of Lancaster"
+  status: PLACEHOLDER
+  source: "City of Lancaster building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Lancaster — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

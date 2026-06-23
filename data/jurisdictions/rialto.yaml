@@ -1,11 +1,11 @@
-# City of Rialto — thin jurisdiction profile.
-# Inherits the statewide submittal checklists from ca-statewide.yaml.
-# Confirm the local AHJ's specific forms and any local amendments per project.
+# City of Rialto — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
 meta:
   jurisdiction_id: "rialto"
   jurisdiction_name: "City of Rialto"
   status: PLACEHOLDER
-  source: "City of Rialto Building & Safety + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Rialto building department + fire AHJ — VERIFY current submittal requirements"
   reviewing_agencies:
     - "City of Rialto — Building & Safety (structural / rack anchorage) — VERIFY"
     - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

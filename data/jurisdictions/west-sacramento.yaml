@@ -1,0 +1,11 @@
+# City of West Sacramento — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "west-sacramento"
+  jurisdiction_name: "City of West Sacramento"
+  status: PLACEHOLDER
+  source: "City of West Sacramento building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of West Sacramento — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

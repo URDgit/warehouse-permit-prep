@@ -1,0 +1,11 @@
+# City of Tracy — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "tracy"
+  jurisdiction_name: "City of Tracy"
+  status: PLACEHOLDER
+  source: "City of Tracy building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Tracy — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

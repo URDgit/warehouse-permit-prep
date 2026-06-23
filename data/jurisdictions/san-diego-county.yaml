@@ -1,0 +1,11 @@
+# County of San Diego (unincorporated) — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "san-diego-county"
+  jurisdiction_name: "County of San Diego (unincorporated)"
+  status: PLACEHOLDER
+  source: "County of San Diego (unincorporated) building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "County of San Diego (unincorporated) — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

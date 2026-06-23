@@ -1,0 +1,11 @@
+# County of Alameda (unincorporated) — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "alameda-county"
+  jurisdiction_name: "County of Alameda (unincorporated)"
+  status: PLACEHOLDER
+  source: "County of Alameda (unincorporated) building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "County of Alameda (unincorporated) — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

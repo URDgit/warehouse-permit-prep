@@ -1,0 +1,11 @@
+# City of Coachella — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "coachella"
+  jurisdiction_name: "City of Coachella"
+  status: PLACEHOLDER
+  source: "City of Coachella building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Coachella — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

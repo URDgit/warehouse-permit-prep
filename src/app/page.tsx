@@ -465,8 +465,12 @@ export default function Home() {
           <label className="field">
             <span>Jurisdiction</span>
             <select value={form.project.jurisdiction} onChange={(e) => set("project", "jurisdiction", e.target.value)}>
-              {JURISDICTIONS.map((j) => (
-                <option key={j.id} value={j.id}>{j.name}</option>
+              {Array.from(new Set(JURISDICTIONS.map((j) => j.group))).map((group) => (
+                <optgroup key={group} label={group}>
+                  {JURISDICTIONS.filter((j) => j.group === group).map((j) => (
+                    <option key={j.id} value={j.id}>{j.name}</option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </label>

@@ -1,0 +1,11 @@
+# City of Gilroy — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "gilroy"
+  jurisdiction_name: "City of Gilroy"
+  status: PLACEHOLDER
+  source: "City of Gilroy building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Gilroy — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

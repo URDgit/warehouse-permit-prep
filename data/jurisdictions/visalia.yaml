@@ -1,0 +1,11 @@
+# City of Visalia — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "visalia"
+  jurisdiction_name: "City of Visalia"
+  status: PLACEHOLDER
+  source: "City of Visalia building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Visalia — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

@@ -1,0 +1,11 @@
+# City of Milpitas — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "milpitas"
+  jurisdiction_name: "City of Milpitas"
+  status: PLACEHOLDER
+  source: "City of Milpitas building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Milpitas — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

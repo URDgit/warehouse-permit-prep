@@ -1,0 +1,11 @@
+# City of El Cajon — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "el-cajon"
+  jurisdiction_name: "City of El Cajon"
+  status: PLACEHOLDER
+  source: "City of El Cajon building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of El Cajon — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

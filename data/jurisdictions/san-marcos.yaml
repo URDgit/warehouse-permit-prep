@@ -1,0 +1,11 @@
+# City of San Marcos — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "san-marcos"
+  jurisdiction_name: "City of San Marcos"
+  status: PLACEHOLDER
+  source: "City of San Marcos building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of San Marcos — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

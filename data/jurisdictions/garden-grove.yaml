@@ -1,0 +1,11 @@
+# City of Garden Grove — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "garden-grove"
+  jurisdiction_name: "City of Garden Grove"
+  status: PLACEHOLDER
+  source: "City of Garden Grove building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Garden Grove — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

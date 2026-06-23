@@ -1,0 +1,11 @@
+# City of San Jose — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "san-jose"
+  jurisdiction_name: "City of San Jose"
+  status: PLACEHOLDER
+  source: "City of San Jose building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of San Jose — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

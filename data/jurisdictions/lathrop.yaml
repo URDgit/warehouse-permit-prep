@@ -1,0 +1,11 @@
+# City of Lathrop — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "lathrop"
+  jurisdiction_name: "City of Lathrop"
+  status: PLACEHOLDER
+  source: "City of Lathrop building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Lathrop — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

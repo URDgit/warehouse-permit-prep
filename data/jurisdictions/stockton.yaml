@@ -1,11 +1,11 @@
-# City of Stockton — thin jurisdiction profile.
-# Inherits the statewide submittal checklists from ca-statewide.yaml.
-# Confirm the local AHJ's specific forms and any local amendments per project.
+# City of Stockton — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
 meta:
   jurisdiction_id: "stockton"
   jurisdiction_name: "City of Stockton"
   status: PLACEHOLDER
-  source: "City of Stockton Community Development / Building + fire AHJ — VERIFY current submittal requirements"
+  source: "City of Stockton building department + fire AHJ — VERIFY current submittal requirements"
   reviewing_agencies:
     - "City of Stockton — Building & Safety (structural / rack anchorage) — VERIFY"
     - "Fire authority having jurisdiction (high-piled storage) — VERIFY"

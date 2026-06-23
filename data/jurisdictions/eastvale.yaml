@@ -1,0 +1,11 @@
+# City of Eastvale — thin jurisdiction profile. Inherits the statewide submittal
+# checklists from ca-statewide.yaml. Confirm the local AHJ's specific forms
+# and any local amendments per project.
+meta:
+  jurisdiction_id: "eastvale"
+  jurisdiction_name: "City of Eastvale"
+  status: PLACEHOLDER
+  source: "City of Eastvale building department + fire AHJ — VERIFY current submittal requirements"
+  reviewing_agencies:
+    - "City of Eastvale — Building & Safety (structural / rack anchorage) — VERIFY"
+    - "Fire authority having jurisdiction (high-piled storage) — VERIFY"
