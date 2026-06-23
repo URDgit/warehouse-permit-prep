@@ -39,12 +39,7 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         {m.disclaimer}
       </div>
 
-      <div className="banner banner--warn">
-        <strong>Review status</strong>
-        {pkg.placeholderCount} of {pkg.codeValuesUsed.length} code values are unverified{" "}
-        <em>placeholders</em> that a licensed engineer must supply or confirm before this package
-        can be used.
-      </div>
+      <ReadinessPanel r={pkg.readiness} />
 
       <div className="toolbar">
         <button className="btn btn-secondary" onClick={downloadMarkdown}>
@@ -212,6 +207,59 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         <strong>Reminder</strong>
         {m.disclaimer}
       </div>
+    </div>
+  );
+}
+
+function ReadinessPanel({ r }: { r: ReviewPackage["readiness"] }) {
+  const pct = r.totalCodeValues ? Math.round((r.verifiedCount / r.totalCodeValues) * 100) : 0;
+  return (
+    <div className={`readiness ${r.isSubmittalReady ? "readiness--ready" : "readiness--blocked"}`}>
+      <div className="readiness__head">
+        <strong>{r.isSubmittalReady ? "✓ All code values verified" : "Not ready for engineer submittal"}</strong>
+        <span className="readiness__count">
+          {r.verifiedCount}/{r.totalCodeValues} verified · {r.placeholderCount} outstanding
+        </span>
+      </div>
+      <div className="progress" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+        <div className="progress__bar" style={{ width: `${pct}%` }} />
+      </div>
+      {r.blockedCalcs.length > 0 && (
+        <p className="note"><strong>Calculations not computed:</strong> {r.blockedCalcs.join(", ")}.</p>
+      )}
+      {r.dataIssues.length > 0 && (
+        <p className="note"><strong>Rule data issues:</strong> {r.dataIssues.join(" ")}</p>
+      )}
+      {r.byArea.length > 0 && (
+        <>
+          <h3>What a licensed engineer still needs to resolve</h3>
+          {r.byArea.map((g) => (
+            <div className="readiness__group" key={g.area}>
+              <div className="readiness__area">
+                {g.area} <span className="badge badge--placeholder">{g.items.length}</span>
+              </div>
+              <table className="report">
+                <thead>
+                  <tr>
+                    <th style={{ width: "28%" }}>Item</th>
+                    <th>What&apos;s needed</th>
+                    <th style={{ width: "24%" }}>Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {g.items.map((it, i) => (
+                    <tr key={i}>
+                      <td>{it.label}</td>
+                      <td>{it.need}</td>
+                      <td className="source">{it.source}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }

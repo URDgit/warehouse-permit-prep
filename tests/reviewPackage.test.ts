@@ -29,4 +29,27 @@ describe("review package assembly", () => {
     expect(md).toMatch(/DRAFT/);
     expect(md).toMatch(/Audit trail/);
   });
+
+  it("builds an actionable readiness checklist of outstanding placeholders", () => {
+    const r = pkg.readiness;
+    expect(r.isSubmittalReady).toBe(false);
+    expect(r.placeholderCount).toBe(pkg.placeholderCount);
+    expect(r.verifiedCount + r.placeholderCount).toBe(r.totalCodeValues);
+    expect(r.outstanding.length).toBe(r.placeholderCount);
+    expect(r.byArea.length).toBeGreaterThan(0);
+    // every outstanding item is actionable: discipline + citation + what's needed
+    for (const item of r.outstanding) {
+      expect(item.area.length).toBeGreaterThan(0);
+      expect(item.source.length).toBeGreaterThan(0);
+      expect(item.need.length).toBeGreaterThan(0);
+    }
+    // both calculations are currently blocked
+    expect(r.blockedCalcs.length).toBe(2);
+  });
+
+  it("surfaces the readiness checklist in the markdown export", () => {
+    const md = renderMarkdown(pkg);
+    expect(md).toMatch(/Readiness/);
+    expect(md).toMatch(/NOT ready for engineer submittal/);
+  });
 });

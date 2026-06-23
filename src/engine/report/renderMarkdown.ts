@@ -38,6 +38,25 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   for (const c of m.codeBasis) L.push(`- ${c}`);
   L.push("");
 
+  // --- Readiness checklist -------------------------------------------
+  const r = pkg.readiness;
+  L.push(`## Readiness — what still needs a licensed engineer`);
+  L.push("");
+  L.push(
+    `**${r.isSubmittalReady ? "All code values verified." : "NOT ready for engineer submittal."}** ` +
+      `${r.verifiedCount}/${r.totalCodeValues} code values verified; ${r.placeholderCount} outstanding.`,
+  );
+  if (r.blockedCalcs.length) L.push(`Calculations not computed: ${r.blockedCalcs.join(", ")}.`);
+  if (r.dataIssues.length) L.push(`Rule data issues: ${r.dataIssues.join(" ")}`);
+  L.push("");
+  for (const g of r.byArea) {
+    L.push(`### ${g.area} (${g.items.length})`);
+    L.push(`| Item | What's needed | Source |`);
+    L.push(`| --- | --- | --- |`);
+    for (const it of g.items) L.push(`| ${it.label} | ${it.need} | ${it.source} |`);
+    L.push("");
+  }
+
   // --- Inputs ---------------------------------------------------------
   L.push(`## 1. Inputs provided`);
   const i = pkg.inputs;

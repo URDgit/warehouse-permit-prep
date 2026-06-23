@@ -87,3 +87,16 @@ table.report th { color: var(--muted); font-weight: 600; }
 
 .toolbar { display: flex; gap: 10px; margin: 6px 0 18px; flex-wrap: wrap; }
 .note { color: var(--muted); font-size: 13px; }
+
+/* Readiness / verification checklist */
+.readiness { border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; border: 2px solid; }
+.readiness--blocked { background: var(--warn-bg); border-color: var(--warn-line); }
+.readiness--ready { background: var(--ok-bg); border-color: var(--ok-line); }
+.readiness__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.readiness__head strong { font-size: 15px; }
+.readiness__count { color: var(--muted); font-size: 13px; }
+.progress { height: 8px; background: rgba(0,0,0,0.08); border-radius: 999px; overflow: hidden; margin: 10px 0 4px; }
+.progress__bar { height: 100%; background: var(--ok-line); border-radius: 999px; transition: width .3s ease; }
+.readiness--blocked .progress__bar { background: var(--warn-line); }
+.readiness__group { margin-top: 12px; }
+.readiness__area { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
