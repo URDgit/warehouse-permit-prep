@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getFirmProfile } from "@/app/actions";
+import { loadClientData, saveClientData } from "@/lib/store/clientStore";
 import { downloadCorrectionLetterPdf } from "@/app/pdf/pdfBuilders";
 import type { Correction, CorrectionLetterData } from "@/engine/corrections";
 import { jurisdictionName } from "@/engine/jurisdictions/registry";
@@ -27,19 +28,15 @@ function nid() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-function readProjects(): { activeId: string; projects: ProjMeta[] } {
-  try {
-    const store = JSON.parse(localStorage.getItem(PROJECTS_KEY) || "{}");
-    const projects: ProjMeta[] = (store.projects ?? []).map((p: any) => ({
-      id: String(p.id),
-      name: p.form?.project?.projectName || "Untitled project",
-      address: p.form?.building?.address || "",
-      jurisdiction: jurisdictionName(p.form?.project?.jurisdiction ?? "los-angeles"),
-    }));
-    return { activeId: store.activeId ?? projects[0]?.id ?? "", projects };
-  } catch {
-    return { activeId: "", projects: [] };
-  }
+function mapProjects(store: { activeId?: string; projects?: any[] } | null): { activeId: string; projects: ProjMeta[] } {
+  const list = Array.isArray(store?.projects) ? store!.projects : [];
+  const projects: ProjMeta[] = list.map((p: any) => ({
+    id: String(p.id),
+    name: p.form?.project?.projectName || "Untitled project",
+    address: p.form?.building?.address || "",
+    jurisdiction: jurisdictionName(p.form?.project?.jurisdiction ?? "los-angeles"),
+  }));
+  return { activeId: store?.activeId ?? projects[0]?.id ?? "", projects };
 }
 
 export default function CorrectionsPage() {
@@ -48,25 +45,35 @@ export default function CorrectionsPage() {
   const [store, setStore] = useState<CorrStore>({});
 
   useEffect(() => {
-    const { activeId, projects } = readProjects();
-    setProjects(projects);
-    setSelected(activeId);
-    try {
-      setStore(JSON.parse(localStorage.getItem(CORR_KEY) || "{}"));
-    } catch {
-      setStore({});
-    }
+    let cancelled = false;
+    (async () => {
+      const projStore = await loadClientData<{ activeId?: string; projects?: any[] } | null>(
+        "projects",
+        PROJECTS_KEY,
+        null,
+      );
+      const { activeId, projects } = mapProjects(projStore);
+      const corr = await loadClientData<CorrStore>("corrections", CORR_KEY, {});
+      if (cancelled) return;
+      setProjects(projects);
+      setSelected(activeId);
+      setStore(corr ?? {});
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const current: CorrSet = store[selected] ?? { revision: 1, items: [] };
 
+  // Debounce persistence: edits fire on every keystroke.
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   function persist(next: CorrStore) {
     setStore(next);
-    try {
-      localStorage.setItem(CORR_KEY, JSON.stringify(next));
-    } catch {
-      /* ignore */
-    }
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveClientData("corrections", CORR_KEY, next);
+    }, 700);
   }
   function setCurrent(patch: Partial<CorrSet>) {
     if (!selected) return;
@@ -114,8 +121,8 @@ export default function CorrectionsPage() {
       <h1>Plan-check corrections</h1>
       <p className="note">
         Log the corrections the building/fire department issued, write your responses, and generate
-        a <strong>Correction Response Letter</strong> to submit with your resubmittal. Stored in your
-        browser, per project.
+        a <strong>Correction Response Letter</strong> to submit with your resubmittal. Saved to your
+        account when signed in (otherwise this browser), per project.
       </p>
 
       {projects.length === 0 ? (

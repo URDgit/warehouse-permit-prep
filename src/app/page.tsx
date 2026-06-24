@@ -8,6 +8,7 @@ import { JURISDICTIONS } from "@/engine/jurisdictions/registry";
 import { intakeSchema } from "@/engine/intake/schema";
 import { renderVerificationBriefMarkdown } from "@/engine/report/verificationBrief";
 import { downloadVerificationBriefPdf } from "@/app/pdf/pdfBuilders";
+import { loadClientData, saveClientData } from "@/lib/store/clientStore";
 import ReviewPackageView from "@/app/ReviewPackageView";
 
 // Example data so the walking skeleton runs end-to-end on the first click.
@@ -180,37 +181,57 @@ export default function Home() {
     }));
   }
 
-  // Load saved projects on first mount (migrating the old single-draft store).
+  // Load saved projects on first mount: the signed-in user's account when
+  // available, else localStorage (migrating the old single-draft store).
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(PROJECTS_KEY);
-      if (raw) {
-        const store = JSON.parse(raw) as { activeId?: string; projects?: any[] };
-        const ps: Project[] = (store.projects ?? []).map((p) => ({
-          id: String(p.id ?? newId()),
-          form: mergeForm(p.form ?? {}),
-          savedAt: String(p.savedAt ?? ""),
-        }));
-        if (ps.length > 0) {
-          const active = ps.find((p) => p.id === store.activeId) ?? ps[0];
-          setProjects(ps);
-          setActiveId(active.id);
-          setForm(active.form);
+    let cancelled = false;
+    (async () => {
+      try {
+        const store = await loadClientData<{ activeId?: string; projects?: any[] } | null>(
+          "projects",
+          PROJECTS_KEY,
+          null,
+        );
+        const list = Array.isArray(store?.projects) ? store!.projects : [];
+        if (list.length > 0) {
+          const ps: Project[] = list.map((p) => ({
+            id: String(p.id ?? newId()),
+            form: mergeForm(p.form ?? {}),
+            savedAt: String(p.savedAt ?? ""),
+          }));
+          const active = ps.find((p) => p.id === store?.activeId) ?? ps[0];
+          if (!cancelled) {
+            setProjects(ps);
+            setActiveId(active.id);
+            setForm(active.form);
+          }
           return;
         }
+        // First run (or migrate the previous single auto-saved draft from localStorage).
+        let legacy: string | null = null;
+        try {
+          legacy = localStorage.getItem(LEGACY_KEY);
+        } catch {
+          /* ignore */
+        }
+        const f = legacy ? mergeForm(JSON.parse(legacy)) : initialForm;
+        const p: Project = { id: newId(), form: f, savedAt: new Date().toISOString() };
+        if (!cancelled) {
+          setProjects([p]);
+          setActiveId(p.id);
+          setForm(p.form);
+        }
+      } catch {
+        const p: Project = { id: newId(), form: initialForm, savedAt: new Date().toISOString() };
+        if (!cancelled) {
+          setProjects([p]);
+          setActiveId(p.id);
+        }
       }
-      // First run (or migrate the previous single auto-saved draft).
-      const legacy = localStorage.getItem(LEGACY_KEY);
-      const f = legacy ? mergeForm(JSON.parse(legacy)) : initialForm;
-      const p: Project = { id: newId(), form: f, savedAt: new Date().toISOString() };
-      setProjects([p]);
-      setActiveId(p.id);
-      setForm(p.form);
-    } catch {
-      const p: Project = { id: newId(), form: initialForm, savedAt: new Date().toISOString() };
-      setProjects([p]);
-      setActiveId(p.id);
-    }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Keep the active project synced with the form, and persist the whole store.
@@ -220,11 +241,12 @@ export default function Home() {
   }, [form, activeId]);
   useEffect(() => {
     if (!activeId || projects.length === 0) return;
-    try {
-      localStorage.setItem(PROJECTS_KEY, JSON.stringify({ activeId, projects }));
-    } catch {
-      /* ignore unwritable storage */
-    }
+    // Debounce: these change on every keystroke, so wait for a pause before
+    // persisting (one network write per pause, not per character).
+    const t = setTimeout(() => {
+      saveClientData("projects", PROJECTS_KEY, { activeId, projects });
+    }, 800);
+    return () => clearTimeout(t);
   }, [projects, activeId]);
 
   function selectProject(id: string) {
