@@ -47,7 +47,7 @@ export default function SettingsPage() {
   return (
     <div>
       <div className="toolbar">
-        <Link className="btn btn-secondary" href="/">← Back to intake</Link>
+        <Link className="btn btn-secondary" href="/app">← Back to intake</Link>
       </div>
 
       <h1>Firm profile</h1>

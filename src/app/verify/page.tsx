@@ -53,7 +53,7 @@ export default function VerifyPage() {
   return (
     <div>
       <div className="toolbar">
-        <Link className="btn btn-secondary" href="/">← Back to intake</Link>
+        <Link className="btn btn-secondary" href="/app">← Back to intake</Link>
       </div>
 
       <h1>Verify data — enter the engineer&apos;s answers</h1>

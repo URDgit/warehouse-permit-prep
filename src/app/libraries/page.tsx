@@ -57,7 +57,7 @@ export default function LibrariesPage() {
   return (
     <div>
       <div className="toolbar">
-        <Link className="btn btn-secondary" href="/">← Back to intake</Link>
+        <Link className="btn btn-secondary" href="/app">← Back to intake</Link>
       </div>
 
       <h1>Libraries</h1>

@@ -115,7 +115,7 @@ export default function CorrectionsPage() {
   return (
     <div>
       <div className="toolbar">
-        <Link className="btn btn-secondary" href="/">← Back to intake</Link>
+        <Link className="btn btn-secondary" href="/app">← Back to intake</Link>
       </div>
 
       <h1>Plan-check corrections</h1>

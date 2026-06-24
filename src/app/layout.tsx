@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 import AuthStatus from "./AuthStatus";
 
 export const metadata: Metadata = {
-  title: "Storage-Rack Permit Package — Draft Preparation Aid",
+  title: "RackWright — Stamp-ready storage-rack permit packages",
   description:
-    "Drafting aid for high-piled storage / storage-rack permit packages (California). Output is a draft requiring licensed-engineer review.",
+    "RackWright helps California engineers and consultants assemble complete, code-cited high-piled storage / storage-rack permit packages for review, seal, and submittal. A drafting aid — you remain the engineer of record.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -14,8 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="app-header">
           <div className="app-header__inner">
-            <strong>Storage-Rack Permit Package</strong>
-            <span className="app-header__sub">Draft Preparation Aid · California</span>
+            <Link href="/" className="app-header__brand">RackWright</Link>
+            <span className="app-header__sub">Storage-rack permit packages · California</span>
             <AuthStatus />
           </div>
         </header>

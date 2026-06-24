@@ -49,7 +49,7 @@ export default function LoginPage() {
           your saved data stays in this browser / on this machine.
         </p>
         <p>
-          <Link href="/">← Back to the app</Link>
+          <Link href="/app">← Back to the app</Link>
         </p>
       </div>
     );
@@ -101,7 +101,7 @@ export default function LoginPage() {
       )}
 
       <p className="note" style={{ marginTop: 16 }}>
-        <Link href="/">← Back to the app</Link>
+        <Link href="/app">← Back to the app</Link>
       </p>
     </div>
   );
