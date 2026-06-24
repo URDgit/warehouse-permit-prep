@@ -15,10 +15,18 @@ export function isSupabaseConfigured(): boolean {
 }
 
 /**
+ * The "require login" flag. Prefer NEXT_PUBLIC_REQUIRE_AUTH because NEXT_PUBLIC_*
+ * vars are statically inlined at build time, so they reliably reach the Edge
+ * middleware bundle. A plain (esp. "Sensitive") REQUIRE_AUTH does not always
+ * reach the Edge runtime — kept here as a fallback for Node/local dev.
+ */
+const REQUIRE_AUTH_FLAG = process.env.NEXT_PUBLIC_REQUIRE_AUTH ?? process.env.REQUIRE_AUTH ?? "";
+
+/**
  * When true, signed-out visitors are redirected to /login. Kept separate from
  * isSupabaseConfigured() so we can connect the database first and only flip
  * the "login required" switch once per-account data is wired up and verified.
  */
 export function authRequired(): boolean {
-  return isSupabaseConfigured() && process.env.REQUIRE_AUTH === "true";
+  return isSupabaseConfigured() && REQUIRE_AUTH_FLAG === "true";
 }
