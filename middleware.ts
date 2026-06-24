@@ -1,6 +1,9 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
+// Note: REQUIRE_AUTH is evaluated in updateSession(); a change to it needs a
+// fresh build (Edge middleware bakes env vars in at build time), not just a
+// cached redeploy.
 export async function middleware(request: NextRequest) {
   return updateSession(request);
 }
