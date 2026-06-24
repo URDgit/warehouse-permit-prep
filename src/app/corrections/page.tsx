@@ -10,7 +10,7 @@ import { jurisdictionName } from "@/engine/jurisdictions/registry";
 
 const PROJECTS_KEY = "wpp-projects-v1";
 const CORR_KEY = "wpp-corrections-v1";
-const AGENCIES = ["LADBS", "LAFD", "Other"];
+const AGENCIES = ["Building & Safety", "Fire", "Other"];
 
 interface ProjMeta {
   id: string;
@@ -80,7 +80,7 @@ export default function CorrectionsPage() {
     persist({ ...store, [selected]: { ...current, ...patch } });
   }
   function addItem() {
-    setCurrent({ items: [...current.items, { id: nid(), number: String(current.items.length + 1), agency: "LADBS", codeRef: "", comment: "", response: "", status: "open" }] });
+    setCurrent({ items: [...current.items, { id: nid(), number: String(current.items.length + 1), agency: "Building & Safety", codeRef: "", comment: "", response: "", status: "open" }] });
   }
   function updItem(id: string, patch: Partial<Correction>) {
     setCurrent({ items: current.items.map((it) => (it.id === id ? { ...it, ...patch } : it)) });
@@ -101,7 +101,7 @@ export default function CorrectionsPage() {
       licenseNumber: firm.licenseNumber,
       projectName: proj?.name ?? "Project",
       projectAddress: proj?.address ?? "",
-      jurisdiction: proj?.jurisdiction ?? "City of Los Angeles (LADBS / LAFD)",
+      jurisdiction: proj?.jurisdiction ?? "(jurisdiction not set)",
       revision: current.revision,
       generatedAt: new Date().toISOString().slice(0, 10),
       items: current.items,

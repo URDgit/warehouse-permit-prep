@@ -15,7 +15,7 @@ export interface Correction {
   id: string;
   /** The reviewer's comment number, e.g. "1" or "S-3". */
   number: string;
-  /** Issuing agency, e.g. LADBS or LAFD. */
+  /** Issuing agency, e.g. Building & Safety or Fire. */
   agency: string;
   /** Code section the reviewer cited (optional). */
   codeRef: string;

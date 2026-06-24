@@ -5,7 +5,7 @@ import AuthStatus from "./AuthStatus";
 export const metadata: Metadata = {
   title: "Storage-Rack Permit Package — Draft Preparation Aid",
   description:
-    "Drafting aid for high-piled storage / storage-rack permit packages (Los Angeles). Output is a draft requiring licensed-engineer review.",
+    "Drafting aid for high-piled storage / storage-rack permit packages (California). Output is a draft requiring licensed-engineer review.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

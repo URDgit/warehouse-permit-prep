@@ -137,7 +137,7 @@ function jurisdictionItems(d: CodeData): BriefItem[] {
       label: `Submittal document: ${String(doc.name ?? doc.id ?? "unnamed")}`,
       location: `jurisdictions/los-angeles.yaml › required_documents[id=${String(doc.id ?? "?")}]`,
       source: n.source,
-      need: n.todo ?? "Confirm this document is required and cite the current LADBS/LAFD requirement.",
+      need: n.todo ?? "Confirm this document is required and cite the current local AHJ requirement.",
       verified: n.verified,
     });
   }
@@ -156,8 +156,8 @@ function decisions(d: CodeData): BriefDecision[] {
     },
     {
       title: "Confirm adopted code editions",
-      detail: `Confirm the editions LADBS/LAFD enforce for this work (currently labeled "${fireEdition}") and the referenced ASCE 7 and ACI 318 editions.`,
-      source: "LADBS / LAFD adopted codes — VERIFY",
+      detail: `Confirm the editions the local AHJ enforces for this work (currently labeled "${fireEdition}") and the referenced ASCE 7 and ACI 318 editions.`,
+      source: "Local AHJ adopted codes — VERIFY",
     },
   ];
 }
@@ -186,7 +186,7 @@ export function buildVerificationBrief(data: CodeData, now: Date = new Date()): 
     },
     { discipline: "Seismic", intro: "Seismic demand on the rack (ASCE 7-16; ANSI/RMI MH16.1).", items: SEISMIC_SPECS.map((s) => itemFromSpec(data, s)) },
     { discipline: "Anchorage", intro: "Rack base-plate anchorage to the existing slab (ASCE 7-16 / ACI 318 Ch.17 / RMI).", items: ANCHORAGE_SPECS.map((s) => itemFromSpec(data, s)) },
-    { discipline: "Los Angeles submittal (LADBS/LAFD)", intro: "Required submittal documents and the triggers for when each applies.", items: jurisdictionItems(data) },
+    { discipline: "Jurisdiction submittal requirements", intro: "Required submittal documents and the triggers for when each applies.", items: jurisdictionItems(data) },
   ];
 
   const allItems = sections.flatMap((s) => s.items);

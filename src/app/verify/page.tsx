@@ -65,7 +65,7 @@ export default function VerifyPage() {
         citation are saved.
       </p>
       <p className="note">
-        Classification rules and Los Angeles submittal triggers are structural logic and are edited
+        Classification rules and jurisdiction submittal triggers are structural logic and are edited
         in the data files (see <code>data/README.md</code>), not here.
       </p>
 

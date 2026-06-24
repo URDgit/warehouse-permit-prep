@@ -106,6 +106,7 @@ export function getJurisdictionRequirements(
   const inherit = (key: string): unknown => (j[key] !== undefined ? j[key] : base[key]);
   const meta = (j.meta ?? {}) as Record<string, any>;
   const baseMeta = (base.meta ?? {}) as Record<string, any>;
+  const jName = String(meta.jurisdiction_name ?? jurisdictionId);
   const docsRaw = inherit("required_documents");
   const docs = Array.isArray(docsRaw) ? (docsRaw as Record<string, any>[]) : [];
   const submittal = (j.submittal_rules ?? {}) as Record<string, any>;
@@ -161,7 +162,7 @@ export function getJurisdictionRequirements(
         source: d.source,
         todo: d.todo,
       },
-      "LADBS / LAFD — VERIFY",
+      "Local AHJ — VERIFY",
     );
 
     return { id, name, applicability, reason, status };
@@ -189,10 +190,10 @@ export function getJurisdictionRequirements(
   }));
 
   const audit: AuditEntry = {
-    step: "Los Angeles submittal requirements",
+    step: `${jName} — submittal requirements`,
     description: triggersVerified
-      ? "Evaluated each submittal document against the verified Los Angeles trigger rules."
-      : "Listed the Los Angeles submittal documents. The triggers for when each is required are not yet verified, so all are shown as 'verify applicability'.",
+      ? "Evaluated each submittal document against this jurisdiction's verified trigger rules."
+      : "Listed the submittal documents for this jurisdiction. The triggers for when each is required are not yet verified, so all are shown as 'verify applicability'.",
     inputsUsed: {
       jurisdiction: input.project.jurisdiction,
       highPiledAreaSqFt: input.building.highPiledAreaSqFt,
@@ -211,7 +212,7 @@ export function getJurisdictionRequirements(
 
   return {
     jurisdictionId,
-    jurisdictionName: String(meta.jurisdiction_name ?? jurisdictionId),
+    jurisdictionName: jName,
     reviewingAgencies: Array.isArray(meta.reviewing_agencies)
       ? meta.reviewing_agencies.map(String)
       : Array.isArray(baseMeta.reviewing_agencies)

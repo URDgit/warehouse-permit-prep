@@ -113,4 +113,10 @@ describe("multi-jurisdiction", () => {
     // the deepened agencies name the fire AHJ that reviews high-piled storage:
     expect(ontario.reviewingAgencies.some((a) => /Fire/.test(a))).toBe(true);
   });
+
+  it("names the selected jurisdiction in the audit trail (not hardcoded to Los Angeles)", () => {
+    const ontario = getJurisdictionRequirements(input, data, "ontario");
+    expect(ontario.audit.step).toMatch(/Ontario/);
+    expect(ontario.audit.step).not.toMatch(/Los Angeles/);
+  });
 });
