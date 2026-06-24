@@ -1,9 +1,9 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-// Note: REQUIRE_AUTH is evaluated in updateSession(); a change to it needs a
-// fresh build (Edge middleware bakes env vars in at build time), not just a
-// cached redeploy.
+// IMPORTANT: this file must live in src/ (this project uses a src/ directory).
+// Next.js only picks up middleware at the same level as the app dir — a
+// root-level middleware.ts is silently ignored and never runs.
 export async function middleware(request: NextRequest) {
   return updateSession(request);
 }
