@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -10,6 +10,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [authError, setAuthError] = useState("");
+
+  // Surface any sign-in failure forwarded from /auth/callback.
+  useEffect(() => {
+    const err = new URLSearchParams(window.location.search).get("authError");
+    if (err) setAuthError(err);
+  }, []);
 
   async function sendLink(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +62,15 @@ export default function LoginPage() {
         Enter your email and we’ll send you a secure sign-in link — no password to remember.
         Accounts are invite-only.
       </p>
+
+      {authError && (
+        <p
+          className="note"
+          style={{ color: "crimson", border: "1px solid currentColor", borderRadius: 6, padding: "8px 10px" }}
+        >
+          Sign-in didn’t complete: {authError}
+        </p>
+      )}
 
       {status === "sent" ? (
         <p>
