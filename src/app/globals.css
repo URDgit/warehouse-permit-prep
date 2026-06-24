@@ -138,7 +138,7 @@ table.report th { color: var(--muted); font-weight: 600; }
 }
 
 /* =========================================================
-   Landing page (RackWright marketing front door)
+   Landing page (PermitWright marketing front door)
    ========================================================= */
 .app-header__brand { color: #fff; font-weight: 800; font-size: 18px; letter-spacing: .01em; text-decoration: none; }
 .app-header__brand:hover { color: #fff; }

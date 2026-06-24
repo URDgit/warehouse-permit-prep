@@ -18,9 +18,9 @@ export default function LandingPage() {
           <p className="lp-eyebrow">For California PEs, SEs &amp; permit consultants</p>
           <h1 className="lp-h1">A complete rack-permit package, the first time.</h1>
           <p className="lp-sub">
-            RackWright helps you assemble code-cited, site-specific high-piled storage and
+            PermitWright helps you assemble code-cited, site-specific high-piled storage and
             storage-rack permit submittals — so plan check doesn&apos;t bounce them back. You bring
-            the engineering judgment; RackWright handles the assembly.
+            the engineering judgment; PermitWright handles the assembly.
           </p>
           <div className="lp-cta">
             <Link className="btn" href="/login">Sign in</Link>
@@ -70,7 +70,7 @@ export default function LandingPage() {
         <p className="lp-body">
           A submittal that&apos;s missing a required sheet, a commodity classification, a flue-space
           dimension, or a jurisdiction-specific form gets corrected and re-queued — costing you
-          weeks per project. RackWright&apos;s job is to make sure the package that leaves your desk is
+          weeks per project. PermitWright&apos;s job is to make sure the package that leaves your desk is
           <strong> complete and site-specific</strong> before it ever reaches the reviewer.
         </p>
       </section>
@@ -138,8 +138,8 @@ export default function LandingPage() {
       {/* Honest scope */}
       <section className="lp-section">
         <div className="banner banner--warn lp-scope">
-          <strong>What RackWright is — and isn&apos;t</strong>
-          RackWright is a drafting and assembly aid. It organizes, validates, cites, and assembles your
+          <strong>What PermitWright is — and isn&apos;t</strong>
+          PermitWright is a drafting and assembly aid. It organizes, validates, cites, and assembles your
           submittal package. It does <em>not</em> perform engineering analysis, choose values for you,
           or guarantee approval. You confirm every value against the cited code, apply your seal, and
           remain the engineer of record. Output is a draft until you sign and stamp it.
