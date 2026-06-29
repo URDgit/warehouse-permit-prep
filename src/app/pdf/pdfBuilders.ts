@@ -144,7 +144,8 @@ function applicabilityLabel(a: string): string {
   return "Verify applicability";
 }
 
-function cvText(cv: { isPlaceholder: boolean; value: unknown; unit: string | null }): string {
+function cvText(cv: { isPlaceholder: boolean; value: unknown; unit: string | null; illustrative?: boolean }): string {
+  if (cv.illustrative) return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""} (ILLUSTRATIVE — verify)`;
   if (cv.isPlaceholder) return "— needs engineer —";
   return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""}`;
 }
@@ -232,7 +233,7 @@ export async function buildReviewPackagePdf(pkg: ReviewPackage): Promise<Doc> {
     ctx,
     autoTable,
     ["Value", "Result", "Status", "Source"],
-    pkg.codeValuesUsed.map((cv) => [cv.label, cvText(cv), cv.status, cv.source]),
+    pkg.codeValuesUsed.map((cv) => [cv.label, cvText(cv), cv.illustrative ? "ILLUSTRATIVE" : cv.status, cv.source]),
   );
 
   heading(ctx, "6. Assumptions");

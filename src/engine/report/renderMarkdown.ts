@@ -18,8 +18,9 @@ function mdCell(s: string): string {
 }
 
 function fmtValue(cv: CodeValue): string {
-  if (cv.isPlaceholder) return "PLACEHOLDER — needs engineer";
   const unit = cv.unit ? ` ${cv.unit}` : "";
+  if (cv.illustrative) return `${String(cv.value)}${unit} (ILLUSTRATIVE — verify)`;
+  if (cv.isPlaceholder) return "PLACEHOLDER — needs engineer";
   return `${String(cv.value)}${unit}`;
 }
 
@@ -143,7 +144,7 @@ export function renderMarkdown(pkg: ReviewPackage): string {
   L.push(`| Value | Result | Status | Source |`);
   L.push(`| --- | --- | --- | --- |`);
   for (const cv of pkg.codeValuesUsed) {
-    L.push(`| ${cv.label} | ${fmtValue(cv)} | ${cv.status} | ${cv.source} |`);
+    L.push(`| ${cv.label} | ${fmtValue(cv)} | ${cv.illustrative ? "ILLUSTRATIVE" : cv.status} | ${cv.source} |`);
   }
   L.push("");
 

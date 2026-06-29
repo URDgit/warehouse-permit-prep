@@ -26,6 +26,7 @@ import { buildDemoPackage } from "@/engine/demo/buildDemoPackage";
 import { listVerifiableFields, type VerifiableField, type OverrideEntry } from "@/engine/data/overrides";
 import { loadFirmProfile, EMPTY_FIRM, type FirmProfile } from "@/engine/firm";
 import { loadLibraries, type Libraries } from "@/engine/libraries";
+import { ILLUSTRATIVE_BY_JURISDICTION } from "@/engine/illustrative/fontana";
 import { readUserData, writeUserData, type WriteResult } from "@/lib/store/userStore";
 
 /** Friendly message for write failures, esp. read-only hosted filesystems. */
@@ -43,8 +44,12 @@ function writeError(e: unknown): string {
  * nobody is signed in). This is what makes a user's verified values affect
  * their own reports.
  */
-async function loadCodeDataForUser(): Promise<CodeData> {
+async function loadCodeDataForUser(illustrativeSet?: OverrideEntry[]): Promise<CodeData> {
   const data = loadCodeData(); // curated + any on-disk overrides
+  // Layer order: curated (PLACEHOLDER) -> illustrative (ILLUSTRATIVE) -> the
+  // engineer's verified values (VERIFIED). So a value the engineer has verified
+  // always wins over an illustrative example.
+  if (illustrativeSet?.length) applyOverrides(data, illustrativeSet);
   const userOverrides = await readUserData<OverrideEntry[]>("overrides");
   if (Array.isArray(userOverrides)) applyOverrides(data, userOverrides);
   return data;
@@ -65,7 +70,10 @@ export type GenerateResult =
   | { ok: true; package: ReviewPackage }
   | { ok: false; errors: FieldError[] };
 
-export async function generateReviewPackage(raw: unknown): Promise<GenerateResult> {
+export async function generateReviewPackage(
+  raw: unknown,
+  opts?: { illustrative?: boolean },
+): Promise<GenerateResult> {
   const parsed = intakeSchema.safeParse(raw);
   if (!parsed.success) {
     const errors: FieldError[] = parsed.error.issues.map((issue) => ({
@@ -76,8 +84,13 @@ export async function generateReviewPackage(raw: unknown): Promise<GenerateResul
   }
 
   try {
+    // When illustrative mode is on, prefill the chosen jurisdiction's illustrative
+    // example values (clearly marked, never verified). The engineer can clear them.
+    const illustrativeSet = opts?.illustrative
+      ? ILLUSTRATIVE_BY_JURISDICTION[parsed.data.project.jurisdiction]
+      : undefined;
     const pkg = buildReviewPackage(parsed.data, {
-      data: await loadCodeDataForUser(),
+      data: await loadCodeDataForUser(illustrativeSet),
       firm: await resolveFirm(),
     });
     return { ok: true, package: pkg };

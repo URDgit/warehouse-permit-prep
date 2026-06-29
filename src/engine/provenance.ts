@@ -44,6 +44,13 @@ export interface CodeValue<T = unknown> {
   status: CodeValueStatus;
   /** True if this value must NOT be trusted as a real answer yet. */
   isPlaceholder: boolean;
+  /**
+   * True if this is an ILLUSTRATIVE example value: it renders (has a value) to
+   * show the finished format, but is NOT verified — isPlaceholder stays true,
+   * so every safety gate (allVerified, readiness) still treats it as unresolved.
+   * The engineer must replace it with their own verified value.
+   */
+  illustrative?: boolean;
   /** What is needed to resolve a placeholder. */
   todo: string | null;
 }
@@ -64,7 +71,11 @@ export function toCodeValue<T = unknown>(
   const statusRaw = String(raw?.status ?? "PLACEHOLDER").toUpperCase();
   const rawValue = raw?.value ?? null;
   const hasValue = rawValue !== null && rawValue !== undefined && rawValue !== "";
-  const isPlaceholder = statusRaw !== "VERIFIED" || !hasValue;
+  // Only an explicit VERIFIED + a value is trusted. ILLUSTRATIVE renders its
+  // value but is still a placeholder for every safety gate.
+  const isVerified = statusRaw === "VERIFIED" && hasValue;
+  const illustrative = statusRaw === "ILLUSTRATIVE" && hasValue;
+  const isPlaceholder = !isVerified;
 
   return {
     id,
@@ -72,9 +83,10 @@ export function toCodeValue<T = unknown>(
     value: (hasValue ? (rawValue as T) : null),
     unit: (raw?.unit as string) ?? null,
     source: String(raw?.source ?? fallbackSource),
-    status: isPlaceholder ? "PLACEHOLDER" : "VERIFIED",
+    status: isVerified ? "VERIFIED" : "PLACEHOLDER",
     isPlaceholder,
-    todo: isPlaceholder ? (raw?.todo ?? null) ?? null : null,
+    illustrative,
+    todo: isPlaceholder && !illustrative ? (raw?.todo ?? null) ?? null : null,
   };
 }
 

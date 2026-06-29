@@ -153,6 +153,7 @@ function toPayload(f: Form) {
 export default function Home() {
   const [form, setForm] = useState<Form>(initialForm);
   const [result, setResult] = useState<GenerateResult | null>(null);
+  const [illustrative, setIllustrative] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [briefBusy, setBriefBusy] = useState<"" | "pdf" | "md">("");
@@ -374,8 +375,15 @@ export default function Home() {
     }
 
     setErrors({});
+    await regenerate(parsed.data, illustrative);
+  }
+
+  // Build the package for a payload, with or without the illustrative prefill.
+  // Reused by the "Clear & enter my values" control on the report.
+  async function regenerate(payload: unknown, illus: boolean) {
+    setIllustrative(illus);
     setLoading(true);
-    const res = await generateReviewPackage(parsed.data);
+    const res = await generateReviewPackage(payload, { illustrative: illus });
     setResult(res);
     setLoading(false);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
@@ -389,7 +397,10 @@ export default function Home() {
             ← Back to edit inputs
           </button>
         </div>
-        <ReviewPackageView pkg={result.package} />
+        <ReviewPackageView
+          pkg={result.package}
+          onClearIllustrative={() => regenerate(result.package.inputs, false)}
+        />
       </div>
     );
   }
@@ -589,6 +600,13 @@ export default function Home() {
         </div>
       </fieldset>
 
+      <label className="checkbox field" style={{ flexDirection: "row", marginBottom: 10 }}>
+        <input type="checkbox" checked={illustrative} onChange={(e) => setIllustrative(e.target.checked)} />
+        <span>
+          Prefill illustrative example values where available (e.g. Fontana) — clearly marked, replace
+          with your verified values before use.
+        </span>
+      </label>
       <div className="toolbar">
         <button className="btn" type="submit" disabled={loading}>
           {loading ? "Generating…" : "Generate draft review package"}

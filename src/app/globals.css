@@ -83,6 +83,8 @@ input.input-error, select.input-error { border-color: var(--danger-line); backgr
 .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; vertical-align: middle; }
 .badge--placeholder { background: var(--warn-bg); border: 1px solid var(--warn-line); color: #7a4d12; }
 .badge--verified { background: var(--ok-bg); border: 1px solid var(--ok-line); color: #1f5b30; }
+.badge--illustrative { background: #e8eefc; border: 1px solid #5b7fd1; color: #27407a; }
+.banner--illustrative { background: #eef3fe; border-color: #5b7fd1; color: #27407a; }
 
 table.report { width: 100%; border-collapse: collapse; font-size: 13px; margin: 6px 0 4px; }
 table.report th, table.report td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }

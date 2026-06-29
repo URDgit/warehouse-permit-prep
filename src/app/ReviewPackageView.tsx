@@ -10,6 +10,7 @@ import { specialInspectionForm, deferredSubmittalForm } from "@/engine/report/fo
 import { getVerificationBrief } from "@/app/actions";
 
 function Badge({ cv }: { cv: CodeValue }) {
+  if (cv.illustrative) return <span className="badge badge--illustrative">ILLUSTRATIVE</span>;
   return cv.isPlaceholder ? (
     <span className="badge badge--placeholder">PLACEHOLDER</span>
   ) : (
@@ -18,6 +19,8 @@ function Badge({ cv }: { cv: CodeValue }) {
 }
 
 function valueText(cv: CodeValue): string {
+  // Illustrative values render their (clearly-marked, unverified) example value.
+  if (cv.illustrative) return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""}`;
   if (cv.isPlaceholder) return "— needs engineer —";
   return `${String(cv.value)}${cv.unit ? ` ${cv.unit}` : ""}`;
 }
@@ -28,8 +31,15 @@ function applicabilityLabel(a: ReviewPackage["jurisdiction"]["requiredDocuments"
   return "Verify applicability";
 }
 
-export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
+export default function ReviewPackageView({
+  pkg,
+  onClearIllustrative,
+}: {
+  pkg: ReviewPackage;
+  onClearIllustrative?: () => void;
+}) {
   const m = pkg.meta;
+  const hasIllustrative = pkg.codeValuesUsed.some((cv) => cv.illustrative);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [briefBusy, setBriefBusy] = useState(false);
   const [coverBusy, setCoverBusy] = useState(false);
@@ -129,6 +139,23 @@ export default function ReviewPackageView({ pkg }: { pkg: ReviewPackage }) {
         <strong>Draft — not an engineered or approved document</strong>
         {m.disclaimer}
       </div>
+
+      {hasIllustrative && (
+        <div className="banner banner--illustrative" role="alert">
+          <strong>Illustrative example values — not verified</strong>
+          Values tagged{" "}
+          <span className="badge badge--illustrative">ILLUSTRATIVE</span> are example numbers, shown so you
+          can see the finished, fully-cited format. The <em>citations are real</em>; the <em>numbers are
+          not</em> — replace each with your own engineer-verified value before use.
+          {onClearIllustrative && (
+            <div style={{ marginTop: 10 }}>
+              <button className="btn" type="button" onClick={onClearIllustrative}>
+                Clear &amp; enter my values
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       <ReadinessPanel r={pkg.readiness} />
 
