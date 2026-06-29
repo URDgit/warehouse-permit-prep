@@ -19,6 +19,17 @@ export default function VerifyPage() {
     setMessage(null);
   }
 
+  // Pre-fill the Fontana illustrative values + exact citations as editable
+  // starting points (still unverified). The engineer confirms/adjusts each value
+  // and ticks Verified; unticked rows are never saved.
+  function loadIllustrative() {
+    getVerifiableFields({ illustrative: true }).then(setFields);
+    setMessage({
+      ok: true,
+      text: "Loaded Fontana illustrative starting points (with citations). Confirm or adjust each value, tick Verified, then Save. Unticked rows are not saved.",
+    });
+  }
+
   async function save() {
     if (!fields) return;
     setSaving(true);
@@ -76,6 +87,9 @@ export default function VerifyPage() {
       </div>
 
       <div className="toolbar">
+        <button className="btn btn-secondary" type="button" onClick={loadIllustrative} disabled={saving}>
+          Start from Fontana illustrative values
+        </button>
         <button className="btn" onClick={save} disabled={saving}>
           {saving ? "Saving…" : "Save verified values"}
         </button>

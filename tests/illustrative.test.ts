@@ -34,6 +34,13 @@ describe("Fontana illustrative values", () => {
     expect(r?.source).toMatch(/Table 15\.4-1/);
   });
 
+  it("shows an illustrative commodity classification, but it never drives logic", () => {
+    expect(pkg.classification.commodityClass.illustrative).toBe(true);
+    expect(String(pkg.classification.commodityClass.value)).toMatch(/Class IV/);
+    expect(pkg.classification.commodityClass.isPlaceholder).toBe(true);
+    expect(pkg.classification.commodityClassId).toBeNull(); // presentational only
+  });
+
   it("the package as a whole is still NOT verified (placeholders remain)", () => {
     expect(pkg.placeholderCount).toBeGreaterThan(0);
   });

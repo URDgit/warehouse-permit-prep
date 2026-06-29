@@ -76,6 +76,68 @@ const initialForm = {
 
 type Form = typeof initialForm;
 
+// One-click representative Fontana high-piled rack project, for validation demos.
+// These are example PROJECT INPUTS (the engineer's own data), not code values.
+const fontanaExampleForm: Form = {
+  project: {
+    projectName: "Fontana Example — High-Piled Rack Installation",
+    preparedBy: "Example (replace with your firm)",
+    preparedDate: today,
+    jurisdiction: "fontana",
+  },
+  building: {
+    address: "15000 Valley Blvd, Fontana, CA 92335",
+    constructionType: "",
+    totalBuildingAreaSqFt: "120000",
+    highPiledAreaSqFt: "60000",
+    ceilingHeightFt: "36",
+    existingSprinkler: true,
+    sprinklerSystemType: "ESFR",
+  },
+  rack: {
+    rackType: "selective",
+    storageHeightFt: "30",
+    numberOfTiers: "6",
+    rackDepthConfig: "double-row",
+    aisleWidthFt: "8",
+    anchored: true,
+    anchorType: "",
+  },
+  loads: {
+    productLoadPerLevelLb: "2500",
+    numberOfLoadedLevels: "6",
+    rackSelfWeightLb: "",
+  },
+  slab: {
+    thicknessIn: "6",
+    compressiveStrengthPsi: "4000",
+    reinforcement: "",
+  },
+  commodity: {
+    description: "Cartoned goods with Group A plastics",
+    primaryMaterial: "",
+    packaging: "cartoned",
+    plasticContent: "limited",
+    encapsulated: false,
+    idlePalletsStored: false,
+  },
+  sprinkler: {
+    systemType: "ESFR",
+    designDensityGpmPerSqFt: "",
+    kFactor: "",
+    inRackSprinklers: false,
+  },
+  seismic: {
+    siteClass: "D",
+    Ss: "2.0",
+    S1: "0.8",
+    Sds: "1.33",
+    Sd1: "0.75",
+    seismicDesignCategory: "D",
+    riskCategory: "II",
+  },
+};
+
 const PROJECTS_KEY = "wpp-projects-v1";
 const LEGACY_KEY = "wpp-intake-v1";
 
@@ -419,6 +481,9 @@ export default function Home() {
           </select>
         </label>
         <button type="button" className="btn btn-secondary" onClick={newProject}>New</button>
+        <button type="button" className="btn btn-secondary" onClick={() => setForm(fontanaExampleForm)} title="Load a representative Fontana high-piled rack project">
+          Load Fontana example
+        </button>
         <button type="button" className="btn btn-secondary" onClick={deleteProject} disabled={projects.length <= 1}>
           Delete
         </button>

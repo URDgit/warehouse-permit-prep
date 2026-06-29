@@ -100,6 +100,32 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
     classStatus = "blocked_by_placeholder";
   }
 
+  // Illustrative overlay: when the real classification is undetermined but an
+  // illustrative example class is provided (illustrative mode), show it clearly
+  // marked. Presentational only — commodityClassId stays null, so it never drives
+  // jurisdiction triggers or any other logic.
+  const illusClass = (data.commodity?.illustrative_class ?? {}) as Record<string, any>;
+  const illusActive =
+    String(illusClass.status ?? "").toUpperCase() === "ILLUSTRATIVE" &&
+    illusClass.value !== null &&
+    illusClass.value !== undefined &&
+    illusClass.value !== "";
+  if (commodityClass.isPlaceholder && illusActive) {
+    commodityClass = {
+      id: "commodity.class",
+      label: "Commodity classification",
+      value: String(illusClass.value),
+      unit: null,
+      source: String(illusClass.source ?? baseSource),
+      status: "PLACEHOLDER",
+      isPlaceholder: true,
+      illustrative: true,
+      todo: null,
+    };
+    classDescription =
+      "Commodity class shown as an ILLUSTRATIVE example only (not a verified classification). Replace it with your verified classification.";
+  }
+
   const inputsUsed = {
     description: input.commodity.description,
     primaryMaterial: input.commodity.primaryMaterial,

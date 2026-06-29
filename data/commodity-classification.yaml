@@ -32,6 +32,15 @@ meta:
   governing_chapter: "CFC 2022 Chapter 32 — High-Piled Combustible Storage"
   source_note: "Commodity classes are defined in CFC Chapter 32. Confirm exact section and table numbers against the adopted code."
 
+# Illustrative example classification, used ONLY to pre-fill the package in
+# illustrative mode. This is NOT a verified classification and NOT a rule
+# output — the engine renders it but still treats it as unverified. The
+# illustrative dataset fills `value`; otherwise it stays empty.
+illustrative_class:
+  value: ""
+  status: PLACEHOLDER
+  source: "CFC 2022 §3203 (commodity classification) — illustrative only"
+
 # ---------------------------------------------------------------------
 #  The list of commodity classes the app can assign.
 #  Definitions are PLACEHOLDERs until verified — they are intentionally

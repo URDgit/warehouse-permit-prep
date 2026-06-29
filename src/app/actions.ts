@@ -170,9 +170,15 @@ export async function saveLibraries(lib: Libraries): Promise<{ ok: true } | { ok
   }
 }
 
-/** Current state of every editable code value (with verified overrides applied). */
-export async function getVerifiableFields(): Promise<VerifiableField[]> {
-  return listVerifiableFields(await loadCodeDataForUser());
+/**
+ * Current state of every editable code value (with verified overrides applied).
+ * With `{ illustrative: true }`, the Fontana illustrative values + exact citations
+ * are pre-filled as editable starting points (still UNVERIFIED) so the engineer
+ * can confirm/adjust each value and tick it verified, instead of typing from scratch.
+ */
+export async function getVerifiableFields(opts?: { illustrative?: boolean }): Promise<VerifiableField[]> {
+  const set = opts?.illustrative ? ILLUSTRATIVE_BY_JURISDICTION["fontana"] : undefined;
+  return listVerifiableFields(await loadCodeDataForUser(set));
 }
 
 export type SaveOverridesResult = { ok: true; count: number } | { ok: false; message: string };

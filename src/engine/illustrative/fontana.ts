@@ -18,6 +18,10 @@ import type { OverrideEntry } from "@/engine/data/overrides";
 const ILLUS = "ILLUSTRATIVE";
 
 export const FONTANA_ILLUSTRATIVE: OverrideEntry[] = [
+  // --- Commodity classification (illustrative example only) ---
+  { path: "commodity.illustrative_class", value: "Class IV — Group A plastics in cartons (example)", status: ILLUS,
+    source: "CFC 2022 §3203 (commodity classification; Group A/B/C plastics)" },
+
   // --- Fire-code requirements (CFC 2022 Chapter 32) ---
   { path: "fireCode.applicability.high_piled_area_threshold", value: 500, unit: "sq ft", status: ILLUS,
     source: "CFC 2022 §3206 / Table 3206.2 (high-piled storage area thresholds)" },
