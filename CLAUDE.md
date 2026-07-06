@@ -65,3 +65,10 @@ The existing site cites **outdated codes**. This must be fixed before any outrea
 - Cold outreach emails to engineers are drafted and about to go out — site must be corrected first
 - PermitWright LLC filing is in progress; EIN → Bluevine bank account → ToS on letterhead follow
 - First sample package will be built manually for whichever jurisdiction the first engineer reply names; that deliverable becomes the template for future packages and, eventually, the SaaS output spec
+
+## Email infrastructure (live as of July 6, 2026)
+
+- Business email: **uriel@permitwright.com** on Google Workspace (Business Starter, 1 seat). Sends AND receives — the inbound-email blocker from the site work order is **RESOLVED**. The site's mailto CTA is fully functional.
+- DNS (Cloudflare, permitwright.com zone): MX → `smtp.google.com`. Root TXT SPF: `v=spf1 include:_spf.google.com ~all`. Google DKIM at `google._domainkey`. DMARC at `_dmarc` (p=none). All verified passing (SPF/DKIM/DMARC = PASS).
+- Resend remains for app/transactional sending only, isolated on the `send.` subdomain (its own SPF + DKIM there). Do NOT use Resend for outreach; do NOT add MX records or a second root SPF; any future SPF change must MERGE into the single existing root record.
+- Aliases (sales@, info@) if ever needed = free aliases on the existing user, never new paid seats.
