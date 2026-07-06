@@ -27,7 +27,7 @@ export function computeSeismicDemand(input: IntakeInput, data: CodeData): CalcRe
     "seismic.formula_reference",
     "Governing seismic formula",
     sf.formula_reference,
-    "ASCE 7-16 — VERIFY governing equation",
+    "ASCE 7-22 — VERIFY governing equation",
   );
   const R = toCodeValue<number>("seismic.R", "Response modification factor (R/Rp)", coeffs.response_modification_R);
   const Ie = toCodeValue<number>("seismic.Ie", "Seismic importance factor (Ie)", coeffs.importance_factor_Ie);
@@ -35,7 +35,7 @@ export function computeSeismicDemand(input: IntakeInput, data: CodeData): CalcRe
     "seismic.product_load_reduction_factor",
     "Product load reduction factor (seismic mass)",
     data.seismic?.seismic_weight?.product_load_reduction_factor,
-    "ANSI/RMI MH16.1 / ASCE 7-16 — VERIFY",
+    "ANSI/RMI MH16.1 / ASCE 7-22 — VERIFY",
   );
   const supportingValues: CodeValue[] = [formula, R, Ie, productLoadFactor];
 
@@ -79,7 +79,7 @@ export function computeSeismicDemand(input: IntakeInput, data: CodeData): CalcRe
     codeValues: supportingValues,
     assumptions: [
       "Rack seismic weight comes from the stored product load (reduced by a code factor) plus rack self-weight; the reduction factor is an engineer-verified code value.",
-      "The choice between nonbuilding-structure (ASCE 7-16 Ch.15) and component (Ch.13) design paths must be made by the engineer; it changes the formula.",
+      "The choice between nonbuilding-structure (ASCE 7-22 Ch.15) and component (Ch.13) design paths must be made by the engineer; it changes the formula.",
     ],
     result: null,
     status: blocked ? "blocked_by_placeholder" : "ok",

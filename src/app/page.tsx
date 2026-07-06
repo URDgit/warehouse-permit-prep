@@ -1,157 +1,84 @@
-import Link from "next/link";
+import { SITE } from "@/config/site";
 
 // =====================================================================
-//  LANDING PAGE  (public marketing front door — static server component)
+//  LANDING PAGE — done-for-you research service (public one-pager)
 // =====================================================================
-//  The intake tool lives at /app (gated when REQUIRE_AUTH is on). This page
-//  stays public via PUBLIC_PATHS in the middleware. Copy is deliberately
-//  outcome-led and honest about scope (drafting aid; engineer stays EoR) —
-//  the trust posture that works for skeptical licensed engineers.
+//  Current phase: PermitWright sells jurisdiction-specific research packages
+//  to California structural engineers (flat fee, 48-hour turnaround). All
+//  copy/pricing/package contents come from src/config/site.ts so the future
+//  SaaS phase can reuse the structure. No auth links, no signup, no pricing
+//  tiers — the only CTA is the sample-request mailto.
+//
+//  LEGAL POSITIONING (load-bearing): research + document prep only; the
+//  licensed engineer of record keeps all judgment and responsible charge.
 // =====================================================================
 
 export default function LandingPage() {
   return (
     <div className="lp">
       {/* Hero */}
-      <section className="lp-hero">
+      <section className="lp-hero lp-hero--single">
         <div className="lp-hero__text">
-          <p className="lp-eyebrow">For California PEs, SEs &amp; permit consultants</p>
-          <h1 className="lp-h1">A complete rack-permit package, the first time.</h1>
-          <p className="lp-sub">
-            PermitWright helps you assemble code-cited, site-specific high-piled storage and
-            storage-rack permit submittals — so plan check doesn&apos;t bounce them back. You bring
-            the engineering judgment; PermitWright handles the assembly.
-          </p>
+          <p className="lp-eyebrow">{SITE.hero.eyebrow}</p>
+          <h1 className="lp-h1">{SITE.hero.headline}</h1>
+          <p className="lp-sub">{SITE.hero.subhead}</p>
+          <p className="lp-pricing-line">{SITE.hero.pricingLine}</p>
           <div className="lp-cta">
-            <Link className="btn" href="/login">Sign in</Link>
-            <Link className="btn btn-secondary" href="/app">Open the app →</Link>
-          </div>
-          <p className="lp-microtrust">
-            Built on CFC 2022 · ASCE 7-16 · ANSI/RMI MH16.1 · ACI 318 — every value cited to code.
-          </p>
-        </div>
-
-        {/* Real-product visual: a sample cited report row + audit trail */}
-        <div className="lp-preview" aria-hidden="true">
-          <div className="lp-preview__bar"><span /><span /><span /></div>
-          <div className="lp-preview__body">
-            <div className="lp-preview__h">Code values used</div>
-            <div className="lp-preview__row">
-              <span>Commodity classification</span>
-              <span className="badge badge--verified">VERIFIED</span>
-            </div>
-            <div className="lp-preview__src">Source: CFC 2022 §3203 / Table 3203.8</div>
-            <div className="lp-preview__row">
-              <span>Min. aisle width</span>
-              <span className="badge badge--verified">VERIFIED</span>
-            </div>
-            <div className="lp-preview__src">Source: CFC 2022 §3206.9</div>
-            <div className="lp-preview__row">
-              <span>Seismic design path</span>
-              <span className="badge badge--placeholder">VERIFY</span>
-            </div>
-            <div className="lp-preview__src">Source: ASCE 7-16 §15.5.3 — engineer confirms</div>
-            <div className="lp-preview__audit">Audit trail · every value traced to its citation</div>
+            <a className="btn" href={SITE.sampleRequestHref}>{SITE.hero.cta}</a>
           </div>
         </div>
       </section>
 
-      {/* Trust strip */}
-      <section className="lp-trust">
-        <div><strong>Cited to code</strong><span>Every value carries its CFC / ASCE / RMI reference</span></div>
-        <div><strong>Full audit trail</strong><span>Show reviewers exactly how the package was built</span></div>
-        <div><strong>128 CA jurisdictions</strong><span>Submittal checklists tuned per building &amp; fire AHJ</span></div>
-        <div><strong>You stay the EoR</strong><span>You verify every value and apply your own seal</span></div>
+      {/* EOR positioning strip (prominent) */}
+      <section className="lp-eor" role="note">
+        <strong>Your seal. Your judgment. Our legwork.</strong>
+        {SITE.eorStatement}
       </section>
 
-      {/* Problem */}
+      {/* What's in every package */}
       <section className="lp-section">
-        <h2 className="lp-h2">Incomplete packages are the #1 reason plan check sends it back</h2>
-        <p className="lp-body">
-          A submittal that&apos;s missing a required sheet, a commodity classification, a flue-space
-          dimension, or a jurisdiction-specific form gets corrected and re-queued — costing you
-          weeks per project. PermitWright&apos;s job is to make sure the package that leaves your desk is
-          <strong> complete and site-specific</strong> before it ever reaches the reviewer.
-        </p>
+        <h2 className="lp-h2">What&apos;s in every package</h2>
+        <p className="lp-body">{SITE.packageIntro}</p>
+        <div className="lp-features">
+          {SITE.packageContents.map((item) => (
+            <div className="lp-feature" key={item.title}>
+              <strong>{item.title}</strong> — {item.detail}
+            </div>
+          ))}
+        </div>
+        <p className="lp-code-currency">{SITE.codeCurrencyLine}</p>
       </section>
 
       {/* How it works */}
       <section className="lp-section">
         <h2 className="lp-h2">How it works</h2>
         <div className="lp-steps">
-          <div className="lp-step">
-            <div className="lp-step__n">1</div>
-            <h3>Enter the project</h3>
-            <p>Building, racks, commodity, slab, and jurisdiction. Reusable libraries pre-fill your
-              usual anchors and commodities.</p>
-          </div>
-          <div className="lp-step">
-            <div className="lp-step__n">2</div>
-            <h3>Get a code-cited draft</h3>
-            <p>A submittal checklist for that AHJ, classification and code references, readiness
-              flags, and a complete audit trail — nothing invented, everything cited.</p>
-          </div>
-          <div className="lp-step">
-            <div className="lp-step__n">3</div>
-            <h3>Verify, assemble &amp; seal</h3>
-            <p>Add your verified values, merge your own calc PDFs, brand it with your letterhead,
-              then review, seal, and submit. You remain the engineer of record.</p>
-          </div>
+          {SITE.steps.map((step, i) => (
+            <div className="lp-step" key={step.title}>
+              <div className="lp-step__n">{i + 1}</div>
+              <h3>{step.title}</h3>
+              <p>{step.detail}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Features */}
+      {/* About / contact */}
       <section className="lp-section">
-        <h2 className="lp-h2">What&apos;s in the package</h2>
-        <div className="lp-features">
-          <div className="lp-feature"><strong>Submittal checklists</strong> per jurisdiction — plan-content (CFC §3201.3), structural &amp; fire documents, special inspections, deferred submittals.</div>
-          <div className="lp-feature"><strong>Local AHJ specifics</strong> for major markets — the plan portal and the fire authority that actually reviews high-piled storage.</div>
-          <div className="lp-feature"><strong>Engineer verification brief</strong> — a clean list of every value you must confirm, with its code citation.</div>
-          <div className="lp-feature"><strong>Plan-check correction tracker</strong> &amp; one-click correction-response letters for resubmittals.</div>
-          <div className="lp-feature"><strong>Combined-package assembler</strong> — merge your stamped calc PDFs with a cover and sheet index into one file.</div>
-          <div className="lp-feature"><strong>Your firm&apos;s letterhead &amp; seal block</strong> on every output, saved to your account.</div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="lp-section">
-        <h2 className="lp-h2">Simple pricing</h2>
-        <div className="lp-pricing">
-          <div className="lp-price-card">
-            <div className="lp-price">$99<span>/mo</span></div>
-            <div className="lp-price__per">per engineer · billed monthly · cancel anytime</div>
-            <ul className="lp-price__list">
-              <li>Unlimited projects &amp; packages</li>
-              <li>All 128 California jurisdictions</li>
-              <li>Correction tracker, forms &amp; PDF assembler</li>
-              <li>Your firm letterhead &amp; account storage</li>
-            </ul>
-            <Link className="btn" href="/login">Sign in to get started</Link>
-          </div>
-          <p className="lp-roi">
-            “The first package it saved me from a resubmittal paid for the year.” — what a complete,
-            site-specific submittal is worth.
-          </p>
-        </div>
-      </section>
-
-      {/* Honest scope */}
-      <section className="lp-section">
-        <div className="banner banner--warn lp-scope">
-          <strong>What PermitWright is — and isn&apos;t</strong>
-          PermitWright is a drafting and assembly aid. It organizes, validates, cites, and assembles your
-          submittal package. It does <em>not</em> perform engineering analysis, choose values for you,
-          or guarantee approval. You confirm every value against the cited code, apply your seal, and
-          remain the engineer of record. Output is a draft until you sign and stamp it.
-        </div>
+        <h2 className="lp-h2">Who&apos;s behind it</h2>
+        <p className="lp-body">{SITE.aboutParagraph}</p>
+        <p className="lp-body">
+          Questions or a project ready to go:{" "}
+          <a href={`mailto:${SITE.contactEmail}`}><strong>{SITE.contactEmail}</strong></a>
+        </p>
       </section>
 
       {/* Closing CTA */}
       <section className="lp-final">
-        <h2 className="lp-h2">Stop getting bounced at plan check.</h2>
+        <h2 className="lp-h2">Stop spending billable hours on legwork.</h2>
+        <p className="lp-pricing-line">{SITE.hero.pricingLine}</p>
         <div className="lp-cta">
-          <Link className="btn" href="/login">Sign in</Link>
-          <Link className="btn btn-secondary" href="/app">Open the app →</Link>
+          <a className="btn" href={SITE.sampleRequestHref}>{SITE.hero.cta}</a>
         </div>
       </section>
     </div>

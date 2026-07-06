@@ -39,7 +39,7 @@ export interface CodeValue<T = unknown> {
   value: T | null;
   /** Unit of the value, if any. */
   unit: string | null;
-  /** Code citation, e.g. "CFC 2022 Chapter 32". */
+  /** Code citation, e.g. "2025 California Fire Code Chapter 32". */
   source: string;
   status: CodeValueStatus;
   /** True if this value must NOT be trusted as a real answer yet. */

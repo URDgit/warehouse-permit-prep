@@ -151,7 +151,7 @@ function decisions(d: CodeData): BriefDecision[] {
     {
       title: "Rack seismic design path",
       detail:
-        "Decide whether the rack is designed as a nonbuilding structure (ASCE 7-16 Ch.15, §15.5.3) or via component provisions (Ch.13). This choice selects the governing seismic formula and coefficients.",
+        "Decide whether the rack is designed as a nonbuilding structure (ASCE 7-22 Ch.15, §15.5.3) or via component provisions (Ch.13). This choice selects the governing seismic formula and coefficients.",
       source: path.source,
     },
     {
@@ -184,8 +184,8 @@ export function buildVerificationBrief(data: CodeData, now: Date = new Date()): 
           : []),
       ],
     },
-    { discipline: "Seismic", intro: "Seismic demand on the rack (ASCE 7-16; ANSI/RMI MH16.1).", items: SEISMIC_SPECS.map((s) => itemFromSpec(data, s)) },
-    { discipline: "Anchorage", intro: "Rack base-plate anchorage to the existing slab (ASCE 7-16 / ACI 318 Ch.17 / RMI).", items: ANCHORAGE_SPECS.map((s) => itemFromSpec(data, s)) },
+    { discipline: "Seismic", intro: "Seismic demand on the rack (ASCE 7-22; ANSI/RMI MH16.1).", items: SEISMIC_SPECS.map((s) => itemFromSpec(data, s)) },
+    { discipline: "Anchorage", intro: "Rack base-plate anchorage to the existing slab (ASCE 7-22 / ACI 318 Ch.17 / RMI).", items: ANCHORAGE_SPECS.map((s) => itemFromSpec(data, s)) },
     { discipline: "Jurisdiction submittal requirements", intro: "Required submittal documents and the triggers for when each applies.", items: jurisdictionItems(data) },
   ];
 

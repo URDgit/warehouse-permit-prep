@@ -18,7 +18,7 @@ minimum:
   value: null                      # the actual value, or null if not set yet
   unit: "feet"                     # the unit, if any
   status: PLACEHOLDER              # PLACEHOLDER = not verified · VERIFIED = confirmed
-  source: "CFC 2022 Chapter 32 — VERIFY section/table"   # the code citation
+  source: "2025 California Fire Code Chapter 32 — VERIFY section/table"   # the code citation
   todo: "Minimum aisle width depends on ..."             # what's needed (placeholders only)
 ```
 
@@ -29,7 +29,7 @@ minimum:
   value: 8                         # <-- put the real number/text here
   unit: "feet"
   status: VERIFIED                 # <-- change PLACEHOLDER to VERIFIED
-  source: "CFC 2022 Table 3206.2"  # <-- put the exact, confirmed citation
+  source: "2025 California Fire Code Table 3206.2"  # <-- put the exact, confirmed citation
   todo: ""                         # (optional) clear the todo
 ```
 
@@ -55,7 +55,7 @@ YAML cares about a few things. If the app shows a “YAML formatting error”, c
 
 1. **Indentation uses spaces, not tabs.** Keep the existing indentation.
 2. **Keep the field names** (`value`, `status`, `source`, …) exactly as written.
-3. Put **text in double quotes**: `source: "CFC 2022 Table 3206.2"`.
+3. Put **text in double quotes**: `source: "2025 California Fire Code Table 3206.2"`.
 4. Numbers have no quotes: `value: 8`. Yes/no values: `true` or `false`.
 5. Lines starting with `#` are **comments** — notes for humans, ignored by the app.
 
@@ -75,7 +75,7 @@ A rule has three parts:
 rules:
   - when: { packaging: cartoned, plastic_content: { in: [none, limited] } }
     assign_class: class_III
-    source: "CFC 2022 §32xx.x"
+    source: "2025 California Fire Code §32xx.x"
 ```
 
 - `when:` lists the conditions. **All** must be true for the rule to apply.
@@ -152,8 +152,8 @@ forms, and triggers live in the jurisdiction file.
 | --- | --- |
 | `commodity-classification.yaml` | Commodity classes (I–IV, plastics groups) and the rules that map a stored product to a class. |
 | `fire-code-requirements.yaml` | Triggered fire-protection requirements: aisle widths, max heights, sprinkler design, flue spaces, smoke removal, etc. |
-| `seismic.yaml` | Seismic design basis and formula references (ASCE 7-16). |
-| `anchorage.yaml` | Rack base-plate anchorage references (ASCE 7-16 / ACI 318 / ANSI-RMI MH16.1) and existing-slab properties. |
+| `seismic.yaml` | Seismic design basis and formula references (ASCE 7-22). |
+| `anchorage.yaml` | Rack base-plate anchorage references (ASCE 7-22 / ACI 318 / ANSI-RMI MH16.1) and existing-slab properties. |
 | `jurisdictions/los-angeles.yaml` | LADBS/LAFD required submittal documents and the rules for when each applies. |
 
 To add another city later, copy `jurisdictions/los-angeles.yaml` to a new file

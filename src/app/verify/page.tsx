@@ -140,7 +140,7 @@ export default function VerifyPage() {
                       <input
                         type="text"
                         value={f.source}
-                        placeholder="e.g. CFC 2022 Table 3206.2"
+                        placeholder="e.g. 2025 California Fire Code Table 3206.2"
                         onChange={(e) => update(f.id, { source: e.target.value })}
                       />
                     </td>

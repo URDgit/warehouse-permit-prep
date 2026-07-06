@@ -1,5 +1,5 @@
 # =====================================================================
-#  COMMODITY CLASSIFICATION  —  California Fire Code (CFC), 2022 edition
+#  COMMODITY CLASSIFICATION  —  California Fire Code (CFC), 2025 edition
 # =====================================================================
 #
 #  WHAT THIS FILE IS
@@ -27,9 +27,9 @@
 # =====================================================================
 
 meta:
-  code_edition: "2022 California Fire Code (CFC)"
+  code_edition: "2025 California Fire Code (CFC)"
   edition_status: PLACEHOLDER   # VERIFY which CFC edition LADBS/LAFD enforces for this project
-  governing_chapter: "CFC 2022 Chapter 32 — High-Piled Combustible Storage"
+  governing_chapter: "2025 California Fire Code Chapter 32 — High-Piled Combustible Storage"
   source_note: "Commodity classes are defined in CFC Chapter 32. Confirm exact section and table numbers against the adopted code."
 
 # Illustrative example classification, used ONLY to pre-fill the package in
@@ -39,7 +39,7 @@ meta:
 illustrative_class:
   value: ""
   status: PLACEHOLDER
-  source: "CFC 2022 §3203 (commodity classification) — illustrative only"
+  source: "2025 California Fire Code §3203 (commodity classification) — illustrative only"
 
 # ---------------------------------------------------------------------
 #  The list of commodity classes the app can assign.
@@ -52,49 +52,49 @@ classes:
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 (commodity classification) — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 (commodity classification) — VERIFY exact section/table"
       todo: "Enter the code definition of a Class I commodity."
   - id: class_II
     name: "Class II"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of a Class II commodity."
   - id: class_III
     name: "Class III"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of a Class III commodity."
   - id: class_IV
     name: "Class IV"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of a Class IV commodity."
   - id: group_a_plastics
     name: "Group A Plastics"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of Group A plastics (and note Group B / Group C if used)."
   - id: group_b_plastics
     name: "Group B Plastics"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of Group B plastics."
   - id: group_c_plastics
     name: "Group C Plastics"
     description:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY exact section/table"
+      source: "2025 California Fire Code Chapter 32 — VERIFY exact section/table"
       todo: "Enter the code definition of Group C plastics."
 
 # ---------------------------------------------------------------------
@@ -104,7 +104,7 @@ classes:
 # ---------------------------------------------------------------------
 classification_rules:
   status: PLACEHOLDER
-  source: "CFC 2022 Chapter 32 commodity classification provisions and tables — VERIFY"
+  source: "2025 California Fire Code Chapter 32 commodity classification provisions and tables — VERIFY"
   todo: >
     A licensed engineer must define how the intake answers (primary
     material, packaging, plastic content, encapsulation, idle pallets,
@@ -136,7 +136,7 @@ classification_rules:
   example_rules:
     - when: { plastic_content: significant, encapsulated: true }
       assign_class: group_a_plastics
-      source: "CFC 2022 §32xx.x (EXAMPLE — verify)"
+      source: "2025 California Fire Code §32xx.x (EXAMPLE — verify)"
     - when: { packaging: cartoned, plastic_content: { in: [none, limited] } }
       assign_class: class_III
-      source: "CFC 2022 §32xx.x (EXAMPLE — verify)"
+      source: "2025 California Fire Code §32xx.x (EXAMPLE — verify)"

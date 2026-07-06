@@ -58,43 +58,43 @@ submittal_rules:
 plan_content_requirements:
   - id: floor_plan
     name: "Floor plan showing high-piled storage areas and dimensions"
-    source: "CFC 2022 §3201.3 — VERIFY (local amendments)"
+    source: "2025 California Fire Code §3201.3 — VERIFY (local amendments)"
   - id: storage_height
     name: "Usable storage height for each storage area"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: rack_tiers
     name: "Number of tiers within each rack"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: commodity_clearance
     name: "Clearance between top of storage and sprinkler deflector"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: aisle_dimensions
     name: "Aisle dimensions between storage arrays"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: max_pile_volume
     name: "Maximum pile volume for each storage array"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: commodity_classification
     name: "Commodity location and classification (per §3203)"
-    source: "CFC 2022 §3201.3 / §3203 — VERIFY"
+    source: "2025 California Fire Code §3201.3 / §3203 — VERIFY"
   - id: encapsulated_locations
     name: "Locations of banded or encapsulated commodities"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: fd_access_doors
     name: "Fire department access door locations"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: suppression_detection
     name: "Type of fire suppression and detection systems"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: sprinkler_valves
     name: "Ceiling and in-rack sprinkler control valve locations"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: smoke_curtain
     name: "Smoke removal and curtain board system specifications"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
   - id: flue_spaces
     name: "Transverse and longitudinal flue space dimensions"
-    source: "CFC 2022 §3201.3 — VERIFY"
+    source: "2025 California Fire Code §3201.3 — VERIFY"
 
 structural_submittal_requirements:
   - id: pe_sealed_calcs
@@ -105,7 +105,7 @@ structural_submittal_requirements:
     source: "ANSI/RMI MH16.1 — VERIFY edition"
   - id: seismic_analysis
     name: "Seismic analysis per ASCE 7"
-    source: "ASCE 7-16 (per 2022 CBC) — VERIFY"
+    source: "ASCE 7-22 (per 2025 CBC) — VERIFY"
   - id: baseplate_anchorage
     name: "Base plate sizing and anchorage to the existing slab"
     source: "ACI 318 Ch. 17 / ANSI-RMI MH16.1 — VERIFY"

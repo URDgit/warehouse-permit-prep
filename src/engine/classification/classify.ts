@@ -41,7 +41,7 @@ export function classifyCommodity(input: IntakeInput, data: CodeData): Classific
   const classes = Array.isArray(data.commodity?.classes) ? (data.commodity.classes as Record<string, any>[]) : [];
   const validClassIds = classes.map((c) => String(c.id));
   const classNameById = (id: string) => String(classes.find((c) => String(c.id) === id)?.name ?? id);
-  const baseSource = String(rules.source ?? "CFC 2022 Chapter 32 — VERIFY");
+  const baseSource = String(rules.source ?? "2025 California Fire Code Chapter 32 — VERIFY");
 
   let commodityClass: CodeValue<string>;
   let commodityClassId: string | null = null;

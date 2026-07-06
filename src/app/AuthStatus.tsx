@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
@@ -15,13 +14,10 @@ export default async function AuthStatus() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return (
-      <Link href="/login" style={{ marginLeft: "auto", fontSize: 13, whiteSpace: "nowrap" }}>
-        Sign in
-      </Link>
-    );
-  }
+  // Signed-out visitors see no auth affordance: the public site is a service
+  // one-pager (current phase), not the app. The tool at /app still works —
+  // navigating there redirects to /login for authorized users.
+  if (!user) return null;
 
   return (
     <form

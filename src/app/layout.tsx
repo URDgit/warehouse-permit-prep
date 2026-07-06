@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 import AuthStatus from "./AuthStatus";
+import { SITE } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "PermitWright — Stamp-ready storage-rack permit packages",
-  description:
-    "PermitWright helps California engineers and consultants assemble complete, code-cited high-piled storage / storage-rack permit packages for review, seal, and submittal. A drafting aid — you remain the engineer of record.",
+  title: SITE.metaTitle,
+  description: SITE.metaDescription,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,15 +15,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <header className="app-header">
           <div className="app-header__inner">
-            <Link href="/" className="app-header__brand">PermitWright</Link>
-            <span className="app-header__sub">Storage-rack permit packages · California</span>
+            <Link href="/" className="app-header__brand">{SITE.name}</Link>
+            <span className="app-header__sub">High-piled storage permit research · California</span>
             <AuthStatus />
           </div>
         </header>
         <main className="container">{children}</main>
         <footer className="app-footer">
-          Preliminary drafting aid only — not an engineered or approved document. Requires
-          review and stamp by a California-licensed professional engineer.
+          {SITE.footerLine1}
+          <br />
+          {SITE.footerLine2}
         </footer>
       </body>
     </html>

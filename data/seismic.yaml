@@ -1,5 +1,5 @@
 # =====================================================================
-#  SEISMIC DESIGN BASIS  —  ASCE 7-16 (as referenced by 2022 CBC)
+#  SEISMIC DESIGN BASIS  —  ASCE 7-22 (as referenced by 2025 CBC)
 # =====================================================================
 #
 #  This file holds the seismic design parameters and the formula
@@ -7,7 +7,7 @@
 #
 #  IMPORTANT ENGINEERING DECISION (must be made by the engineer):
 #  A steel storage rack can be designed either as a NONBUILDING
-#  STRUCTURE (ASCE 7-16 Chapter 15, incl. §15.5.3 steel storage racks)
+#  STRUCTURE (ASCE 7-22 Chapter 15, incl. §15.5.3 steel storage racks)
 #  or, in some cases, evaluated using component provisions (Chapter 13).
 #  This choice changes which formula and coefficients apply. The app does
 #  NOT pick for you — it records your choice and the source.
@@ -21,8 +21,8 @@
 # =====================================================================
 
 meta:
-  standard: "ASCE 7-16"
-  standard_status: PLACEHOLDER   # VERIFY edition referenced by the adopted 2022 CBC for this project
+  standard: "ASCE 7-22"
+  standard_status: PLACEHOLDER   # VERIFY edition referenced by the adopted 2025 CBC for this project
   also_reference: "ANSI/RMI MH16.1 (Design of Steel Storage Racks) — VERIFY edition"
 
 # Which design path applies to the rack. Engineer sets this.
@@ -30,7 +30,7 @@ design_basis:
   rack_design_path:
     value: null   # expected: "nonbuilding_structure" or "nonstructural_component"
     status: PLACEHOLDER
-    source: "ASCE 7-16 Ch. 15 (§15.5.3) vs. Ch. 13 — engineer determination required"
+    source: "ASCE 7-22 Ch. 15 (§15.5.3) vs. Ch. 13 — engineer determination required"
     todo: "Decide whether the rack is designed as a nonbuilding structure (Ch.15) or via component provisions (Ch.13). This selects the formula below."
 
 # Seismic force formula references. Coefficients MUST be set by engineer.
@@ -40,23 +40,23 @@ seismic_force:
   formula_reference:
     value: null
     status: PLACEHOLDER
-    source: "ASCE 7-16 — VERIFY governing equation (e.g. Ch.15 base shear or Ch.13 Fp)"
+    source: "ASCE 7-22 — VERIFY governing equation (e.g. Ch.15 base shear or Ch.13 Fp)"
     todo: "Record the exact governing equation reference once the design path is chosen."
   coefficients:
     response_modification_R:
       value: null
       status: PLACEHOLDER
-      source: "ASCE 7-16 Table (per chosen path) — VERIFY"
+      source: "ASCE 7-22 Table (per chosen path) — VERIFY"
       todo: "R (or Rp) for the selected rack design path."
     overstrength_omega0:
       value: null
       status: PLACEHOLDER
-      source: "ASCE 7-16 Table (per chosen path) — VERIFY"
+      source: "ASCE 7-22 Table (per chosen path) — VERIFY"
       todo: "Overstrength factor, if applicable."
     importance_factor_Ie:
       value: null
       status: PLACEHOLDER
-      source: "ASCE 7-16 §1.5 / Table 1.5-2 (Risk Category) — VERIFY"
+      source: "ASCE 7-22 §1.5 / Table 1.5-2 (Risk Category) — VERIFY"
       todo: "Seismic importance factor based on Risk Category for the use."
 
 # Portion of the stored product weight that counts toward seismic mass.
@@ -65,7 +65,7 @@ seismic_weight:
   product_load_reduction_factor:
     value: null
     status: PLACEHOLDER
-    source: "ANSI/RMI MH16.1 / ASCE 7-16 — product load factor for seismic mass — VERIFY"
+    source: "ANSI/RMI MH16.1 / ASCE 7-22 — product load factor for seismic mass — VERIFY"
     todo: "Fraction of the stored product weight included in the rack's seismic mass (e.g. a load reduction factor per RMI). The engineer sets this value."
 
 # Site-specific ground motion parameters. These are PROJECT INPUTS that

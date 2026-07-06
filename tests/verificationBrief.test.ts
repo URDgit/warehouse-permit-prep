@@ -29,7 +29,7 @@ describe("engineer verification brief", () => {
   it("marks an item verified once its data node is VERIFIED, lowering the outstanding count", () => {
     const partial: CodeData = {
       commodity: {},
-      fireCode: { aisle_width: { minimum: { value: 8, status: "VERIFIED", source: "CFC 2022 Table X", unit: "feet" } } },
+      fireCode: { aisle_width: { minimum: { value: 8, status: "VERIFIED", source: "2025 California Fire Code Table X", unit: "feet" } } },
       seismic: {},
       anchorage: {},
       jurisdictions: { "los-angeles": {} },

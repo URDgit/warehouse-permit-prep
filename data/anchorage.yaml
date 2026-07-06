@@ -1,5 +1,5 @@
 # =====================================================================
-#  RACK ANCHORAGE BASIS  —  ASCE 7-16 / ACI 318 / ANSI-RMI MH16.1
+#  RACK ANCHORAGE BASIS  —  ASCE 7-22 / ACI 318 / ANSI-RMI MH16.1
 # =====================================================================
 #
 #  This file holds the references and factors used to evaluate base-plate
@@ -15,8 +15,8 @@
 
 meta:
   references:
-    - "ASCE 7-16 (seismic demand on anchorage)"
-    - "ACI 318 Chapter 17 (anchoring to concrete) — VERIFY edition referenced by 2022 CBC"
+    - "ASCE 7-22 (seismic demand on anchorage)"
+    - "ACI 318 Chapter 17 (anchoring to concrete) — VERIFY edition referenced by 2025 CBC"
     - "ANSI/RMI MH16.1 (rack anchorage provisions) — VERIFY edition"
   status: PLACEHOLDER
 
@@ -25,7 +25,7 @@ anchor_demand:
   formula_reference:
     value: null
     status: PLACEHOLDER
-    source: "ASCE 7-16 / ANSI-RMI MH16.1 anchorage demand — VERIFY"
+    source: "ASCE 7-22 / ANSI-RMI MH16.1 anchorage demand — VERIFY"
     todo: "Record the governing equations for anchor tension/shear demand (overturning from seismic base shear, etc.)."
 
 # Capacity side: anchor strength from the existing slab + anchor type.
@@ -65,5 +65,5 @@ load_combinations:
   reference:
     value: null
     status: PLACEHOLDER
-    source: "ASCE 7-16 §2.3 / §2.4 load combinations — VERIFY"
+    source: "ASCE 7-22 §2.3 / §2.4 load combinations — VERIFY"
     todo: "Record which load combinations govern the anchorage check."

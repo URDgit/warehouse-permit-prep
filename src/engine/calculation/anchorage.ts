@@ -25,7 +25,7 @@ export function computeAnchorage(input: IntakeInput, data: CodeData): CalcResult
     "anchorage.demand_formula",
     "Anchor demand formula",
     a.anchor_demand?.formula_reference,
-    "ASCE 7-16 / ANSI-RMI MH16.1 — VERIFY",
+    "ASCE 7-22 / ANSI-RMI MH16.1 — VERIFY",
   );
   const fc = toCodeValue<number>("anchorage.slab_fc", "Existing slab concrete strength (f'c)", slab.compressive_strength_fc);
   const slabThickness = toCodeValue<number>("anchorage.slab_thickness", "Existing slab thickness", slab.slab_thickness);

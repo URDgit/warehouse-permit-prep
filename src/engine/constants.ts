@@ -18,9 +18,9 @@ export const DISCLAIMER =
 
 /** The code basis these data files are labeled against (subject to verification). */
 export const CODE_BASIS = [
-  "2022 California Fire Code (CFC) — high-piled combustible storage (Chapter 32)",
-  "2022 California Building Code (CBC)",
-  "ASCE 7-16 — seismic design (as referenced by the 2022 CBC)",
+  "2025 California Fire Code (CFC) — high-piled combustible storage (Chapter 32)",
+  "2025 California Building Code (CBC)",
+  "ASCE 7-22 — seismic design (as referenced by the 2025 CBC)",
   "ACI 318 — anchoring to concrete (Chapter 17)",
   "ANSI/RMI MH16.1 — design of steel storage racks",
   "Local jurisdiction (city / county) submittal requirements",

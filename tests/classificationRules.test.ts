@@ -73,12 +73,12 @@ describe("classifyCommodity with verified rules", () => {
 
   it("assigns the class and cites the rule's source when a verified rule matches", () => {
     const data = dataWith([
-      { when: { packaging: "cartoned", plastic_content: { in: ["none", "limited"] } }, assign_class: "class_III", source: "CFC 2022 §X" },
+      { when: { packaging: "cartoned", plastic_content: { in: ["none", "limited"] } }, assign_class: "class_III", source: "2025 California Fire Code §X" },
     ]);
     const r = classifyCommodity(input, data);
     expect(r.commodityClass.value).toBe("Class III");
     expect(r.commodityClass.isPlaceholder).toBe(false);
-    expect(r.commodityClass.source).toBe("CFC 2022 §X");
+    expect(r.commodityClass.source).toBe("2025 California Fire Code §X");
     expect(r.audit[0].status).toBe("ok");
   });
 

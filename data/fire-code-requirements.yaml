@@ -1,5 +1,5 @@
 # =====================================================================
-#  FIRE-CODE REQUIREMENTS  —  California Fire Code (CFC), 2022 edition
+#  FIRE-CODE REQUIREMENTS  —  California Fire Code (CFC), 2025 edition
 # =====================================================================
 #
 #  These are the fire-protection requirements that get TRIGGERED once a
@@ -13,9 +13,9 @@
 # =====================================================================
 
 meta:
-  code_edition: "2022 California Fire Code (CFC)"
+  code_edition: "2025 California Fire Code (CFC)"
   edition_status: PLACEHOLDER
-  governing_chapter: "CFC 2022 Chapter 32 — High-Piled Combustible Storage"
+  governing_chapter: "2025 California Fire Code Chapter 32 — High-Piled Combustible Storage"
   reference_standard: "NFPA 13 (as referenced/adopted) for sprinkler design — VERIFY edition"
 
 # When do high-piled storage requirements apply at all?
@@ -24,13 +24,13 @@ applicability:
     value: null
     unit: "square feet"
     status: PLACEHOLDER
-    source: "CFC 2022 Chapter 32 (high-piled storage area thresholds) — VERIFY table"
+    source: "2025 California Fire Code Chapter 32 (high-piled storage area thresholds) — VERIFY table"
     todo: "Floor area (by commodity class / sprinklered vs not) that triggers high-piled storage provisions."
   storage_height_threshold:
     value: null
     unit: "feet"
     status: PLACEHOLDER
-    source: "CFC 2022 Chapter 2 / Chapter 32 definition of 'high-piled storage' — VERIFY"
+    source: "2025 California Fire Code Chapter 2 / Chapter 32 definition of 'high-piled storage' — VERIFY"
     todo: "Storage height above which storage is considered 'high-piled'."
 
 # Minimum aisle width between racks / piles.
@@ -39,7 +39,7 @@ aisle_width:
     value: null
     unit: "feet"
     status: PLACEHOLDER
-    source: "CFC 2022 Chapter 32 (aisle width requirements) — VERIFY section/table"
+    source: "2025 California Fire Code Chapter 32 (aisle width requirements) — VERIFY section/table"
     todo: "Depends on commodity class, storage height, and whether sprinklered. Provide the governing minimum."
 
 # Maximum permitted heights.
@@ -48,13 +48,13 @@ heights:
     value: null
     unit: "feet"
     status: PLACEHOLDER
-    source: "CFC 2022 Chapter 32 — VERIFY"
+    source: "2025 California Fire Code Chapter 32 — VERIFY"
     todo: "Maximum pile/storage height permitted for the given commodity & protection."
   max_storage_to_ceiling_clearance:
     value: null
     unit: "feet"
     status: PLACEHOLDER
-    source: "CFC 2022 Chapter 32 / NFPA 13 clearance to sprinklers — VERIFY"
+    source: "2025 California Fire Code Chapter 32 / NFPA 13 clearance to sprinklers — VERIFY"
     todo: "Required clearance between top of storage and sprinkler deflectors / ceiling."
 
 # Automatic sprinkler design basis (NFPA 13 / CFC).
@@ -84,21 +84,21 @@ other_requirements:
     required:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 (smoke and heat removal) — VERIFY"
+      source: "2025 California Fire Code Chapter 32 (smoke and heat removal) — VERIFY"
       todo: "Determine if/when smoke & heat removal (e.g. roof vents, mechanical) is required."
   - id: draft_curtains
     name: "Draft curtains / curtain boards"
     required:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY"
+      source: "2025 California Fire Code Chapter 32 — VERIFY"
       todo: "Determine applicability of draft curtains."
   - id: fire_department_access
     name: "Fire department access doors / aisles"
     required:
       value: null
       status: PLACEHOLDER
-      source: "CFC 2022 Chapter 32 — VERIFY"
+      source: "2025 California Fire Code Chapter 32 — VERIFY"
       todo: "Determine access door spacing and access aisle requirements."
   - id: flue_spaces
     name: "Rack flue spaces (transverse / longitudinal)"
