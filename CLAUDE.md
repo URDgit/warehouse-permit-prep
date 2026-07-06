@@ -8,7 +8,7 @@ PermitWright (permitwright.com) is a business serving **California structural en
 
 The original plan was a **$99/month SaaS** generating jurisdiction-specific permit packages. That is now the **future phase**, not the current one.
 
-**Current phase (launching now):** a manual, done-for-you service — "Model A":
+**Current phase (LIVE as of July 6, 2026 — awaiting first replies):** a manual, done-for-you service — "Model A":
 - Sell **jurisdiction-specific research packages** directly to structural engineers
 - **Flat $750 per project, 48-hour turnaround**
 - The engineer remains **Engineer of Record (EOR)**; PermitWright provides code research and document preparation ONLY — never engineering judgment, design, or responsible charge (California B&P Code §6735 boundary; this positioning is legally load-bearing, preserve it in all copy)
@@ -62,7 +62,7 @@ The existing site cites **outdated codes**. This must be fixed before any outrea
 
 ## Sequencing context (for awareness, not action)
 
-- Cold outreach emails to engineers are drafted and about to go out — site must be corrected first
+- **Outreach LAUNCHED July 6, 2026:** five cold emails sent to structural engineering principals (pain-first draft, free-sample CTA, sent manually from uriel@permitwright.com). Recipients: Storage Rack Engineering, Burke Structural, T&B Engineering, YA Creative, JMC2 — tracked in `outreach/prospects.csv` (`sent_date`/`status` columns). Business state is **"live service awaiting first replies," not pre-launch**.
 - PermitWright LLC filing is in progress; EIN → Bluevine bank account → ToS on letterhead follow
 - First sample package will be built manually for whichever jurisdiction the first engineer reply names; that deliverable becomes the template for future packages and, eventually, the SaaS output spec
 
