@@ -62,8 +62,8 @@ The existing site cites **outdated codes**. This must be fixed before any outrea
 
 ## Sequencing context (for awareness, not action)
 
-- **Outreach LAUNCHED July 6, 2026:** five cold emails sent to structural engineering principals (pain-first draft, free-sample CTA, sent manually from uriel@permitwright.com). Recipients: Storage Rack Engineering, Burke Structural, T&B Engineering, YA Creative, JMC2 — tracked in `outreach/prospects.csv` (`sent_date`/`status` columns). Business state is **"live service awaiting first replies," not pre-launch**.
-- PermitWright LLC filing is in progress; EIN → Bluevine bank account → ToS on letterhead follow
+- **Outreach LAUNCHED July 6, 2026 — 12 total cold emails sent** (pain-first draft, free-sample CTA, sent manually from uriel@permitwright.com): 5 on 7/6 to structural engineering principals (Storage Rack Engineering, Burke Structural, T&B Engineering, YA Creative, JMC2) + 7 on 7/7 to firm inboxes (RME Structural, AAA Engineering Design, Blue Horizon, Riverside Engineering, NTS Engineering & Design, A to Z Engineering, AEC Moreno Design). Tracked in `outreach/prospects.csv` (`sent_date`/`status` columns). Business state is **"live service awaiting first replies," not pre-launch**.
+- **PermitWright LLC formation confirmed by Northwest Registered Agent 7/7/2026;** registered agent service active. Awaiting stamped Articles before the LLC-naming pass on site/ToS (entity-name rule stands until then). EIN → Bluevine bank account → ToS on letterhead follow
 - First sample package will be built manually for whichever jurisdiction the first engineer reply names; that deliverable becomes the template for future packages and, eventually, the SaaS output spec
 
 ## Email infrastructure (live as of July 6, 2026)
