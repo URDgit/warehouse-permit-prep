@@ -40,9 +40,10 @@ professionals show phone/address).
   2. **Fire consultants / permit expediters** — the HPS-fire lane; ~70% of Fontana volume. Consultant-lane draft v1 sent to Premier Fire 7/7.
   3. **Self-filing operators** — intel-only (emails now on file); a possible future SaaS/self-serve segment, not current outreach.
 - **Reclassifications:** Premier Fire (7/6), then **Triad and Compliance First** (7/7), moved from "direct competitor" to **volume filer / consultant-lane prospect** — they compete for end clients, not for the research-input niche PermitWright sells into.
+- **Upstream FPEs (Biship, Forcier) are DO-NOT-CONTACT** until (a) licenses are verified via the DCA lookup and (b) relationship context is established — reach them via consultant referral, not cold. Both rows carry status `intel-only` in prospects.csv.
 - **Open action items:**
   - Consultant-lane outreach to Premier Warehouse Permits (Chevis) and Triad (Seymour).
-  - Verify Biship (PE 1556) and Forcier (PE 2296) on the DCA license lookup before referencing or contacting.
+  - DCA license verification for Biship (PE 1556) and Forcier (PE 2296) — prerequisite for ever referencing or contacting.
   - Optional: pull the "View Additional Licensed Professionals" link on FHPS26-00002 (may reveal another upstream PE).
 
 ## Appendix — full FHPS26 record log (sweep 2026-07-07)
