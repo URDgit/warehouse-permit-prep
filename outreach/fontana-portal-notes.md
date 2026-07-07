@@ -1,24 +1,39 @@
 # Fontana permit-portal intel — high-piled storage filings
 
-**Source:** Fontana Accela portal (aca-prod.accela.com/FONTANA), pulled 2026-07-06.
+**Sources:** Fontana Accela portal (aca-prod.accela.com/FONTANA).
+Initial pull 2026-07-06; **full FHPS26 sweep 2026-07-07** via Claude in Chrome
+(22 records, spot-verified against 3 known records).
 
 ## How Fontana handles HPS permits
 
 - Fontana uses a **dedicated HPS record type**: `FHPS-YY-####`, filed in the **Fire module** (not lumped into general building permits).
-- At least **19 HPS filings by July 2026** — roughly **~3 per month**. This is a real, recurring permit volume in a single jurisdiction.
-- **Applicants are typically fire consultants, not structural engineers** — and Fontana accepts filings with the consultant as the professional of record.
+- **22 FHPS26 records by July 2026** (~3+/month). Real, recurring permit volume in a single jurisdiction.
+- **Applicants are typically fire consultants/expediters, not structural engineers** — Fontana accepts filings with the consultant as professional of record.
+- Excluded from analysis: **FHPS26-00001** (misfiled fire-alarm record).
 
-## Example filings
+## Filer share (22 records, FHPS26 series)
 
-| Record | Project | Scope / status |
-| --- | --- | --- |
-| FHPS26-00018 | Hankook Tire, 10825 Production Ave | HPS **expansion**; issued, expires 06/04/2027. Applicant: Jonathan Lusk, Premier Fire Consulting (Anaheim office). |
-| FHPS26-00019 | Eversana, 10887 Commerce Way B | Single/double-row racks; **flammable/combustible liquids in cooler room**; in-rack sprinklers per **NFPA 30**; issued. Applicant: Alex Gonzalez, Premier Fire Consulting (Los Alamitos office). |
+| Filer | Filings | Share | Named staff on records |
+| --- | --- | --- | --- |
+| **Premier Fire Consulting** | 8 | ~36% | Jonathan Lusk, Alex Gonzalez, Bryan Mendoza |
+| **Premier Warehouse Permits** (NEW volume filer; works with Ziglift) | 3 | ~14% | Deijon Chevis (admin@warehousepermits.com) |
+| **Triad Fire Consultants** | 2 | ~9% | Lynn Seymour (lynn@triadfire.com) |
+| **Compliance First** | 2 | ~9% | — |
+| Dealers/integrators (Total Warehouse — Rikk Campos; Storage Solutions — Kyle Rowles) | ~2 | — | PE of record on the Storage Solutions filing: **Sal Fateen (Seizmic)** |
+| Self-filing operators | remainder | — | Carlos Lopez; Carrie Sharifi (RSS-DSV); Zhe Song (ZM Trucks); Tommy Nightingale (Tech Wayne) |
+
+**The consultant/expediter lane files ~70% of Fontana HPS volume.**
+
+## Upstream engineering observations
+
+- **Shared upstream FPE:** Steve Biship (PE 1556, as captured in the sweep) **stamps for both Premier Fire AND Triad** — the stamping engineer behind competitors' filings is itself a distinct research-input prospect.
+- **Sal Fateen (Seizmic)** appears as PE of record via Storage Solutions — the dominant rack-SE shop shows up even in dealer-led filings.
 
 ## What this means for PermitWright
 
-- **Two customer archetypes, two lanes:**
-  1. **Structural engineers** — the seismic/rack-anchorage lane (current outreach draft targets these).
-  2. **Fire consultants** — the HPS-fire lane (commodity classification, CFC Ch. 32 analysis, sprinkler scheme, AHJ narrative). They file at volume and are professionals of record in Fontana.
-- **Premier Fire Consulting is reclassified** from "direct competitor" to **volume buyer / channel prospect**: they're the most active HPS applicant on Fontana's portal, with multiple named staff and offices (see prospects.csv rows for Jonathan Lusk and Alex Gonzalez).
-- **Action item:** a consultant-lane outreach draft is needed — the current pain-first draft speaks to structural engineers; the fire-consultant pitch is different (research legwork per jurisdiction, faster turnaround on classification worksheets and CFC section analysis, overflow capacity at ~3 filings/month in Fontana alone).
+- **Three customer archetypes:**
+  1. **Structural engineers** — seismic/rack-anchorage lane (current outreach draft).
+  2. **Fire consultants / permit expediters** — the HPS-fire lane; they file ~70% of Fontana volume. Consultant-lane draft v1 sent to Premier Fire 7/7.
+  3. **Self-filing operators** — intel-only for now (Lopez; Sharifi/RSS-DSV; Song/ZM Trucks; Nightingale/Tech Wayne); a possible future SaaS/self-serve segment, not current outreach.
+- **Reclassifications:** Premier Fire (7/6), and now **Triad and Compliance First**, moved from "direct competitor" to **volume filer / consultant-lane prospect** — they compete for end clients, not for the research-input niche PermitWright sells into.
+- **Open action items:** consultant-lane outreach to Premier Warehouse Permits (Chevis) and Triad (Seymour); capture emails for Bryan Mendoza, Rikk Campos, Kyle Rowles before any send (not captured in sweep — do not guess).
