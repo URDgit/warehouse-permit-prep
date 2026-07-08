@@ -14,6 +14,8 @@ production checklist for building each $750 research package.
    - every claim cited
    - every judgment call marked **[EOR: …]**
    - zero "2022" / "7-16" strings anywhere in the document
-   - the string "LLC" appears nowhere (until stamped Articles arrive)
+   - "PermitWright LLC" appears on legal surfaces only (cover prepared-by line);
+     brand voice stays "PermitWright" everywhere else (Articles filed 7/6/2026 —
+     docs/permitwright-articles-of-organization-FILED-2026-07-06.pdf)
    - footer shows the correct project name on every page
    - 48-hour clock met

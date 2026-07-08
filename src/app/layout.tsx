@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <main className="container">{children}</main>
         <footer className="app-footer">
-          {SITE.footerLine1}
+          {SITE.footerLine1} · <Link href="/terms">Terms</Link>
           <br />
           {SITE.footerLine2}
         </footer>

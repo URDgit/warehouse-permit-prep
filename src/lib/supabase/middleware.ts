@@ -4,7 +4,7 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured, authRequired } f
 
 // Paths that never require auth. "/" is the public marketing landing page;
 // it's matched exactly (startsWith("//") never matches), so /app etc. stay gated.
-const PUBLIC_PATHS = ["/", "/login", "/auth"];
+const PUBLIC_PATHS = ["/", "/terms", "/login", "/auth"];
 
 /**
  * Refreshes the Supabase session cookie on each request and, when auth is

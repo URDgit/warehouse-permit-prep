@@ -7,8 +7,11 @@
 //  phase (auth, billing, generation pipeline) can grow out of the same
 //  structure without a rewrite.
 //
-//  ENTITY RULE: brand is "PermitWright" (no "LLC") everywhere on the public
-//  site until the stamped Articles of Organization arrive.
+//  ENTITY RULE (updated 2026-07-08, Articles filed 7/6/2026 — see
+//  docs/permitwright-articles-of-organization-FILED-2026-07-06.pdf):
+//  "PermitWright LLC" on LEGAL surfaces (footer copyright line, Terms page,
+//  deliverable cover prepared-by lines); brand voice stays "PermitWright"
+//  in all marketing copy (hero, sections, headers, wordmarks).
 //
 //  LEGAL POSITIONING (load-bearing — preserve in all copy): PermitWright
 //  provides code research and document preparation ONLY. Engineering
@@ -18,6 +21,7 @@
 
 export const SITE = {
   name: "PermitWright",
+  legalName: "PermitWright LLC",
   region: "Southern California",
   contactEmail: "uriel@permitwright.com",
   sampleRequestHref: "mailto:uriel@permitwright.com?subject=Sample%20Package%20Request",
@@ -83,6 +87,6 @@ export const SITE = {
   aboutParagraph:
     "PermitWright is run by Uriel Rojas, based in Southern California. The service grew out of firsthand experience with warehouse operations and high-piled storage permitting in SoCal jurisdictions.",
 
-  footerLine1: "© 2026 PermitWright · Southern California",
+  footerLine1: "© 2026 PermitWright LLC · Southern California",
   footerLine2: "Code research current to the 2025 California Building Standards Code.",
 } as const;
