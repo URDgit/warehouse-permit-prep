@@ -6,7 +6,18 @@ CAFC2025P1). Mark each row ✅ confirmed or write the corrected numbering; hand
 the results back and the "verify at issue" notes get removed and the demo
 finalized.
 
-**Demo status: DRAFT — not cleared to send until this pass is complete.**
+**Demo status: PASS COMPLETE (2026-07-07) — all 5 rows confirmed by Uriel against
+the published 2025 CFC (January 2026 errata edition, read on codes.iccsafe.org).**
+Refinements applied to the demo in v1.1: §3201.3 phrasing aligned to the code's
+own terms (type of fire protection systems / sprinkler valve locations / smoke
+removal & curtain board specs); §3203 recited as §3203.1 (classes) + §3203.9
+(Group A limits); §3208 upgraded to §3208.3 / Table 3208.3; 12-ft trigger recited
+to the CFC Ch. 2 definition via §3202 with the "where required by the fire code
+official" discretionary language on the 6-ft high-hazard trigger; Table 3206.2
+bands scoped to Class I–IV (high-hazard top band 300,000 sf), note h ESFR
+smoke-removal exemption added and EOR-flagged, and "sprinklers throughout"
+corrected to "throughout the building or to 1-hour fire barriers per §3208.2."
+Demo is **VERIFIED — cleared for replies-only deployment.**
 
 ## Needs YOUR verification
 
